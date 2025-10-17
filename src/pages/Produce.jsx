@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import ProduceCard from '../components/ProduceCard'
 
-export default function Produce(){
+// Import images from src/assets
+import lemonImg from '../assets/lemon.jpg'
+import basilImg from '../assets/basil.jpg'
+import mangoImg from '../assets/mango.jpg'
+import rosemaryImg from '../assets/rosemary.jpg'
+
+export default function Produce() {
   const [list, setList] = useState([])
-  useEffect(()=> {
+
+  useEffect(() => {
     setList([
-      {id:1,name:'Lemon',description:'Citrus',origin:'Kiambu',image:'/assets/lemon.jpg'},
-      {id:2,name:'Basil',description:'Aromatic herb',origin:'Nakuru',image:'/assets/basil.jpg'},
-      {id:3,name:'Mango',description:'Sweet fruit',origin:'Coast',image:'/assets/mango.jpg'},
-      {id:4,name:'Rosemary',description:'Fragrant herb',origin:'Kericho',image:'/assets/rosemary.jpg'}
+      { id: 1, name: 'Lemon', description: 'Citrus', origin: 'Kiambu', image: lemonImg },
+      { id: 2, name: 'Basil', description: 'Aromatic herb', origin: 'Nakuru', image: basilImg },
+      { id: 3, name: 'Mango', description: 'Sweet fruit', origin: 'Coast', image: mangoImg },
+      { id: 4, name: 'Rosemary', description: 'Fragrant herb', origin: 'Kericho', image: rosemaryImg }
     ])
-  },[])
+  }, [])
+
   return (
     <section className="max-w-6xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-6">Produce</h1>
