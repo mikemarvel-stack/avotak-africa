@@ -11,7 +11,7 @@ import Dashboard from './pages/Dashboard'
 
 export default function App() {
   return (
-    <BrowserRouter basename="/avotak-africa"> {/* ⚡ SPA subpath */}
+    <BrowserRouter basename="/avotak-africa">
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow">

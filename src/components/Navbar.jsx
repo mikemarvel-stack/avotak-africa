@@ -11,7 +11,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3">
           <img
-            src={`${import.meta.env.BASE_URL}logo.svg`} // ⚡ public folder logo
+            src={`${import.meta.env.BASE_URL}logo.svg`}
             alt="Avotak logo"
             className="w-10 h-10"
           />
@@ -45,41 +45,11 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white px-4 pb-4">
-          <Link
-            to="/produce"
-            className={`block py-2 ${loc.pathname === '/produce' ? 'text-primary font-medium' : 'text-gray-700'}`}
-            onClick={() => setIsOpen(false)}
-          >
-            Produce
-          </Link>
-          <Link
-            to="/services"
-            className={`block py-2 ${loc.pathname === '/services' ? 'text-primary font-medium' : 'text-gray-700'}`}
-            onClick={() => setIsOpen(false)}
-          >
-            Services
-          </Link>
-          <Link
-            to="/projects"
-            className={`block py-2 ${loc.pathname === '/projects' ? 'text-primary font-medium' : 'text-gray-700'}`}
-            onClick={() => setIsOpen(false)}
-          >
-            Projects
-          </Link>
-          <Link
-            to="/contact"
-            className={`block py-2 ${loc.pathname === '/contact' ? 'text-primary font-medium' : 'text-gray-700'}`}
-            onClick={() => setIsOpen(false)}
-          >
-            Contact
-          </Link>
-          <Link
-            to="/dashboard"
-            className="block py-2 px-3 bg-primary text-white rounded-md mt-2"
-            onClick={() => setIsOpen(false)}
-          >
-            Dashboard
-          </Link>
+          <Link to="/produce" className={`block py-2 ${loc.pathname === '/produce' ? 'text-primary font-medium' : 'text-gray-700'}`} onClick={() => setIsOpen(false)}>Produce</Link>
+          <Link to="/services" className={`block py-2 ${loc.pathname === '/services' ? 'text-primary font-medium' : 'text-gray-700'}`} onClick={() => setIsOpen(false)}>Services</Link>
+          <Link to="/projects" className={`block py-2 ${loc.pathname === '/projects' ? 'text-primary font-medium' : 'text-gray-700'}`} onClick={() => setIsOpen(false)}>Projects</Link>
+          <Link to="/contact" className={`block py-2 ${loc.pathname === '/contact' ? 'text-primary font-medium' : 'text-gray-700'}`} onClick={() => setIsOpen(false)}>Contact</Link>
+          <Link to="/dashboard" className="block py-2 px-3 bg-primary text-white rounded-md mt-2" onClick={() => setIsOpen(false)}>Dashboard</Link>
         </div>
       )}
     </nav>
