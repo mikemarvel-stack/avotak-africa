@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/avotak-africa/' // GitHub Pages repo name
+  base: '/avotak-africa/' // <-- must match your GitHub repo name
 })
