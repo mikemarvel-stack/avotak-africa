@@ -14,11 +14,12 @@ import {
 export default function Footer() {
   const navigate = useNavigate();
 
-  const handleContactClick = (e) => {
-    e.preventDefault();
-    navigate('/contact');
+  const handleNavigate = (path) => {
+    navigate(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const linkStyle = 'cursor-pointer hover:text-green-700 transition';
 
   return (
     <motion.footer
@@ -40,18 +41,21 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-3 text-gray-600 mb-1">
             <Phone className="w-4 h-4" />
-            <a href="tel:+254700000000" className="hover:text-green-700 transition">
-              +254 700 000 000
-            </a>
+            <span
+              onClick={() => handleNavigate('/contact')}
+              className={linkStyle}
+            >
+              +254 711 281 829
+            </span>
           </div>
           <div className="flex items-center gap-3 text-gray-600">
             <Mail className="w-4 h-4" />
-            <a
-              href="mailto:info@avotakafrica.com"
-              className="hover:text-green-700 transition"
+            <span
+              onClick={() => handleNavigate('/contact')}
+              className={linkStyle}
             >
               info@avotakafrica.com
-            </a>
+            </span>
           </div>
         </div>
 
@@ -60,28 +64,44 @@ export default function Footer() {
           <div className="font-semibold text-green-800 mb-4">Quick Links</div>
           <ul className="space-y-2 text-gray-600">
             <li>
-              <a href="/services" className="hover:text-green-700 transition">
-                Services
-              </a>
-            </li>
-            <li>
-              <a href="/about" className="hover:text-green-700 transition">
+              <span
+                onClick={() => handleNavigate('/about')}
+                className={linkStyle}
+              >
                 About Us
-              </a>
+              </span>
             </li>
             <li>
-              <a href="/gallery" className="hover:text-green-700 transition">
-                Gallery
-              </a>
+              <span
+                onClick={() => handleNavigate('/produce')}
+                className={linkStyle}
+              >
+                Produce
+              </span>
             </li>
             <li>
-              {/* Contact link using navigate */}
-              <button
-                onClick={handleContactClick}
-                className="hover:text-green-700 transition text-left"
+              <span
+                onClick={() => handleNavigate('/services')}
+                className={linkStyle}
+              >
+                Services
+              </span>
+            </li>
+            <li>
+              <span
+                onClick={() => handleNavigate('/projects')}
+                className={linkStyle}
+              >
+                Projects
+              </span>
+            </li>
+            <li>
+              <span
+                onClick={() => handleNavigate('/contact')}
+                className={linkStyle}
               >
                 Contact
-              </button>
+              </span>
             </li>
           </ul>
         </div>
