@@ -1,5 +1,6 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import {
   Facebook,
   Twitter,
@@ -8,9 +9,17 @@ import {
   Mail,
   Phone,
   MapPin,
-} from 'lucide-react'
+} from 'lucide-react';
 
 export default function Footer() {
+  const navigate = useNavigate();
+
+  const handleContactClick = (e) => {
+    e.preventDefault();
+    navigate('/contact');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <motion.footer
       className="bg-gray-50 border-t text-gray-700 relative z-10"
@@ -37,7 +46,10 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-3 text-gray-600">
             <Mail className="w-4 h-4" />
-            <a href="mailto:info@avotakafrica.com" className="hover:text-green-700 transition">
+            <a
+              href="mailto:info@avotakafrica.com"
+              className="hover:text-green-700 transition"
+            >
               info@avotakafrica.com
             </a>
           </div>
@@ -47,10 +59,30 @@ export default function Footer() {
         <div>
           <div className="font-semibold text-green-800 mb-4">Quick Links</div>
           <ul className="space-y-2 text-gray-600">
-            <li><a href="/services" className="hover:text-green-700 transition">Services</a></li>
-            <li><a href="/about" className="hover:text-green-700 transition">About Us</a></li>
-            <li><a href="/gallery" className="hover:text-green-700 transition">Gallery</a></li>
-            <li><a href="/contact" className="hover:text-green-700 transition">Contact</a></li>
+            <li>
+              <a href="/services" className="hover:text-green-700 transition">
+                Services
+              </a>
+            </li>
+            <li>
+              <a href="/about" className="hover:text-green-700 transition">
+                About Us
+              </a>
+            </li>
+            <li>
+              <a href="/gallery" className="hover:text-green-700 transition">
+                Gallery
+              </a>
+            </li>
+            <li>
+              {/* Contact link using navigate */}
+              <button
+                onClick={handleContactClick}
+                className="hover:text-green-700 transition text-left"
+              >
+                Contact
+              </button>
+            </li>
           </ul>
         </div>
 
@@ -95,5 +127,5 @@ export default function Footer() {
         © {new Date().getFullYear()} Avotak Africa Ltd. All rights reserved.
       </div>
     </motion.footer>
-  )
+  );
 }

@@ -1,6 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function AboutUs() {
+  const navigate = useNavigate();
+
+  const handleContactClick = () => {
+    // Navigate to contact page
+    navigate("/contact");
+    // Scroll to top in case the page is long
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <main className="min-h-screen bg-gray-50">
       <section className="max-w-6xl mx-auto px-4 py-16">
@@ -93,12 +103,12 @@ export default function AboutUs() {
           <p className="text-gray-700 mb-6">
             Whether you are a customer, partner, or farmer, join us in creating a greener, healthier, and more sustainable future. Together, we grow, innovate, and thrive.
           </p>
-          <a
-            href="/contact"
+          <button
+            onClick={handleContactClick}
             className="inline-block px-6 py-3 bg-green-700 text-white rounded-md hover:bg-green-800 transition"
           >
             Contact Us
-          </a>
+          </button>
         </div>
       </section>
     </main>
