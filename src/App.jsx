@@ -2,6 +2,9 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import BackToTop from './components/BackToTop'
+import StickySocials from './components/StickySocials'
+
 import Home from './pages/Home'
 import Produce from './pages/Produce'
 import Services from './pages/Services'
@@ -11,8 +14,11 @@ import Dashboard from './pages/Dashboard'
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
       <Navbar />
+      {/* Sticky Social Icons */}
+      <StickySocials />
+
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -23,7 +29,12 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </main>
+
+      {/* Footer */}
       <Footer />
+
+      {/* Back-to-Top Button */}
+      <BackToTop />
     </div>
   )
 }
