@@ -1,7 +1,12 @@
 import React from 'react';
 
 // Dynamically import all images from assets folder
-const images = import.meta.glob('../assets/*.jpg', { eager: true, as: 'url' });
+// Updated for Vite deprecation: use `query` and `import: 'default'`
+const images = import.meta.glob('../assets/*.{jpg,jpeg,png}', { eager: true, import: 'default', query: '?url' });
+
+// Helper to normalize strings (lowercase, remove spaces & special chars)
+const normalize = (str) =>
+  str.toLowerCase().replace(/[\s\W]/g, '');
 
 export default function Projects() {
   const projects = [
@@ -49,8 +54,10 @@ export default function Projects() {
 
   // Match project title to corresponding image from assets
   const getImage = (title) => {
-    const formattedTitle = title.replace(/\s/g, '%20'); // Replace spaces with %20 to match filenames
-    const key = Object.keys(images).find((path) => path.includes(formattedTitle));
+    const normTitle = normalize(title);
+    const key = Object.keys(images).find((path) =>
+      normalize(path.split('/').pop().split('.')[0]) === normTitle
+    );
     return key ? images[key] : '';
   };
 
