@@ -1,5 +1,8 @@
 import React from 'react';
 
+// Dynamically import all images from assets folder
+const images = import.meta.glob('../assets/*.jpg', { eager: true, as: 'url' });
+
 export default function Projects() {
   const projects = [
     {
@@ -9,7 +12,6 @@ export default function Projects() {
       summary: 'Set up of herb propagation nursery to support local farmers.',
       impact: 'Seed stock for 120 farmers.',
       date: 'Jan 2024 - Mar 2024',
-      image: 'https://images.unsplash.com/photo-1593642532973-d31b6557fa68',
     },
     {
       id: 2,
@@ -18,7 +20,6 @@ export default function Projects() {
       summary: 'Implemented quality improvement measures for mango exports.',
       impact: '20% increase in buyer acceptance.',
       date: 'Apr 2024 - Jun 2024',
-      image: 'https://images.unsplash.com/photo-1603052875342-2f8d8b2d0e3b',
     },
     {
       id: 3,
@@ -27,7 +28,6 @@ export default function Projects() {
       summary: 'Streamlined export procedures and documentation for small-scale farmers.',
       impact: 'Reduced export lead time by 30%.',
       date: 'Jul 2024 - Sep 2024',
-      image: 'https://images.unsplash.com/photo-1588702547922-4e8e1b2d9b3b',
     },
     {
       id: 4,
@@ -36,7 +36,6 @@ export default function Projects() {
       summary: 'Trained farmers on best practices for basil cultivation.',
       impact: '150 farmers trained; yield improved by 25%.',
       date: 'Oct 2024 - Dec 2024',
-      image: 'https://images.unsplash.com/photo-1593642532973-d31b6557fa68',
     },
     {
       id: 5,
@@ -45,9 +44,15 @@ export default function Projects() {
       summary: 'Connected local farmers to regional supermarkets and buyers.',
       impact: 'Increased farmer revenue by 40%.',
       date: 'Jan 2025 - Present',
-      image: 'https://images.unsplash.com/photo-1561948955-4f3e4d3e5b2d',
     },
   ];
+
+  // Match project title to corresponding image from assets
+  const getImage = (title) => {
+    const formattedTitle = title.replace(/\s/g, '%20'); // Replace spaces with %20 to match filenames
+    const key = Object.keys(images).find((path) => path.includes(formattedTitle));
+    return key ? images[key] : '';
+  };
 
   return (
     <section className="max-w-5xl mx-auto px-4 py-12">
@@ -55,7 +60,11 @@ export default function Projects() {
       <div className="grid gap-6 md:grid-cols-2">
         {projects.map((p) => (
           <div key={p.id} className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-            <img src={p.image} alt={p.title} className="w-full h-48 object-cover rounded-t-xl mb-4" />
+            <img
+              src={getImage(p.title)}
+              alt={p.title}
+              className="w-full h-48 object-cover rounded-t-xl mb-4"
+            />
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-xl font-semibold">{p.title}</h3>
               <span className="text-sm text-gray-500">{p.date}</span>
