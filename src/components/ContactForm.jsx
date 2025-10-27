@@ -7,22 +7,56 @@ export default function ContactForm(){
   const onSubmit = async (data) => {
     try {
       // Send to Formspree
-      await axios.post('https://formspree.io/f/yourformid', data)
+      await axios.post('https://formspree.io/f/xqkrznyg', data)
 
-      // Also send to Tawk.to chat if available
-      if (window.Tawk_API && typeof window.Tawk_API.addEvent === 'function') {
-        window.Tawk_API.addEvent('Contact Form Submission', {
-          name: data.name,
-          email: data.email,
-          company: data.company,
-          message: data.message
-        }, function(error){
-          if(error) console.error('Tawk.to event error:', error);
-        });
-      } else if (window.Tawk_API && typeof window.Tawk_API.addTags === 'function') {
-        // Fallback: add tags and send a message
-        window.Tawk_API.addTags(['contact-form']);
-        window.Tawk_API.sendMessage && window.Tawk_API.sendMessage(`Contact form: ${data.name} (${data.email})\n${data.company ? 'Company: ' + data.company + '\n' : ''}${data.message}`);
+      // Format the message for Tawk
+      const formattedMessage = `New Contact Form Submission:\n\nName: ${data.name}\nEmail: ${data.email}\n${data.company ? `Company: ${data.company}\n` : ''}Message: ${data.message}`;
+
+      // Initialize Tawk if needed
+      if (typeof window.Tawk_API === 'undefined') {
+        window.Tawk_API = {};
+        window.Tawk_LoadStart = new Date();
+        
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://embed.tawk.to/68ffda2105d3d8194aaa21ad/1j8jmo4rv';
+        script.charset = 'UTF-8';
+        script.setAttribute('crossorigin', '*');
+        
+        script.onload = () => {
+          // Once script is loaded, set attributes and send message
+          sendTawkMessage();
+        };
+        
+        document.body.appendChild(script);
+      } else {
+        // If Tawk is already loaded, send message directly
+        sendTawkMessage();
+      }
+
+      function sendTawkMessage() {
+        if (window.Tawk_API) {
+          // Set visitor information first
+          window.Tawk_API.setAttributes({
+            name: data.name,
+            email: data.email
+          }, function(error) {
+            if (error) {
+              console.error('Tawk.to set attributes error:', error);
+            } else {
+              // After attributes are set, open chat and send message
+              window.Tawk_API.maximize();
+              setTimeout(() => {
+                window.Tawk_API.onLoad = function() {
+                  window.Tawk_API.sendMessage(formattedMessage);
+                };
+                if (window.Tawk_API.isChatMaximized()) {
+                  window.Tawk_API.sendMessage(formattedMessage);
+                }
+              }, 1500);
+            }
+          });
+        }
       }
 
       alert('Message sent — thank you!')

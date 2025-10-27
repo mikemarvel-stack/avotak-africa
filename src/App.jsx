@@ -1,10 +1,10 @@
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import StickySocials from './components/StickySocials'
 import BackToTop from './components/BackToTop'
-import TawkChat from './components/TawkChat'
 import Footer from './components/Footer'
+import AdminLayout from './components/admin/AdminLayout'
 
 // Pages
 import Home from './pages/Home'
@@ -13,14 +13,21 @@ import Projects from './pages/Projects'
 import Services from './pages/Services'
 import AboutUs from './pages/AboutUs'
 import Contact from './pages/Contact'
+import Dashboard from './pages/Dashboard'
 
 export default function App() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  if (isAdminRoute) {
+    return <AdminLayout />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col relative">
       <Navbar />
       <StickySocials />
       <BackToTop />
-      <TawkChat />
       
       <main className="flex-1">
         <Routes>
@@ -30,6 +37,7 @@ export default function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin/*" element={<AdminLayout />} />
         </Routes>
       </main>
       

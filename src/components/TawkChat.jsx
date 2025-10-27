@@ -12,7 +12,7 @@ export default function TawkChat({ openFromContact }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
-      text: '👋 Hi there! Welcome to Avotak Africa. How can we help you today? (You can also use the green chat icon at any time.)',
+      text: '👋 Hi there! Welcome to Avotak Africa. How can we help you today?\n\nYou can use this chat to ask about our services, products, or any inquiry. Our team is ready to assist you! (You can also use the green chat icon at any time.)',
       sender: 'bot',
       timestamp: new Date(),
     },
@@ -103,8 +103,8 @@ export default function TawkChat({ openFromContact }) {
             className="mt-3 w-80 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-green-100"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-green-600 to-green-500 text-white px-4 py-3 flex justify-between items-center">
-              <span className="font-bold tracking-wide">Avotak Chat</span>
+            <div className="bg-gradient-to-r from-green-700 to-green-500 text-white px-4 py-3 flex justify-between items-center">
+              <span className="font-bold tracking-wide text-lg">Avotak Africa</span>
               <button onClick={toggleChat} className="hover:bg-green-700 rounded-full p-1">
                 <XMarkIcon className="w-5 h-5" />
               </button>
@@ -176,7 +176,7 @@ export default function TawkChat({ openFromContact }) {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSend()}
-                placeholder="Type your message..."
+                placeholder="Type your message or inquiry for Avotak Africa..."
                 className="flex-grow px-4 py-3 focus:outline-none rounded-l-2xl"
               />
               <button
