@@ -1,0 +1,421 @@
+{
+  "url": "http://localhost:3005",
+  "timestamp": "2025-10-27T20:37:05.314Z",
+  "logs": [
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/main.jsx?t=1761597406373"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/App.jsx?t=1761597273437"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/index.css?t=1761597406373"
+    },
+    {
+      "type": "console",
+      "level": "debug",
+      "text": "[vite] connecting...",
+      "location": {
+        "url": "http://localhost:3005/@vite/client",
+        "lineNumber": 494,
+        "columnNumber": 8
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/debug/Bisect.jsx?t=1761597273437"
+    },
+    {
+      "type": "console",
+      "level": "debug",
+      "text": "[vite] connected.",
+      "location": {
+        "url": "http://localhost:3005/@vite/client",
+        "lineNumber": 617,
+        "columnNumber": 14
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/debug/ErrorBoundary.jsx"
+    },
+    {
+      "type": "console",
+      "level": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold",
+      "location": {
+        "url": "http://localhost:3005/node_modules/.vite/deps/chunk-SB5BK2J2.js?v=0fc4153c",
+        "lineNumber": 21548,
+        "columnNumber": 24
+      }
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Booting React app — root element found.",
+      "location": {
+        "url": "http://localhost:3005/src/main.jsx?t=1761597406373",
+        "lineNumber": 10,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Rendering App component (bisect mode)",
+      "location": {
+        "url": "http://localhost:3005/src/App.jsx?t=1761597273437",
+        "lineNumber": 19,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Rendering App component (bisect mode)",
+      "location": {
+        "url": "http://localhost:3005/src/App.jsx?t=1761597273437",
+        "lineNumber": 19,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/components/Navbar.jsx?import"
+    },
+    {
+      "type": "console",
+      "level": "warning",
+      "text": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.",
+      "location": {
+        "url": "http://localhost:3005/node_modules/.vite/deps/react-router-dom.js?v=0fc4153c",
+        "lineNumber": 4390,
+        "columnNumber": 12
+      }
+    },
+    {
+      "type": "console",
+      "level": "warning",
+      "text": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.",
+      "location": {
+        "url": "http://localhost:3005/node_modules/.vite/deps/react-router-dom.js?v=0fc4153c",
+        "lineNumber": 4390,
+        "columnNumber": 12
+      }
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Bisect: imported Navbar",
+      "location": {
+        "url": "http://localhost:3005/src/debug/Bisect.jsx?t=1761597273437",
+        "lineNumber": 46,
+        "columnNumber": 18
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/components/StickySocials.jsx?import"
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Bisect: imported StickySocials",
+      "location": {
+        "url": "http://localhost:3005/src/debug/Bisect.jsx?t=1761597273437",
+        "lineNumber": 46,
+        "columnNumber": 18
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/components/BackToTop.jsx?import"
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Bisect: imported BackToTop",
+      "location": {
+        "url": "http://localhost:3005/src/debug/Bisect.jsx?t=1761597273437",
+        "lineNumber": 46,
+        "columnNumber": 18
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/components/TawkChat.jsx?import"
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Bisect: imported TawkChat",
+      "location": {
+        "url": "http://localhost:3005/src/debug/Bisect.jsx?t=1761597273437",
+        "lineNumber": 46,
+        "columnNumber": 18
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/components/Footer.jsx?import"
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Bisect: imported Footer",
+      "location": {
+        "url": "http://localhost:3005/src/debug/Bisect.jsx?t=1761597273437",
+        "lineNumber": 46,
+        "columnNumber": 18
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/pages/Home.jsx?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/components/HomeSlider.jsx"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/components/ProduceCard.jsx"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/components/Gallery.jsx"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/lemon.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/basil.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/mango.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/avocado.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/apple.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/spinach.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/tomato.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Basil%20Cultivation%20Program.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Export%20Mango%20Pilot.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Export%20Process%20Facilitation.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Fresh%20Produce%20Market%20Linkages.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Herb%20Nursery.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/banana.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/carrot.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/coriander.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/ginger.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/herb-field.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/placeholder-fruit.svg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/rosemary.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/turmeric.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/slider/slide1.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/slider/slide2.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/slider/slide3.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/slider/slide4.jpg?import"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/slider/slide5.jpg?import"
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Bisect: imported Home (page)",
+      "location": {
+        "url": "http://localhost:3005/src/debug/Bisect.jsx?t=1761597273437",
+        "lineNumber": 46,
+        "columnNumber": 18
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/pages/Produce.jsx?import"
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Bisect: imported Produce (page)",
+      "location": {
+        "url": "http://localhost:3005/src/debug/Bisect.jsx?t=1761597273437",
+        "lineNumber": 46,
+        "columnNumber": 18
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/slider/slide1.jpg"
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Tawk.to widget ID not configured. Chat will use fallback UI.",
+      "location": {
+        "url": "http://localhost:3005/src/components/TawkChat.jsx?import",
+        "lineNumber": 39,
+        "columnNumber": 14
+      }
+    },
+    {
+      "type": "console",
+      "level": "log",
+      "text": "Tawk.to widget ID not configured. Chat will use fallback UI.",
+      "location": {
+        "url": "http://localhost:3005/src/components/TawkChat.jsx?import",
+        "lineNumber": 39,
+        "columnNumber": 14
+      }
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/lemon.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/basil.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/mango.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/avocado.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/apple.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/spinach.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/tomato.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Basil%20Cultivation%20Program.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Export%20Mango%20Pilot.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Export%20Process%20Facilitation.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Fresh%20Produce%20Market%20Linkages.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/Herb%20Nursery.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/banana.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/carrot.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/coriander.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/ginger.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/herb-field.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/placeholder-fruit.svg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/rosemary.jpg"
+    },
+    {
+      "type": "app-request",
+      "url": "http://localhost:3005/src/assets/turmeric.jpg"
+    }
+  ],
+  "contentSnippet": "<!DOCTYPE html><html lang=\"en\"><head>\n    <script type=\"module\">import { injectIntoGlobalHook } from \"/@react-refresh\";\ninjectIntoGlobalHook(window);\nwindow.$RefreshReg$ = () => {};\nwindow.$RefreshSig$ = () => (type) => type;</script>\n\n    <script type=\"module\" src=\"/@vite/client\"></script>\n\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    \n    <!-- NOTE: removed strict CSP during local development because it blocks inline scripts (extensions or dev tooling).\n      In production you should configure CSP via server headers with nonces or script-hashes instead of allowing 'unsafe-inline'. -->\n    \n    <title>Avotak Africa Ltd</title>\n    <meta name=\"description\" content=\"Agricultural consulting, fresh fruits and herbs — Avotak Africa Ltd\">\n    <meta name=\"theme-color\" content=\"#2f855a\">\n\n    <!-- Favicons -->\n    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">\n    <link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"/pwa-192.png\">\n    <link rel=\"icon\" type=\"image/png\" sizes=\"512x512\" href=\"/pwa-512.png\">\n  <style type=\"text/css\" data-vite-dev-id=\"/media/mike/Mike_s files/Software Engineering/avotak-africa/src/index.css\">*, ::before, ::after {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;"
+}

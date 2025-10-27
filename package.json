@@ -7,10 +7,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:github": "vite build --mode github",
+    "build:github": "vite build --base=/avotak-africa/",
+    "build:netlify": "vite build --base=/",
     "preview": "vite preview",
+    "preview:build": "vite preview --port=4173",
     "deploy:github": "npm run build:github && gh-pages -d dist",
-    "deploy:netlify": "npm run build && netlify deploy --prod --dir=dist"
+    "deploy:netlify": "npm run build:netlify && netlify deploy --prod --dir=dist",
+    "clean": "rm -rf dist node_modules/.vite"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -28,6 +31,7 @@
     "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.4.21",
     "gh-pages": "^6.3.0",
+    "playwright": "^1.56.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.18",
     "vite": "^5.4.20"

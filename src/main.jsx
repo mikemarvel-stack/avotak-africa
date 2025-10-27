@@ -4,13 +4,10 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
 
-// Set basename dynamically depending on deploy environment
-const basename =
-  import.meta.env.VITE_DEPLOY_ENV === 'github' ? '/avotak-africa' : '/'
-
-createRoot(document.getElementById('root')).render(
+const rootEl = document.getElementById('root')
+createRoot(rootEl).render(
   <React.StrictMode>
-    <BrowserRouter basename={basename}>
+    <BrowserRouter basename=""> {/* For Netlify */}
       <App />
     </BrowserRouter>
   </React.StrictMode>

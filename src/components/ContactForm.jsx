@@ -6,7 +6,25 @@ export default function ContactForm(){
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     try {
+      // Send to Formspree
       await axios.post('https://formspree.io/f/yourformid', data)
+
+      // Also send to Tawk.to chat if available
+      if (window.Tawk_API && typeof window.Tawk_API.addEvent === 'function') {
+        window.Tawk_API.addEvent('Contact Form Submission', {
+          name: data.name,
+          email: data.email,
+          company: data.company,
+          message: data.message
+        }, function(error){
+          if(error) console.error('Tawk.to event error:', error);
+        });
+      } else if (window.Tawk_API && typeof window.Tawk_API.addTags === 'function') {
+        // Fallback: add tags and send a message
+        window.Tawk_API.addTags(['contact-form']);
+        window.Tawk_API.sendMessage && window.Tawk_API.sendMessage(`Contact form: ${data.name} (${data.email})\n${data.company ? 'Company: ' + data.company + '\n' : ''}${data.message}`);
+      }
+
       alert('Message sent — thank you!')
       reset()
     } catch (err) {

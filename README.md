@@ -1,5 +1,5 @@
-## 🌿 Avotak Africa – Agricultural Consultancy Company
 
+## 🌿 Avotak Africa – Agricultural Consultancy Company
 
 ### Overview
 ---
@@ -11,32 +11,23 @@ The platform is designed to help clients, partners, and farmers explore consulta
 ---
 #### Home Page
 
-Hero Section: Engaging introduction to Avotak Africa and its mission.
-
-Featured Projects / Produce: Highlights selected farm projects, crops, and services.
-
-Gallery: Visual showcase of farms, project sites, and sustainable practices.
+- Hero Section: Engaging introduction to Avotak Africa and its mission.
+- Featured Projects / Produce: Highlights selected farm projects, crops, and services.
+- Gallery: Visual showcase of farms, project sites, and sustainable practices.
 
 #### Produce / Projects Page
 
-Listing of produce or projects handled by Avotak Africa.
-
-Each item shows:
-```
-Name and description
-
-Origin or project location
-
-Interactive cards with subtle hover effects using Framer Motion.
-```
+- Listing of produce or projects handled by Avotak Africa.
+- Each item shows:
+	- Name and description
+	- Origin or project location
+	- Interactive cards with subtle hover effects using Framer Motion.
 
 #### Reusable Components
 
-ProduceCard: Displays project or produce details consistently.
-
-Gallery: Handles dynamic arrays of images in a responsive layout.
-
-Hero: Engaging header section for landing page.
+- ProduceCard: Displays project or produce details consistently.
+- Gallery: Handles dynamic arrays of images in a responsive layout.
+- Hero: Engaging header section for landing page.
 
 #### Responsive Design
 
