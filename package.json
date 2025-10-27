@@ -1,16 +1,16 @@
 {
   "name": "avotak-africa",
-  "homepage": "https://mikemarvel-stack.github.io/avotak-africa/",
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "homepage": "https://mikemarvel-stack.github.io/avotak-africa/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:github": "vite build --mode github",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "postbuild": "cp dist/index.html dist/404.html",
-    "deploy": "gh-pages -d dist"
+    "deploy:github": "npm run build:github && gh-pages -d dist",
+    "deploy:netlify": "npm run build && netlify deploy --prod --dir=dist"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
