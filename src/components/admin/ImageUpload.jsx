@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { apiPrivate } from '../../services/api';
+import api from '../../services/api';
 
 const ImageUpload = ({ onImageUploaded }) => {
   const [uploading, setUploading] = useState(false);
@@ -16,7 +16,7 @@ const ImageUpload = ({ onImageUploaded }) => {
     setError('');
 
     try {
-      const response = await apiPrivate.post('/upload', formData, {
+  const response = await api.post('/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
