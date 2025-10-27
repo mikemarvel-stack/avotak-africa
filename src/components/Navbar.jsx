@@ -47,7 +47,7 @@ export default function Navbar() {
           <button
             onClick={() => setOpen(!open)}
             aria-label="menu"
-            className="p-2 rounded-md bg-gray-100"
+            className="p-2 rounded-md bg-gray-80"
           >
             {open ? (
               <span className="text-2xl">&#10005;</span> // X icon
