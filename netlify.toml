@@ -1,6 +1,13 @@
 [build]
-  command = "npm run build:netlify"
+  command = "npm run build"
   publish = "dist"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://avotak-backend.onrender.com/api/:splat"
+  status = 200
+  force = true
+  headers = {Access-Control-Allow-Origin = "*"}
 
 [[redirects]]
   from = "/*"
@@ -9,3 +16,6 @@
 
 [build.environment]
   NODE_VERSION = "18"
+
+[context.production.environment]
+  VITE_API_URL = "https://avotak-backend.onrender.com"
