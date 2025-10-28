@@ -4,21 +4,23 @@ import useAdminStore from '../../store/useAdminStore';
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, error } = useAdminStore();
+  const { login, error, isAdmin } = useAdminStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(email, password);
+    const success = await login(email, password);
+    if (success) {
+      alert('Login successful!');
+      // Navigate to dashboard or protected route
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Admin Login
-          </h2>
-        </div>
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Admin Login
+        </h2>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
             <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">
@@ -47,7 +49,6 @@ export default function AdminLogin() {
               />
             </div>
           </div>
-
           <div>
             <button
               type="submit"
