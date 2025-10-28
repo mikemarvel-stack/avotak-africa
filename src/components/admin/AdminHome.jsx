@@ -17,7 +17,7 @@ export default function AdminHome() {
       setLoading(true);
       setError(null);
       const response = await apiCall('/content/home');
-      setContent(response.data || response);
+      setContent({ heroTitle: '', heroSubtitle: '', sliderImages: [], ...response });
     } catch (err) {
       console.error('Failed to load home content:', err);
       setError('Failed to load home content.');
@@ -47,7 +47,7 @@ export default function AdminHome() {
   };
 
   const handleUpdateSliderImage = (index, field, value) => {
-    const updatedImages = [...content.sliderImages];
+    const updatedImages = [...(content.sliderImages || [])];
     updatedImages[index] = { ...updatedImages[index], [field]: value };
     setContent(prev => ({ ...prev, sliderImages: updatedImages }));
   };
@@ -74,7 +74,6 @@ export default function AdminHome() {
             <div>
               <label className="block text-sm font-medium text-gray-700">Hero Title</label>
               <input
-                name="heroTitle"
                 value={content.heroTitle}
                 onChange={(e) => setContent({ ...content, heroTitle: e.target.value })}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
@@ -84,7 +83,6 @@ export default function AdminHome() {
             <div>
               <label className="block text-sm font-medium text-gray-700">Hero Subtitle</label>
               <textarea
-                name="heroSubtitle"
                 value={content.heroSubtitle}
                 onChange={(e) => setContent({ ...content, heroSubtitle: e.target.value })}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
@@ -99,47 +97,26 @@ export default function AdminHome() {
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-semibold">Slider Images</h2>
-            <button
-              type="button"
-              onClick={handleAddSliderImage}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-            >
+            <button type="button" onClick={handleAddSliderImage} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
               Add Image
             </button>
           </div>
 
           <div className="space-y-4">
-            {content.sliderImages.map((image, index) => (
+            {(content.sliderImages || []).map((image, index) => (
               <div key={index} className="flex items-start space-x-4 p-4 border rounded-lg">
                 <div className="flex-grow grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
-                    <ImageUpload
-                      onImageUploaded={(url) => handleUpdateSliderImage(index, 'url', url)}
-                    />
-                    {image.url && (
-                      <img
-                        src={image.url}
-                        alt={`Slide ${index + 1}`}
-                        className="h-24 w-24 object-cover rounded mt-2"
-                      />
-                    )}
+                    <ImageUpload onImageUploaded={(url) => handleUpdateSliderImage(index, 'url', url)} />
+                    {image.url && <img src={image.url} alt={`Slide ${index + 1}`} className="h-24 w-24 object-cover rounded mt-2" />}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Caption</label>
-                    <input
-                      type="text"
-                      value={image.caption}
-                      onChange={(e) => handleUpdateSliderImage(index, 'caption', e.target.value)}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                    />
+                    <input type="text" value={image.caption} onChange={(e) => handleUpdateSliderImage(index, 'caption', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" />
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveSliderImage(index)}
-                  className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                >
+                <button type="button" onClick={() => handleRemoveSliderImage(index)} className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
                   Remove
                 </button>
               </div>
@@ -148,10 +125,7 @@ export default function AdminHome() {
         </div>
 
         <div className="flex justify-end">
-          <button
-            type="submit"
-            className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-          >
+          <button type="submit" className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
             Save Changes
           </button>
         </div>
