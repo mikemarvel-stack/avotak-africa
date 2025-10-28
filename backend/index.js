@@ -1,11 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import cors from 'cors';{
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
-  }
-}
+import cors from 'cors';
 import dotenv from 'dotenv';
 
 import authRoutes from './routes/auth.js';
@@ -44,4 +39,7 @@ mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
     console.log('✅ MongoDB connected');
     app.listen(PORT, () => console.log(`🚀 Backend running on port ${PORT}`));
   })
-  .catch(err => console.error('❌ MongoDB connection error:', err.message));
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err.message);
+    process.exit(1); // Exit on connection error
+  });
