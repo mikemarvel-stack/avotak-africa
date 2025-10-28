@@ -1,54 +1,41 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import axios from 'axios';
-
-// --- ROBUST API CONFIGURATION ---
-// Log the env variable at build time to see what Netlify is providing.
-console.log(`VITE_API_URL from env: "${import.meta.env.VITE_API_URL}"`);
-
-// If VITE_API_URL is undefined, null, or an empty string, default to '/api'.
-const API_URL = import.meta.env.VITE_API_URL || '/api';
-
-console.log(`Final API_URL used: "${API_URL}"`);
-// --- END OF ROBUST API CONFIGURATION ---
-
-const api = axios.create({
-  baseURL: API_URL,
-});
+import api from '../services/api'; // Import the shared api instance
 
 const useAdminStore = create(
   persist(
     (set, get) => ({
-      isAdmin: false,
       token: null,
-      apiCall: async (endpoint, method = 'GET', data = null) => {
+      isAdmin: false,
+      error: null,
+      login: async (email, password) => {
         try {
-          const response = await api({
-            url: endpoint,
-            method,
-            data,
-            headers: {
-              ...(get().token && { Authorization: `Bearer ${get().token}` }),
-            },
-          });
-          return response.data;
-        } catch (error) {
-          console.error('API call failed:', error.response || error.message);
-          if (error.response && error.response.status === 401) {
-            // Token is invalid or expired, log out
-            set({ isAdmin: false, token: null });
-          }
-          throw error;
-        }
-      },
-      login: async (credentials) => {
-        const { token } = await get().apiCall('/auth/login', 'POST', credentials);
-        if (token) {
-          set({ isAdmin: true, token });
+          set({ error: null });
+          const response = await api.post('/auth/login', { email, password });
+          const { token } = response.data;
+          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          set({ token, isAdmin: true });
+          return true;
+        } catch (err) {
+          const errorMsg =
+            err.response?.data?.message || 'Login failed. Please try again.';
+          console.error('API call failed:', err.response || err);
+          set({ error: errorMsg });
+          return false;
         }
       },
       logout: () => {
-        set({ isAdmin: false, token: null });
+        delete api.defaults.headers.common['Authorization'];
+        set({ token: null, isAdmin: false, error: null });
+      },
+      checkAuth: () => {
+        const token = get().token;
+        if (token) {
+          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          set({ isAdmin: true });
+        } else {
+          set({ isAdmin: false });
+        }
       },
     }),
     {
@@ -56,5 +43,8 @@ const useAdminStore = create(
     }
   )
 );
+
+// Initialize auth state on app load
+useAdminStore.getState().checkAuth();
 
 export default useAdminStore;
