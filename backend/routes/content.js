@@ -13,6 +13,9 @@ import {
   deleteProduce
 } from '../controllers/contentController.js';
 import { protect } from '../middleware/authMiddleware.js';
+import Project from '../models/Project.js'; // Add Project model import
+import Gallery from '../models/Gallery.js'; // Add Gallery model import
+import { cloudinary } from '../utils/cloudinary.js'; // Add Cloudinary import
 
 const router = express.Router();
 
@@ -72,92 +75,69 @@ router.route('/produce/:id')
   .delete(protect, asyncHandler(deleteProduce));
 
 // -------------------- PROJECTS --------------------
-router.get('/projects', async (req, res) => {
-  try {
-    const projects = await Project.find().sort('order');
-    res.json(projects);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to fetch projects' });
-  }
-});
+router.get('/projects', asyncHandler(async (req, res) => {
+  const projects = await Project.find().sort('order');
+  res.json(projects);
+}));
 
-router.post('/projects', verifyToken, async (req, res) => {
-  try {
-    const project = new Project(req.body);
-    await project.save();
-    res.json(project);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
-  }
-});
+router.post('/projects', protect, asyncHandler(async (req, res) => {
+  const project = new Project(req.body);
+  await project.save();
+  res.status(201).json(project);
+}));
 
-router.put('/projects/:id', verifyToken, async (req, res) => {
-  try {
-    const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(project);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
+router.put('/projects/:id', protect, asyncHandler(async (req, res) => {
+  const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  if (!project) {
+    res.status(404);
+    throw new Error('Project not found');
   }
-});
+  res.json(project);
+}));
 
-router.delete('/projects/:id', verifyToken, async (req, res) => {
-  try {
-    await Project.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
+router.delete('/projects/:id', protect, asyncHandler(async (req, res) => {
+  const project = await Project.findByIdAndDelete(req.params.id);
+  if (!project) {
+    res.status(404);
+    throw new Error('Project not found');
   }
-});
+  res.json({ message: 'Project removed' });
+}));
 
 // -------------------- GALLERY --------------------
-router.get('/gallery', async (req, res) => {
-  try {
-    const gallery = await Gallery.find().sort('order');
-    res.json(gallery);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to fetch gallery items' });
+router.get('/gallery', asyncHandler(async (req, res) => {
+  const gallery = await Gallery.find().sort('order');
+  res.json(gallery);
+}));
+
+router.post('/gallery', protect, asyncHandler(async (req, res) => {
+  const item = new Gallery(req.body);
+  await item.save();
+  res.status(201).json(item);
+}));
+
+router.put('/gallery/:id', protect, asyncHandler(async (req, res) => {
+  const item = await Gallery.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  if (!item) {
+    res.status(404);
+    throw new Error('Gallery item not found');
   }
-});
+  res.json(item);
+}));
 
-router.post('/gallery', verifyToken, async (req, res) => {
-  try {
-    const item = new Gallery(req.body);
-    await item.save();
-    res.json(item);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
+router.delete('/gallery/:id', protect, asyncHandler(async (req, res) => {
+  const item = await Gallery.findById(req.params.id);
+  if (!item) {
+    res.status(404);
+    throw new Error('Gallery item not found');
   }
-});
 
-router.put('/gallery/:id', verifyToken, async (req, res) => {
-  try {
-    const item = await Gallery.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(item);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
+  if (item.publicId) {
+    await cloudinary.uploader.destroy(item.publicId);
   }
-});
 
-router.delete('/gallery/:id', verifyToken, async (req, res) => {
-  try {
-    const item = await Gallery.findById(req.params.id);
-    if (!item) return res.status(404).json({ message: 'Gallery item not found' });
-
-    if (item.publicId) await cloudinary.uploader.destroy(item.publicId);
-
-    await item.deleteOne();
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err.message });
-  }
-});
+  await item.deleteOne();
+  res.json({ message: 'Gallery item removed' });
+}));
 
 export default router;

@@ -1,10 +1,10 @@
-import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import express from 'express';
 import authRoutes from './routes/auth.js';
-import dashboardRoutes from './routes/dashboard.js';
-import contentRoutes from './routes/content.js';
-import mongoose from 'mongoose';
 import cors from 'cors';
+import dashboardRoutes from './routes/dashboard.js';
+import contentRoutes from './routes/content.js'; // This should now correctly point to your main content router
+import dotenv from 'dotenv';
 import healthRoutes from './routes/health.js'; // Import health routes
 import errorHandler from './middleware/errorHandler.js'; // Import the handler
 
