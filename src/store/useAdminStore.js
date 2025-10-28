@@ -1,8 +1,13 @@
-import axios from 'axios';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import axios from 'axios';
 
+// Ensure API_URL is always a valid string, defaulting to a relative path.
 const API_URL = import.meta.env.VITE_API_URL || '/api';
+
+const api = axios.create({
+  baseURL: API_URL,
+});
 
 const useAdminStore = create(
   persist(
@@ -13,7 +18,7 @@ const useAdminStore = create(
 
       login: async (email, password) => {
         try {
-          const response = await axios.post(`${API_URL}/auth/login`, {
+          const response = await api.post(`/auth/login`, {
             email,
             password,
           });
@@ -38,11 +43,11 @@ const useAdminStore = create(
         try {
           const config = {
             method,
-            url: `${API_URL}${endpoint}`,
+            url: endpoint,
             headers: token ? { Authorization: `Bearer ${token}` } : {},
             data,
           };
-          const response = await axios(config);
+          const response = await api(config);
           return response.data;
         } catch (error) {
           throw error.response?.data || error.message;
