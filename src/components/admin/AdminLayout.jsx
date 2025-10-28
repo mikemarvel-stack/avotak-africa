@@ -9,12 +9,27 @@ import AdminServices from './AdminServices';
 import AdminProjects from './AdminProjects';
 import AdminProduce from './AdminProduce';
 import AdminGallery from './AdminGallery';
+import Navbar from '../Navbar';
+import Footer from '../Footer';
+import StickySocials from '../StickySocials';
+import BackToTop from '../BackToTop';
 
 export default function AdminLayout() {
   const { isAdmin } = useAdminStore();
 
   if (!isAdmin) {
-    return <AdminLogin />;
+    // If not logged in, show the login page within the main site layout
+    return (
+      <div className="min-h-screen flex flex-col relative bg-white text-gray-800 antialiased">
+        <Navbar />
+        <StickySocials />
+        <BackToTop />
+        <main className="flex-1 flex items-center justify-center">
+          <AdminLogin />
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   return (
