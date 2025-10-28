@@ -5,7 +5,6 @@ import Service from '../models/Service.js';
 import Produce from '../models/Produce.js';
 import Project from '../models/Project.js';
 import AboutContent from '../models/AboutContent.js';
-import ServicesContent from '../models/ServicesContent.js';
 
 // --- Home Content ---
 export const getHomeContent = async (req, res) => {
@@ -38,26 +37,18 @@ export const updateHomeContent = async (req, res) => {
 // --- Services Content ---
 export const getServicesContent = async (req, res) => {
   try {
-    const content = await ServicesContent.findOneOrCreate();
-    res.json(content);
+    // Using Service model directly as there is no ServicesContent model
+    const services = await Service.find({});
+    res.json(services);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching services content', error: error.message });
   }
 };
 
 export const updateServicesContent = async (req, res) => {
-  try {
-    const content = await ServicesContent.findOneOrCreate();
-    const { title, description } = req.body;
-
-    content.title = title ?? content.title;
-    content.description = description ?? content.description;
-
-    const updatedContent = await content.save();
-    res.json(updatedContent);
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating services content', error: error.message });
-  }
+  // This function might need further implementation based on how you want to update services.
+  // For now, it will return an error as it's not fully implemented.
+  res.status(501).json({ message: 'Updating services content is not implemented yet.' });
 };
 
 // --- About Content ---
