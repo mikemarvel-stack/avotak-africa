@@ -2,8 +2,15 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import axios from 'axios';
 
-// Ensure API_URL is always a valid string, defaulting to a relative path.
+// --- ROBUST API CONFIGURATION ---
+// Log the env variable at build time to see what Netlify is providing.
+console.log(`VITE_API_URL from env: "${import.meta.env.VITE_API_URL}"`);
+
+// If VITE_API_URL is undefined, null, or an empty string, default to '/api'.
 const API_URL = import.meta.env.VITE_API_URL || '/api';
+
+console.log(`Final API_URL used: "${API_URL}"`);
+// --- END OF ROBUST API CONFIGURATION ---
 
 const api = axios.create({
   baseURL: API_URL,
@@ -12,49 +19,41 @@ const api = axios.create({
 const useAdminStore = create(
   persist(
     (set, get) => ({
-      token: null,
       isAdmin: false,
-      error: null,
-
-      login: async (email, password) => {
-        try {
-          const response = await api.post(`/auth/login`, {
-            email,
-            password,
-          });
-          const { token } = response.data;
-          set({ token, isAdmin: true, error: null });
-          return true;
-        } catch (error) {
-          set({
-            error: error.response?.data?.message || 'Login failed',
-            isAdmin: false,
-          });
-          return false;
-        }
-      },
-
-      logout: () => {
-        set({ token: null, isAdmin: false });
-      },
-
+      token: null,
       apiCall: async (endpoint, method = 'GET', data = null) => {
-        const { token } = get();
         try {
-          const config = {
-            method,
+          const response = await api({
             url: endpoint,
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
+            method,
             data,
-          };
-          const response = await api(config);
+            headers: {
+              ...(get().token && { Authorization: `Bearer ${get().token}` }),
+            },
+          });
           return response.data;
         } catch (error) {
-          throw error.response?.data || error.message;
+          console.error('API call failed:', error.response || error.message);
+          if (error.response && error.response.status === 401) {
+            // Token is invalid or expired, log out
+            set({ isAdmin: false, token: null });
+          }
+          throw error;
         }
       },
+      login: async (credentials) => {
+        const { token } = await get().apiCall('/auth/login', 'POST', credentials);
+        if (token) {
+          set({ isAdmin: true, token });
+        }
+      },
+      logout: () => {
+        set({ isAdmin: false, token: null });
+      },
     }),
-    { name: 'admin-storage' }
+    {
+      name: 'admin-storage', // name of the item in the storage (must be unique)
+    }
   )
 );
 
