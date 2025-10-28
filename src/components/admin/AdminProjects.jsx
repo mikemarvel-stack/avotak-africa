@@ -7,7 +7,7 @@ export default function AdminProjects() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const [currentProject, setCurrentProject] = useState({ title: '', description: '', imageUrl: '' });
+  const [currentProject, setCurrentProject] = useState({ title: '', description: '', imageUrl: '', category: '' });
   const [isEditing, setIsEditing] = useState(false);
 
   const fetchProjects = async () => {
@@ -68,7 +68,7 @@ export default function AdminProjects() {
 
   const resetForm = () => {
     setIsEditing(false);
-    setCurrentProject({ title: '', description: '', imageUrl: '' });
+    setCurrentProject({ title: '', description: '', imageUrl: '', category: '' });
     setIsFormVisible(false);
   };
 
@@ -120,6 +120,17 @@ export default function AdminProjects() {
               className="w-full p-2 border rounded-md"
               required
             />
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Category</label>
+              <input
+                name="category"
+                value={currentProject.category}
+                onChange={handleInputChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                placeholder="e.g., Farm Management, Crop Consulting"
+                required
+              />
+            </div>
             <div className="flex justify-end space-x-2">
               <button
                 type="button"
@@ -149,6 +160,7 @@ export default function AdminProjects() {
             />
             <h3 className="font-bold text-lg mb-2">{project.title}</h3>
             <p className="text-gray-600 mb-2">{project.description}</p>
+            <p className="text-gray-500 text-sm mb-2">Category: {project.category}</p>
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => handleEdit(project)}
