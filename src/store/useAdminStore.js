@@ -9,6 +9,7 @@ const useAdminStore = create(
       isAdmin: false,
       error: null,
 
+      // -------------------- LOGIN --------------------
       login: async (email, password) => {
         try {
           set({ error: null });
@@ -24,17 +25,24 @@ const useAdminStore = create(
         }
       },
 
+      // -------------------- LOGOUT --------------------
       logout: () => {
         setAuthToken(null);
         set({ token: null, isAdmin: false, error: null });
       },
 
+      // -------------------- CHECK AUTH --------------------
       checkAuth: () => {
         const token = get().token;
-        if (token) setAuthToken(token) && set({ isAdmin: true });
-        else set({ isAdmin: false });
+        if (token) {
+          setAuthToken(token);
+          set({ isAdmin: true });
+        } else {
+          set({ isAdmin: false });
+        }
       },
 
+      // -------------------- GENERIC API CALL --------------------
       apiCall: async (endpoint, method = 'GET', body = null) => {
         try {
           const config = { method, url: endpoint };
@@ -47,11 +55,33 @@ const useAdminStore = create(
           throw new Error(message);
         }
       },
+
+      // -------------------- SPECIFIC CRUD HELPERS --------------------
+      fetchServices: () => get().apiCall('/content/services'),
+      addService: (data) => get().apiCall('/content/services', 'POST', data),
+      updateService: (id, data) => get().apiCall(`/content/services/${id}`, 'PUT', data),
+      deleteService: (id) => get().apiCall(`/content/services/${id}`, 'DELETE', null),
+
+      fetchProjects: () => get().apiCall('/content/projects'),
+      addProject: (data) => get().apiCall('/content/projects', 'POST', data),
+      updateProject: (id, data) => get().apiCall(`/content/projects/${id}`, 'PUT', data),
+      deleteProject: (id) => get().apiCall(`/content/projects/${id}`, 'DELETE', null),
+
+      fetchProduce: () => get().apiCall('/content/produce'),
+      addProduce: (data) => get().apiCall('/content/produce', 'POST', data),
+      updateProduce: (id, data) => get().apiCall(`/content/produce/${id}`, 'PUT', data),
+      deleteProduce: (id) => get().apiCall(`/content/produce/${id}`, 'DELETE', null),
+
+      fetchGallery: () => get().apiCall('/content/gallery'),
+      addGalleryItem: (data) => get().apiCall('/content/gallery', 'POST', data),
+      updateGalleryItem: (id, data) => get().apiCall(`/content/gallery/${id}`, 'PUT', data),
+      deleteGalleryItem: (id) => get().apiCall(`/content/gallery/${id}`, 'DELETE', null),
     }),
     { name: 'admin-storage' }
   )
 );
 
+// Initialize auth token if stored
 useAdminStore.getState().checkAuth();
 
 export default useAdminStore;

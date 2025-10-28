@@ -1,4 +1,3 @@
-
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -13,21 +12,31 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// -------------------- CORS --------------------
+app.use(cors({
+  origin: [
+    'https://avotakafrica.netlify.app', // frontend URL
+    'http://localhost:5173'             // local dev
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}));
+
+// -------------------- MIDDLEWARE --------------------
 app.use(express.json());
 
-// Routes
+// -------------------- ROUTES --------------------
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/content', contentRoutes);
 
-// Health check route
+// Health check
 app.get('/', (req, res) => {
   res.send('Avotak Africa API is running successfully.');
 });
 
-// MongoDB connection
+// -------------------- MONGODB CONNECTION --------------------
 const mongoUri = process.env.MONGO_URI;
 
 if (!mongoUri) {
@@ -42,5 +51,5 @@ mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
   })
   .catch(err => {
     console.error('❌ MongoDB connection error:', err.message);
-    process.exit(1); // Exit on connection error
+    process.exit(1);
   });

@@ -1,12 +1,12 @@
-// routes/content.js
 import express from 'express';
 import { verifyToken } from '../utils/auth.js';
+import { v2 as cloudinary } from 'cloudinary';
+
 import HomeContent from '../models/HomeContent.js';
 import Service from '../models/Service.js';
 import Project from '../models/Project.js';
 import Produce from '../models/Produce.js';
 import Gallery from '../models/Gallery.js';
-import { v2 as cloudinary } from 'cloudinary';
 
 const router = express.Router();
 
@@ -40,8 +40,13 @@ router.put('/home', verifyToken, async (req, res) => {
 
 // -------------------- SERVICES --------------------
 router.get('/services', async (req, res) => {
-  const services = await Service.find().sort('order');
-  res.json(services);
+  try {
+    const services = await Service.find().sort('order');
+    res.json(services);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to fetch services' });
+  }
 });
 
 router.post('/services', verifyToken, async (req, res) => {
@@ -77,8 +82,13 @@ router.delete('/services/:id', verifyToken, async (req, res) => {
 
 // -------------------- PROJECTS --------------------
 router.get('/projects', async (req, res) => {
-  const projects = await Project.find().sort('order');
-  res.json(projects);
+  try {
+    const projects = await Project.find().sort('order');
+    res.json(projects);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to fetch projects' });
+  }
 });
 
 router.post('/projects', verifyToken, async (req, res) => {
@@ -114,8 +124,13 @@ router.delete('/projects/:id', verifyToken, async (req, res) => {
 
 // -------------------- PRODUCE --------------------
 router.get('/produce', async (req, res) => {
-  const produce = await Produce.find().sort('order');
-  res.json(produce);
+  try {
+    const produce = await Produce.find().sort('order');
+    res.json(produce);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to fetch produce' });
+  }
 });
 
 router.post('/produce', verifyToken, async (req, res) => {
@@ -186,7 +201,6 @@ router.delete('/gallery/:id', verifyToken, async (req, res) => {
     const item = await Gallery.findById(req.params.id);
     if (!item) return res.status(404).json({ message: 'Gallery item not found' });
 
-    // Delete image from Cloudinary if it exists
     if (item.publicId) await cloudinary.uploader.destroy(item.publicId);
 
     await item.deleteOne();
