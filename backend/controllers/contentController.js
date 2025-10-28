@@ -7,8 +7,6 @@ import Project from '../models/Project.js';
 import AboutContent from '../models/AboutContent.js';
 import ServicesContent from '../models/ServicesContent.js';
 
-// ... existing code
-
 // --- Home Content ---
 export const getHomeContent = async (req, res) => {
   try {
@@ -134,7 +132,7 @@ export const updateProduce = async (req, res) => {
     const updatedProduce = await produce.save();
     res.json(updatedProduce);
   } else {
-    res.status(404).json({ message: 'Produce item not found' });
+    res.status(404).json({ message: 'Produce not found' });
   }
 };
 
@@ -151,15 +149,4 @@ export const deleteProduce = async (req, res) => {
 
   await Produce.deleteOne({ _id: id });
   res.json({ message: 'Produce item removed' });
-};
-
-export {
-  getHomeContent,
-  updateHomeContent,
-  getServicesContent,
-  updateServicesContent,
-  getProduce,
-  addProduce,
-  updateProduce,
-  deleteProduce,
 };
