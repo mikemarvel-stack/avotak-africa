@@ -9,6 +9,59 @@ import ServicesContent from '../models/ServicesContent.js';
 
 // ... existing code
 
+// --- Home Content ---
+export const getHomeContent = async (req, res) => {
+  try {
+    const content = await HomeContent.findOneOrCreate();
+    res.json(content);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching home content', error: error.message });
+  }
+};
+
+export const updateHomeContent = async (req, res) => {
+  try {
+    const content = await HomeContent.findOneOrCreate();
+    const { heroTitle, heroSubtitle, featuredProjectsTitle, featuredProjectsSubtitle } = req.body;
+
+    content.heroTitle = heroTitle ?? content.heroTitle;
+    content.heroSubtitle = heroSubtitle ?? content.heroSubtitle;
+    content.featuredProjectsTitle = featuredProjectsTitle ?? content.featuredProjectsTitle;
+    content.featuredProjectsSubtitle = featuredProjectsSubtitle ?? content.featuredProjectsSubtitle;
+
+    const updatedContent = await content.save();
+    res.json(updatedContent);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating home content', error: error.message });
+  }
+};
+
+
+// --- Services Content ---
+export const getServicesContent = async (req, res) => {
+  try {
+    const content = await ServicesContent.findOneOrCreate();
+    res.json(content);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching services content', error: error.message });
+  }
+};
+
+export const updateServicesContent = async (req, res) => {
+  try {
+    const content = await ServicesContent.findOneOrCreate();
+    const { title, description } = req.body;
+
+    content.title = title ?? content.title;
+    content.description = description ?? content.description;
+
+    const updatedContent = await content.save();
+    res.json(updatedContent);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating services content', error: error.message });
+  }
+};
+
 // --- About Content ---
 
 export const getAboutContent = async (req, res) => {
@@ -66,11 +119,28 @@ export const addProduce = async (req, res) => {
 // @route   PUT /api/content/produce/:id
 // @access  Private
 export const updateProduce = async (req, res) => {
-// ... existing code
+  const { id } = req.params;
+  const { name, description, price, category, imageUrl } = req.body;
+
+  const produce = await Produce.findById(id);
+
+  if (produce) {
+    produce.name = name || produce.name;
+    produce.description = description || produce.description;
+    produce.price = price || produce.price;
+    produce.category = category || produce.category;
+    produce.imageUrl = imageUrl || produce.imageUrl;
+
+    const updatedProduce = await produce.save();
+    res.json(updatedProduce);
+  } else {
+    res.status(404).json({ message: 'Produce item not found' });
   }
-  res.json({ message: 'Produce item removed' });
 };
 
+// @desc    Delete a produce item
+// @route   DELETE /api/content/produce/:id
+// @access  Private
 export const deleteProduce = async (req, res) => {
   const { id } = req.params;
   const produce = await Produce.findById(id);
@@ -79,7 +149,7 @@ export const deleteProduce = async (req, res) => {
     return res.status(404).json({ message: 'Produce item not found' });
   }
 
-  await produce.remove();
+  await Produce.deleteOne({ _id: id });
   res.json({ message: 'Produce item removed' });
 };
 
