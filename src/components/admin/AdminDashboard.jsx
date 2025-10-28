@@ -1,17 +1,22 @@
+import useAdminStore from '../../store/useAdminStore';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useAdminStore from '../../store/useAdminStore';
-import { FaFolder, FaCogs, FaLeaf, FaImages } from 'react-icons/fa';
+import { Clipboard, Briefcase, ShoppingCart, Image, Home } from 'lucide-react';
 
-const StatCard = ({ title, count, icon, link }) => (
-  <Link
-    to={link}
-    className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center space-x-4 border border-transparent hover:border-green-500"
-  >
-    <div className="text-3xl text-green-600">{icon}</div>
-    <div>
-      <p className="text-gray-500 text-sm">{title}</p>
-      <p className="text-2xl font-bold">{count}</p>
+const StatCard = ({ icon, title, value, link, loading }) => (
+  <Link to={link} className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow transform hover:-translate-y-1">
+    <div className="flex items-center">
+      <div className="p-3 bg-green-100 rounded-full">
+        {icon}
+      </div>
+      <div className="ml-4">
+        <p className="text-sm font-medium text-gray-500">{title}</p>
+        {loading ? (
+          <div className="h-6 w-8 bg-gray-200 rounded animate-pulse"></div>
+        ) : (
+          <p className="text-2xl font-bold text-gray-800">{value}</p>
+        )}
+      </div>
     </div>
   </Link>
 );
@@ -22,11 +27,11 @@ export default function AdminDashboard() {
     services: 0,
     produce: 0,
     gallery: 0,
+    home: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const apiCall = useAdminStore((state) => state.apiCall);
+  const { user, apiCall } = useAdminStore(state => ({ user: state.user, apiCall: state.apiCall }));
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -39,19 +44,22 @@ export default function AdminDashboard() {
           '/content/services',
           '/content/produce',
           '/content/gallery',
+          '/content/home',
         ];
 
-        const responses = await Promise.all(endpoints.map((endpoint) => apiCall(endpoint)));
-
+        const responses = await Promise.all(endpoints.map(url => apiCall(url)));
+        
         setStats({
           projects: responses[0]?.length || 0,
           services: responses[1]?.length || 0,
           produce: responses[2]?.length || 0,
           gallery: responses[3]?.length || 0,
+          home: responses[4]?.sliderImages?.length || 0,
         });
+
       } catch (err) {
-        console.error('Failed to load dashboard stats:', err);
-        setError('Failed to load dashboard statistics.');
+        console.error('Failed to fetch dashboard stats:', err);
+        setError('Could not load dashboard data.');
       } finally {
         setLoading(false);
       }
@@ -60,33 +68,32 @@ export default function AdminDashboard() {
     fetchStats();
   }, [apiCall]);
 
-  if (loading) return <div className="p-8 text-gray-600">Loading dashboard...</div>;
+  const sections = [
+    { key: 'home', title: 'Home Slider Images', link: '/admin/home', icon: <Home className="w-6 h-6 text-green-600" /> },
+    { key: 'projects', title: 'Projects', link: '/admin/projects', icon: <Clipboard className="w-6 h-6 text-green-600" /> },
+    { key: 'services', title: 'Services', link: '/admin/services', icon: <Briefcase className="w-6 h-6 text-green-600" /> },
+    { key: 'produce', title: 'Produce Items', link: '/admin/produce', icon: <ShoppingCart className="w-6 h-6 text-green-600" /> },
+    { key: 'gallery', title: 'Gallery Images', link: '/admin/gallery', icon: <Image className="w-6 h-6 text-green-600" /> },
+  ];
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+    <div className="p-8 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+      <p className="text-gray-600 mb-8">Welcome back, {user?.username || 'Admin'}!</p>
 
-      {error && (
-        <div className="bg-red-100 text-red-700 p-3 rounded-md mb-6 border border-red-300">
-          {error}
-        </div>
-      )}
+      {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-6">{error}</div>}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Projects" count={stats.projects} icon={<FaFolder />} link="/dashboard/projects" />
-        <StatCard title="Services" count={stats.services} icon={<FaCogs />} link="/dashboard/services" />
-        <StatCard title="Produce" count={stats.produce} icon={<FaLeaf />} link="/dashboard/produce" />
-        <StatCard title="Gallery Items" count={stats.gallery} icon={<FaImages />} link="/dashboard/gallery" />
-      </div>
-
-      <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-3">Welcome, Admin 👋</h2>
-        <p className="text-gray-700 leading-relaxed">
-          From this dashboard, you can manage all the website’s content — including homepage
-          text, services, projects, produce listings, and gallery images.
-          <br />
-          Use the sidebar or the cards above to navigate to different sections.
-        </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sections.map(section => (
+          <StatCard
+            key={section.key}
+            icon={section.icon}
+            title={section.title}
+            value={stats[section.key]}
+            link={section.link}
+            loading={loading}
+          />
+        ))}
       </div>
     </div>
   );

@@ -50,13 +50,21 @@ export default function Contact() {
   };
 
   return (
-    <section className="max-w-3xl mx-auto px-4 py-12 relative">
-      <h1 className="text-3xl font-bold mb-6">Contact Us</h1>
-      <p className="text-gray-600 mb-6">
-        Send us an inquiry about consulting, produce supply, or partnerships.
-      </p>
+    <>
+      <section className="max-w-3xl mx-auto px-4 py-12 relative">
+        <h1 className="text-3xl font-bold mb-6">Contact Us</h1>
+        <p className="text-gray-600 mb-6">
+          Send us an inquiry about consulting, produce supply, or partnerships.
+        </p>
 
-      <ContactForm />
+        <ContactForm />
+
+        <div className="mt-12 text-center">
+          <p className="text-gray-600">
+            For immediate assistance, you can also use our live chat.
+          </p>
+        </div>
+      </section>
 
       {/* Avotak Africa Chat Button */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
@@ -92,6 +100,6 @@ export default function Contact() {
           }
         `}
       </style>
-    </section>
+    </>
   );
 }

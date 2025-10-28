@@ -10,6 +10,7 @@ const TESTS = [
   { name: 'Footer', path: '../components/Footer.jsx' },
   { name: 'Home (page)', path: '../pages/Home.jsx' },
   { name: 'Produce (page)', path: '../pages/Produce.jsx' },
+  { name: 'Projects (page)', path: '../pages/Projects.jsx' },
 ]
 
 export default function Bisect() {

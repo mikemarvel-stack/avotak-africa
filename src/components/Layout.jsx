@@ -1,11 +1,10 @@
 
-import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar';
 import Footer from './Footer';
+import Navbar from './Navbar';
+import TawkChat from './TawkChat';
 import StickySocials from './StickySocials';
 import BackToTop from './BackToTop';
-import TawkChat from './TawkChat';
-
+import { Outlet } from 'react-router-dom';
 export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col relative bg-white text-gray-800 antialiased">

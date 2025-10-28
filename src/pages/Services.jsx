@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Leaf,
   Truck,
@@ -7,62 +7,43 @@ import {
   Factory,
   Globe,
 } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState, useEffect } from 'react'
+import api from '../services/api'; // Import the api service
+
+// A map to associate service titles with icons, as icons can't be stored in the DB.
+const iconMap = {
+  'Farm Advisory & Consulting': <Leaf className="w-8 h-8 text-green-600" />,
+  'Post-Harvest Handling & Quality Management': <Truck className="w-8 h-8 text-green-600" />,
+  'Market Linkages & Export Facilitation': <Globe className="w-8 h-8 text-green-600" />,
+  'Training & Capacity Building': <GraduationCap className="w-8 h-8 text-green-600" />,
+  'Sustainability & Climate-Smart Agriculture': <LineChart className="w-8 h-8 text-green-600" />,
+  'Supply Chain & Value Addition Support': <Factory className="w-8 h-8 text-green-600" />,
+};
 
 export default function Services() {
   const [activeId, setActiveId] = useState(null)
+  const [services, setServices] = useState([]); // Initialize with an empty array
 
-  const services = [
-    {
-      id: 1,
-      title: 'Farm Advisory & Consulting',
-      icon: <Leaf className="w-8 h-8 text-green-600" />,
-      desc: `Our agronomists work closely with farmers to develop customized production plans 
-      that boost yields and profitability. We conduct detailed soil analysis, crop selection guidance, 
-      pest and disease management, and irrigation planning. By combining data-driven insights with 
-      sustainable practices, we help farmers make informed decisions for every planting season.`,
-    },
-    {
-      id: 2,
-      title: 'Post-Harvest Handling & Quality Management',
-      icon: <Truck className="w-8 h-8 text-green-600" />,
-      desc: `We provide expert guidance on proper post-harvest handling to maintain freshness, reduce losses, 
-      and meet international quality standards. Our team trains farmers and aggregators on best practices 
-      for sorting, grading, packaging, and cold storage.`,
-    },
-    {
-      id: 3,
-      title: 'Market Linkages & Export Facilitation',
-      icon: <Globe className="w-8 h-8 text-green-600" />,
-      desc: `Avotak Africa connects producers directly with reliable buyers, distributors, and export channels 
-      across East Africa and beyond. We assist in meeting compliance and certification requirements, 
-      coordinate logistics, and facilitate long-term partnerships for consistent market access.`,
-    },
-    {
-      id: 4,
-      title: 'Training & Capacity Building',
-      icon: <GraduationCap className="w-8 h-8 text-green-600" />,
-      desc: `We organize on-site and virtual training sessions focused on modern agricultural techniques, 
-      agribusiness management, and food safety. Our workshops help farmers, youth groups, 
-      and agribusiness teams enhance their technical skills and competitiveness.`,
-    },
-    {
-      id: 5,
-      title: 'Sustainability & Climate-Smart Agriculture',
-      icon: <LineChart className="w-8 h-8 text-green-600" />,
-      desc: `Our sustainability programs promote environmentally responsible farming practices. 
-      We support climate adaptation through soil conservation, organic inputs, water efficiency, 
-      and agroforestry initiatives to build resilient farming systems.`,
-    },
-    {
-      id: 6,
-      title: 'Supply Chain & Value Addition Support',
-      icon: <Factory className="w-8 h-8 text-green-600" />,
-      desc: `From farm to market, we help streamline your supply chain operations and identify 
-      opportunities for value addition. Whether through processing, branding, or packaging innovations, 
-      Avotak Africa empowers agripreneurs to increase profitability.`,
-    },
-  ]
+  useEffect(() => {
+    // Fetch services from the backend when the component mounts
+    const fetchServices = async () => {
+      try {
+        const response = await api.get('/content/services');
+        // Assuming the backend returns an array of services with _id, title, and desc
+        const servicesWithIcons = response.data.map(service => ({
+          ...service,
+          id: service._id, // Use MongoDB's _id
+          icon: iconMap[service.title] || <Leaf className="w-8 h-8 text-green-600" /> // Assign icon
+        }));
+        setServices(servicesWithIcons);
+      } catch (error) {
+        console.error("Failed to fetch services:", error);
+        // Optionally, set an error state to show a message to the user
+      }
+    };
+
+    fetchServices();
+  }, []); // The empty dependency array ensures this runs only once
 
   const toggleDescription = (id) => {
     setActiveId(activeId === id ? null : id)

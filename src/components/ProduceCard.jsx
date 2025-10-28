@@ -1,52 +1,51 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import placeholderImg from '../assets/placeholder-fruit.svg';
+import { Link } from 'react-router-dom';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
-export default function ProduceCard({ item }) {
-  const categoryColors = {
-    Fruit: 'bg-green-200 text-green-800',
-    Vegetable: 'bg-yellow-200 text-yellow-800',
-    Herb: 'bg-blue-200 text-blue-800',
-    Spice: 'bg-red-200 text-red-800',
+export default function ProduceCard({ produce, index }) {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: index * 0.1,
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    },
   };
 
   return (
-    <motion.article
-      layout
-      className="relative bg-white rounded-2xl shadow-lg overflow-hidden"
-      whileHover={{ scale: 1.03 }}
+    <motion.div
+      variants={cardVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 group"
     >
-      <img
-        src={item.image || placeholderImg}
-        alt={item.name}
-        className="w-full h-40 object-cover rounded-t-2xl"
-      />
-      {/* Hover overlay */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileHover={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-white p-4 rounded-t-2xl text-center"
-      >
-        {item.harvestSeason && <div className="text-sm mb-1">Harvest: {item.harvestSeason}</div>}
-        {item.availability && <div className="text-sm">Availability: {item.availability}</div>}
-      </motion.div>
-
-      <div className="p-4">
-        {/* Category badge with icon */}
-        <span
-          className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full ${
-            categoryColors[item.category] || 'bg-gray-200 text-gray-800'
-          }`}
-        >
-          {item.categoryIcon && <span>{item.categoryIcon}</span>}
-          {item.category}
-        </span>
-
-        <h3 className="font-semibold text-lg mt-2">{item.name}</h3>
-        <p className="text-sm text-gray-600">{item.description}</p>
-        <div className="mt-2 text-sm text-gray-700">Origin: {item.origin}</div>
-      </div>
-    </motion.article>
+      <Link to={`/produce/${produce.slug}`} className="block">
+        <div className="relative h-56">
+          <LazyLoadImage
+            src={produce.imageUrl}
+            alt={produce.name}
+            effect="blur"
+            className="w-full h-full object-cover"
+            wrapperClassName="w-full h-full"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-all duration-300"></div>
+          <div className="absolute bottom-0 left-0 p-4">
+            <h3 className="text-white text-xl font-bold">{produce.name}</h3>
+          </div>
+        </div>
+        <div className="p-4">
+          <p className="text-gray-600 text-sm mb-2">{produce.shortDescription}</p>
+          <span className="text-green-600 font-semibold hover:text-green-700 transition-colors duration-300">
+            Learn More &rarr;
+          </span>
+        </div>
+      </Link>
+    </motion.div>
   );
 }

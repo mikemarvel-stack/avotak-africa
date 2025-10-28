@@ -1,11 +1,12 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
 import dotenv from 'dotenv';
-
+import express from 'express';
 import authRoutes from './routes/auth.js';
 import dashboardRoutes from './routes/dashboard.js';
 import contentRoutes from './routes/content.js';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import healthRoutes from './routes/health.js'; // Import health routes
+import errorHandler from './middleware/errorHandler.js'; // Import the handler
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use(cors({
 app.use(express.json());
 
 // -------------------- ROUTES --------------------
+app.use('/api/health', healthRoutes); // Add health check route
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/content', contentRoutes);
@@ -35,6 +37,9 @@ app.use('/api/content', contentRoutes);
 app.get('/', (req, res) => {
   res.send('Avotak Africa API is running successfully.');
 });
+
+// Add the error handler as the last middleware, before the DB connection
+app.use(errorHandler);
 
 // -------------------- MONGODB CONNECTION --------------------
 const mongoUri = process.env.MONGO_URI;

@@ -1,84 +1,75 @@
-import express from 'express';
-import { verifyToken } from '../utils/auth.js';
-import { v2 as cloudinary } from 'cloudinary';
 
-import HomeContent from '../models/HomeContent.js';
-import Service from '../models/Service.js';
-import Project from '../models/Project.js';
-import Produce from '../models/Produce.js';
-import Gallery from '../models/Gallery.js';
+import express from 'express';
+import Joi from 'joi';
+import asyncHandler from 'express-async-handler';
+import {
+  getHomeContent,
+  updateHomeContent,
+  getServicesContent,
+  updateServicesContent,
+  getProduce,
+  addProduce,
+  updateProduce,
+  deleteProduce
+} from '../controllers/contentController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// -------------------- HOME --------------------
-router.get('/home', async (req, res) => {
-  try {
-    const content = await HomeContent.findOne() || {};
-    res.json(content);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to fetch home content' });
-  }
+// --- Validation Schemas ---
+
+// Schema for updating home content
+const homeContentSchema = Joi.object({
+  heroTitle: Joi.string().required(),
+  heroSubtitle: Joi.string().required(),
+  // Allow other fields to be present without validation for now
+}).unknown(true);
+
+// Schema for adding/updating produce
+const produceSchema = Joi.object({
+  name: Joi.string().required(),
+  description: Joi.string().required(),
+  price: Joi.number().min(0).required(),
+  category: Joi.string().optional().allow(''),
+  imageUrl: Joi.string().uri().optional().allow(''),
+  _id: Joi.any(), // Allow _id for updates
+  id: Joi.any(),
+  image: Joi.any(),
+  __v: Joi.any(),
 });
 
-router.put('/home', verifyToken, async (req, res) => {
-  try {
-    let content = await HomeContent.findOne();
-    if (content) {
-      Object.assign(content, req.body);
-      await content.save();
-    } else {
-      content = new HomeContent(req.body);
-      await content.save();
-    }
-    res.json(content);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to update home content' });
-  }
-});
+// --- Validation Middleware ---
 
-// -------------------- SERVICES --------------------
-router.get('/services', async (req, res) => {
-  try {
-    const services = await Service.find().sort('order');
-    res.json(services);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to fetch services' });
+const validateRequest = (schema) => (req, res, next) => {
+  const { error } = schema.validate(req.body);
+  if (error) {
+    // Send a 400 Bad Request response if validation fails
+    return res.status(400).json({ message: error.details[0].message });
   }
-});
+  next();
+};
 
-router.post('/services', verifyToken, async (req, res) => {
-  try {
-    const service = new Service(req.body);
-    await service.save();
-    res.json(service);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
-  }
-});
 
-router.put('/services/:id', verifyToken, async (req, res) => {
-  try {
-    const service = await Service.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(service);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
-  }
-});
+// --- Content Routes ---
 
-router.delete('/services/:id', verifyToken, async (req, res) => {
-  try {
-    await Service.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
-  }
-});
+// Home Page Content
+router.route('/home')
+  .get(getHomeContent)
+  .put(protect, validateRequest(homeContentSchema), asyncHandler(updateHomeContent));
+
+// Services Page Content
+router.route('/services')
+  .get(getServicesContent)
+  .put(protect, asyncHandler(updateServicesContent));
+
+// Produce Content
+router.route('/produce')
+  .get(getProduce)
+  .post(protect, validateRequest(produceSchema), asyncHandler(addProduce));
+
+router.route('/produce/:id')
+  .put(protect, validateRequest(produceSchema), asyncHandler(updateProduce))
+  .delete(protect, asyncHandler(deleteProduce));
 
 // -------------------- PROJECTS --------------------
 router.get('/projects', async (req, res) => {
@@ -115,48 +106,6 @@ router.put('/projects/:id', verifyToken, async (req, res) => {
 router.delete('/projects/:id', verifyToken, async (req, res) => {
   try {
     await Project.findByIdAndDelete(req.params.id);
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
-  }
-});
-
-// -------------------- PRODUCE --------------------
-router.get('/produce', async (req, res) => {
-  try {
-    const produce = await Produce.find().sort('order');
-    res.json(produce);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Failed to fetch produce' });
-  }
-});
-
-router.post('/produce', verifyToken, async (req, res) => {
-  try {
-    const item = new Produce(req.body);
-    await item.save();
-    res.json(item);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
-  }
-});
-
-router.put('/produce/:id', verifyToken, async (req, res) => {
-  try {
-    const item = await Produce.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(item);
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ message: err.message });
-  }
-});
-
-router.delete('/produce/:id', verifyToken, async (req, res) => {
-  try {
-    await Produce.findByIdAndDelete(req.params.id);
     res.json({ success: true });
   } catch (err) {
     console.error(err);
