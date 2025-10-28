@@ -2,10 +2,7 @@ import axios from 'axios';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-const API_URL =
-  import.meta.env.MODE === 'development'
-    ? 'http://localhost:5000/api'
-    : 'https://avotak-backend.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const useAdminStore = create(
   persist(
