@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import api from '../services/api'; // Import the shared api instance
+import api, { setAuthToken } from '../services/api';
 
 const useAdminStore = create(
   persist(
@@ -13,7 +13,7 @@ const useAdminStore = create(
           set({ error: null });
           const response = await api.post('/auth/login', { email, password });
           const { token } = response.data;
-          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          setAuthToken(token); // Use the helper to set the token
           set({ token, isAdmin: true });
           return true;
         } catch (err) {
@@ -25,13 +25,13 @@ const useAdminStore = create(
         }
       },
       logout: () => {
-        delete api.defaults.headers.common['Authorization'];
+        setAuthToken(null); // Use the helper to clear the token
         set({ token: null, isAdmin: false, error: null });
       },
       checkAuth: () => {
         const token = get().token;
         if (token) {
-          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          setAuthToken(token); // Use the helper to set the token on app load
           set({ isAdmin: true });
         } else {
           set({ isAdmin: false });
@@ -44,7 +44,7 @@ const useAdminStore = create(
   )
 );
 
-// Initialize auth state on app load
+// Initialize auth state on load
 useAdminStore.getState().checkAuth();
 
 export default useAdminStore;

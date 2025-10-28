@@ -1,14 +1,21 @@
 
 import axios from 'axios';
 
-// Use VITE_API_BASE from .env, otherwise default to the Render URL for development
-// or other environments where the proxy isn't used.
-const baseURL =
-  import.meta.env.VITE_API_BASE || 'https://avotak-africa.onrender.com/api';
+// Get the backend URL from environment variables.
+// Vite uses `import.meta.env.VITE_` prefix for environment variables.
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
-  baseURL: baseURL,
-  timeout: 10000,
+  baseURL: API_URL,
 });
+
+// Function to set the auth token for all subsequent requests
+export const setAuthToken = (token) => {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+};
 
 export default api;
