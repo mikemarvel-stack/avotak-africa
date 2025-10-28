@@ -7,7 +7,7 @@
   to = "https://avotak-backend.onrender.com/api/:splat"
   status = 200
   force = true
-  headers = {Access-Control-Allow-Origin = "*"}
+  # headers = {Access-Control-Allow-Origin = "*"}  <-- Let's comment this out or remove it
 
 [[redirects]]
   from = "/*"
@@ -18,4 +18,4 @@
   NODE_VERSION = "18"
 
 [context.production.environment]
-  VITE_API_URL = "https://avotak-backend.onrender.com"
+  VITE_API_URL = "/api"
