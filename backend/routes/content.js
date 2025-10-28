@@ -12,10 +12,10 @@ import {
   updateProduce,
   deleteProduce
 } from '../controllers/contentController.js';
-import { protect } from '../middleware/authMiddleware.js';
-import Project from '../models/Project.js'; // Add Project model import
-import Gallery from '../models/Gallery.js'; // Add Gallery model import
-import { cloudinary } from '../utils/cloudinary.js'; // Add Cloudinary import
+import { protect } from '../utils/auth.js'; // Corrected import path
+import Project from '../models/Project.js';
+import Gallery from '../models/Gallery.js';
+import { cloudinary } from '../utils/cloudinary.js';
 
 const router = express.Router();
 
