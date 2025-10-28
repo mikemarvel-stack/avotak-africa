@@ -31,3 +31,5 @@ export const uploadImage = async (file) => {
     throw error;
   }
 };
+
+export { cloudinary, storage };
