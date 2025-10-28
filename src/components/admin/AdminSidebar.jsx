@@ -1,10 +1,16 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAdminStore from '../../store/useAdminStore';
 
 export default function AdminSidebar() {
   const { logout } = useAdminStore();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/admin');
+  };
 
   const isActive = (path) => location.pathname === `/admin${path}`;
 
@@ -42,7 +48,7 @@ export default function AdminSidebar() {
 
       <div className="absolute bottom-0 left-0 w-64 p-4">
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="w-full flex items-center justify-center space-x-2 p-2 rounded-lg text-green-100 hover:bg-green-700"
         >
           <span className="heroicon-logout w-5 h-5" />
