@@ -7,16 +7,8 @@
 [context.production.environment]
   # Set environment variables for the production build.
   # Vite requires env vars to be prefixed with VITE_.
-  VITE_API_URL = "/api"
+  VITE_API_BASE = "/api" # Corrected variable name
   NODE_VERSION = "18"
-
-# This redirect rule is for your single-page application (SPA).
-# It ensures that any direct navigation to a route like /about or /contact
-# is handled by your index.html file. It must be the last redirect.
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
 
 # This is the proxy redirect for your API calls.
 # It forwards any request from /api/... to your backend server.
@@ -26,3 +18,11 @@
   to = "https://avotak-africa.onrender.com/api/:splat"
   status = 200
   force = true
+
+# This redirect rule is for your single-page application (SPA).
+# It ensures that any direct navigation to a route like /about or /contact
+# is handled by your index.html file. It must be the last redirect.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
