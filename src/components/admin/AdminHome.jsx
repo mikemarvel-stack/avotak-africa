@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import useAdminStore from '../../store/useAdminStore';
+import ImageUpload from './ImageUpload';
 
 export default function AdminHome() {
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState({ heroTitle: '', heroSubtitle: '', sliderImages: [] });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const apiCall = useAdminStore(state => state.apiCall);
 
   useEffect(() => {
@@ -12,10 +14,13 @@ export default function AdminHome() {
 
   const loadContent = async () => {
     try {
-      const data = await apiCall('/content/home');
-      setContent(data);
-    } catch (error) {
-      console.error('Failed to load home content:', error);
+      setLoading(true);
+      setError(null);
+      const response = await apiCall('/content/home');
+      setContent(response.data || response);
+    } catch (err) {
+      console.error('Failed to load home content:', err);
+      setError('Failed to load home content.');
     } finally {
       setLoading(false);
     }
@@ -23,20 +28,14 @@ export default function AdminHome() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    
-    const updatedContent = {
-      heroTitle: formData.get('heroTitle'),
-      heroSubtitle: formData.get('heroSubtitle'),
-      sliderImages: content?.sliderImages || [],
-      sections: content?.sections || []
-    };
-
     try {
-      await apiCall('/content/home', 'PUT', updatedContent);
-      loadContent();
-    } catch (error) {
-      console.error('Failed to update home content:', error);
+      setError(null);
+      await apiCall('/content/home', 'PUT', content);
+      await loadContent();
+      alert('Home page content updated successfully.');
+    } catch (err) {
+      console.error('Failed to update home content:', err);
+      setError('Failed to save changes.');
     }
   };
 
@@ -48,9 +47,9 @@ export default function AdminHome() {
   };
 
   const handleUpdateSliderImage = (index, field, value) => {
-    const newSliderImages = [...content.sliderImages];
-    newSliderImages[index] = { ...newSliderImages[index], [field]: value };
-    setContent(prev => ({ ...prev, sliderImages: newSliderImages }));
+    const updatedImages = [...content.sliderImages];
+    updatedImages[index] = { ...updatedImages[index], [field]: value };
+    setContent(prev => ({ ...prev, sliderImages: updatedImages }));
   };
 
   const handleRemoveSliderImage = (index) => {
@@ -65,6 +64,7 @@ export default function AdminHome() {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-6">Manage Home Page</h1>
+      {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Hero Section */}
@@ -75,7 +75,8 @@ export default function AdminHome() {
               <label className="block text-sm font-medium text-gray-700">Hero Title</label>
               <input
                 name="heroTitle"
-                defaultValue={content?.heroTitle}
+                value={content.heroTitle}
+                onChange={(e) => setContent({ ...content, heroTitle: e.target.value })}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                 required
               />
@@ -84,7 +85,8 @@ export default function AdminHome() {
               <label className="block text-sm font-medium text-gray-700">Hero Subtitle</label>
               <textarea
                 name="heroSubtitle"
-                defaultValue={content?.heroSubtitle}
+                value={content.heroSubtitle}
+                onChange={(e) => setContent({ ...content, heroSubtitle: e.target.value })}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                 rows="3"
                 required
@@ -105,20 +107,23 @@ export default function AdminHome() {
               Add Image
             </button>
           </div>
-          
+
           <div className="space-y-4">
-            {content?.sliderImages?.map((image, index) => (
+            {content.sliderImages.map((image, index) => (
               <div key={index} className="flex items-start space-x-4 p-4 border rounded-lg">
                 <div className="flex-grow grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Image URL</label>
-                    <input
-                      type="url"
-                      value={image.url}
-                      onChange={(e) => handleUpdateSliderImage(index, 'url', e.target.value)}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                      required
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
+                    <ImageUpload
+                      onImageUploaded={(url) => handleUpdateSliderImage(index, 'url', url)}
                     />
+                    {image.url && (
+                      <img
+                        src={image.url}
+                        alt={`Slide ${index + 1}`}
+                        className="h-24 w-24 object-cover rounded mt-2"
+                      />
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Caption</label>

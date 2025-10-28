@@ -9,6 +9,12 @@ const ImageUpload = ({ onImageUploaded }) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Optional: Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload a valid image file.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('image', file);
 
@@ -16,14 +22,17 @@ const ImageUpload = ({ onImageUploaded }) => {
     setError('');
 
     try {
-  const response = await api.post('/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await api.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      onImageUploaded(response.data);
-    } catch (error) {
-      console.error('Upload error:', error);
+
+      // ✅ Extract the image URL from backend response
+      const imageUrl = response.data.imageUrl || response.data.url || '';
+      if (!imageUrl) throw new Error('No image URL returned from server');
+
+      onImageUploaded(imageUrl);
+    } catch (err) {
+      console.error('Upload error:', err);
       setError('Failed to upload image. Please try again.');
     } finally {
       setUploading(false);
