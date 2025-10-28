@@ -1,15 +1,35 @@
-import React, { useState, useEffect } from 'react';
 import useAdminStore from '../../store/useAdminStore';
+import React, { useState, useEffect } from 'react';
+
+const emptyProject = {
+  title: '',
+  description: '',
+  imageUrl: '',
+  category: '',
+  client: '',
+  completionDate: '',
+  features: [],
+  order: 0,
+};
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState([]);
-  const [editingProject, setEditingProject] = useState(null);
+  const [editingProject, setEditingProject] = useState(null); // can be a project object or {} for a new one
+  const [formState, setFormState] = useState(emptyProject);
   const [loading, setLoading] = useState(true);
   const apiCall = useAdminStore(state => state.apiCall);
 
   useEffect(() => {
     loadProjects();
   }, []);
+
+  useEffect(() => {
+    if (editingProject) {
+      setFormState({ ...emptyProject, ...editingProject });
+    } else {
+      setFormState(emptyProject);
+    }
+  }, [editingProject]);
 
   const loadProjects = async () => {
     try {
@@ -22,28 +42,33 @@ export default function AdminProjects() {
     }
   };
 
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormState(prevState => ({ ...prevState, [name]: value }));
+  };
+
+  const handleCancel = () => {
+    setEditingProject(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
     const projectData = {
-      title: formData.get('title'),
-      description: formData.get('description'),
-      imageUrl: formData.get('imageUrl'),
-      category: formData.get('category'),
-      client: formData.get('client'),
-      completionDate: formData.get('completionDate'),
-      features: formData.get('features').split(',').map(f => f.trim()).filter(Boolean),
-      order: parseInt(formData.get('order'), 10)
+      ...formState,
+      features: Array.isArray(formState.features) 
+        ? formState.features 
+        : formState.features.split(',').map(f => f.trim()).filter(Boolean),
+      order: parseInt(formState.order, 10) || 0,
     };
 
     try {
-      if (editingProject) {
+      if (editingProject && editingProject._id) {
         await apiCall(`/content/projects/${editingProject._id}`, 'PUT', projectData);
       } else {
         await apiCall('/content/projects', 'POST', projectData);
       }
       loadProjects();
-      setEditingProject(null);
+      setEditingProject(null); // This will hide the form and clear it
     } catch (error) {
       console.error('Failed to save project:', error);
     }
@@ -66,7 +91,7 @@ export default function AdminProjects() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Manage Projects</h1>
         <button
-          onClick={() => setEditingProject(null)}
+          onClick={() => setEditingProject({})} // Use an empty object for a new project
           className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
         >
           Add New Project
@@ -76,12 +101,14 @@ export default function AdminProjects() {
       {/* Edit/Add Form */}
       {(editingProject !== null) && (
         <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-4">{editingProject._id ? 'Edit Project' : 'Add New Project'}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Title</label>
               <input
                 name="title"
-                defaultValue={editingProject?.title}
+                value={formState.title}
+                onChange={handleFormChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                 required
               />
@@ -90,7 +117,8 @@ export default function AdminProjects() {
               <label className="block text-sm font-medium text-gray-700">Category</label>
               <input
                 name="category"
-                defaultValue={editingProject?.category}
+                value={formState.category}
+                onChange={handleFormChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                 required
               />
@@ -99,7 +127,8 @@ export default function AdminProjects() {
               <label className="block text-sm font-medium text-gray-700">Description</label>
               <textarea
                 name="description"
-                defaultValue={editingProject?.description}
+                value={formState.description}
+                onChange={handleFormChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                 rows="4"
                 required
@@ -110,7 +139,8 @@ export default function AdminProjects() {
               <input
                 name="imageUrl"
                 type="url"
-                defaultValue={editingProject?.imageUrl}
+                value={formState.imageUrl}
+                onChange={handleFormChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                 required
               />
@@ -119,7 +149,8 @@ export default function AdminProjects() {
               <label className="block text-sm font-medium text-gray-700">Client</label>
               <input
                 name="client"
-                defaultValue={editingProject?.client}
+                value={formState.client}
+                onChange={handleFormChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
               />
             </div>
@@ -128,7 +159,8 @@ export default function AdminProjects() {
               <input
                 name="completionDate"
                 type="date"
-                defaultValue={editingProject?.completionDate?.split('T')[0]}
+                value={formState.completionDate ? formState.completionDate.split('T')[0] : ''}
+                onChange={handleFormChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
               />
             </div>
@@ -137,7 +169,8 @@ export default function AdminProjects() {
               <input
                 name="order"
                 type="number"
-                defaultValue={editingProject?.order || 0}
+                value={formState.order}
+                onChange={handleFormChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
               />
             </div>
@@ -145,7 +178,8 @@ export default function AdminProjects() {
               <label className="block text-sm font-medium text-gray-700">Features (comma-separated)</label>
               <input
                 name="features"
-                defaultValue={editingProject?.features?.join(', ')}
+                value={formState.features.join(', ')}
+                onChange={handleFormChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                 placeholder="Feature 1, Feature 2, Feature 3"
               />
@@ -154,7 +188,7 @@ export default function AdminProjects() {
           <div className="mt-4 flex justify-end space-x-2">
             <button
               type="button"
-              onClick={() => setEditingProject(null)}
+              onClick={handleCancel}
               className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
             >
               Cancel

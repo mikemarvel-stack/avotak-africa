@@ -35,7 +35,7 @@ export default function Navbar() {
           <Link to="/services" className={linkClass('/services')}>Services</Link>
           <Link to="/projects" className={linkClass('/projects')}>Projects</Link>
           <Link
-            to="/dashboard"
+            to="/admin"
             className="px-3 py-1 bg-primary text-white rounded-md"
           >
             Dashboard
@@ -74,7 +74,7 @@ export default function Navbar() {
             Projects
           </Link>
           <Link
-            to="/dashboard"
+            to="/admin"
             onClick={() => setOpen(false)}
             className="px-3 py-1 bg-primary text-white rounded-md"
           >
