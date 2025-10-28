@@ -7,6 +7,7 @@ import contentRoutes from './routes/content.js'; // This should now correctly po
 import dotenv from 'dotenv';
 import healthRoutes from './routes/health.js'; // Import health routes
 import errorHandler from './middleware/errorHandler.js'; // Import the handler
+import userRoutes from './routes/userRoutes.js'; // Import user routes
 
 dotenv.config();
 
@@ -26,12 +27,14 @@ app.use(cors({
 
 // -------------------- MIDDLEWARE --------------------
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // -------------------- ROUTES --------------------
 app.use('/api/health', healthRoutes); // Add health check route
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/content', contentRoutes);
+app.use('/api/users', userRoutes); // Use user routes
 
 // Health check
 app.get('/', (req, res) => {
