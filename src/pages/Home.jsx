@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Hero from '../components/Hero';
 import ProduceCard from '../components/ProduceCard';
-import FarmGallery from '../components/FarmGallery';
+import Gallery from '../components/Gallery';
 import api from '../services/api';
 import Testimonials from '../components/Testimonials';
 
@@ -131,7 +131,7 @@ export default function Home() {
           >
             Our Farm Gallery
           </motion.h2>
-          <FarmGallery />
+          <Gallery />
         </div>
       </section>
     </div>
