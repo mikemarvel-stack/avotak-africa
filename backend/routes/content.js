@@ -15,6 +15,7 @@ import {
 import { protect } from '../utils/auth.js'; // Corrected import path
 import Project from '../models/Project.js';
 import Gallery from '../models/Gallery.js';
+import HomeContent from '../models/HomeContent.js'; // Import the new model
 import { cloudinary } from '../utils/cloudinary.js';
 
 const router = express.Router();
@@ -57,7 +58,21 @@ const validateRequest = (schema) => (req, res, next) => {
 
 // Home Page Content
 router.route('/home')
-  .get(getHomeContent)
+  .get(asyncHandler(async (req, res) => {
+    // Find the single document for home content, or create it if it doesn't exist
+    let homeContent = await HomeContent.findOne();
+    if (!homeContent) {
+      homeContent = await HomeContent.create({
+        // You can set default values here if needed
+        sliderImages: [
+          '/src/assets/farm-1.jpg',
+          '/src/assets/farm-2.jpg',
+          '/src/assets/farm-3.jpg',
+        ]
+      });
+    }
+    res.json(homeContent);
+  }))
   .put(protect, validateRequest(homeContentSchema), asyncHandler(updateHomeContent));
 
 // Services Page Content

@@ -28,13 +28,13 @@ const defaultHomeContent = {
 };
 
 const defaultFeatured = [
-  { id: 1, name: 'Lemon', description: 'Fresh citrus from Kenyan highlands', origin: 'Kiambu', category: 'Fruit', image: lemonImg },
-  { id: 2, name: 'Basil', description: 'Aromatic culinary herb', origin: 'Nakuru', category: 'Herb', image: basilImg },
-  { id: 3, name: 'Mango', description: 'Sweet seasonal mango', origin: 'Coast', category: 'Fruit', image: mangoImg },
-  { id: 4, name: 'Avocado', description: 'Creamy and nutrient-rich', origin: 'Kenya', category: 'Fruit', image: avocadoImg },
-  { id: 5, name: 'Apple', description: 'Crisp and juicy fruit', origin: 'Kenya', category: 'Fruit', image: appleImg },
-  { id: 6, name: 'Spinach', description: 'Fresh green leafy vegetable', origin: 'Tanzania', category: 'Vegetable', image: spinachImg },
-  { id: 7, name: 'Tomato', description: 'Juicy and ripe', origin: 'Kenya', category: 'Vegetable', image: tomatoImg }
+  { id: 1, name: 'Lemon', slug: 'lemon', description: 'Fresh citrus from Kenyan highlands', origin: 'Kiambu', category: 'Fruit', image: lemonImg },
+  { id: 2, name: 'Basil', slug: 'basil', description: 'Aromatic culinary herb', origin: 'Nakuru', category: 'Herb', image: basilImg },
+  { id: 3, name: 'Mango', slug: 'mango', description: 'Sweet seasonal mango', origin: 'Coast', category: 'Fruit', image: mangoImg },
+  { id: 4, name: 'Avocado', slug: 'avocado', description: 'Creamy and nutrient-rich', origin: 'Kenya', category: 'Fruit', image: avocadoImg },
+  { id: 5, name: 'Apple', slug: 'apple', description: 'Crisp and juicy fruit', origin: 'Kenya', category: 'Fruit', image: appleImg },
+  { id: 6, name: 'Spinach', slug: 'spinach', description: 'Fresh green leafy vegetable', origin: 'Tanzania', category: 'Vegetable', image: spinachImg },
+  { id: 7, name: 'Tomato', slug: 'tomato', description: 'Juicy and ripe', origin: 'Kenya', category: 'Vegetable', image: tomatoImg }
 ];
 
 export default function Home() {
