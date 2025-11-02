@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProduceCard from '../components/ProduceCard';
 import useFetch from '../hooks/useFetch'; // Import the hook
-import { categoryIcons } from '../components/CategoryIcons'; // Assuming you extract icons
+// import { categoryIcons } from '../components/CategoryIcons'; // Assuming you extract icons
 
 // Import images from src/assets
 import lemonImg from '../assets/lemon.jpg';
@@ -51,7 +51,7 @@ export default function Produce() {
     }
   }, [fetchedProduce]);
 
-  const categories = ['All', ...Object.keys(categoryIcons)];
+  const categories = ['All', /*...Object.keys(categoryIcons)*/];
 
   const filteredProduce = activeCategory === 'All'
     ? produce
@@ -80,7 +80,8 @@ export default function Produce() {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            {categoryIcons[category]} {category}
+            {/* {categoryIcons[category]} {category} */}
+            {category}
           </button>
         ))}
       </div>
