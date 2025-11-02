@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProduceCard from '../components/ProduceCard';
 import useFetch from '../hooks/useFetch'; // Import the hook
-// import { categoryIcons } from '../components/CategoryIcons'; // Assuming you extract icons
+import { categoryIcons } from '../components/CategoryIcons'; // Assuming you extract icons
 
 // Import images from src/assets
 import lemonImg from '../assets/lemon.jpg';
@@ -51,7 +51,7 @@ export default function Produce() {
     }
   }, [fetchedProduce]);
 
-  const categories = ['All', /*...Object.keys(categoryIcons)*/];
+  const categories = ['All', ...Object.keys(categoryIcons).filter(k => k !== 'All')];
 
   const filteredProduce = activeCategory === 'All'
     ? produce
@@ -74,14 +74,13 @@ export default function Produce() {
           <button
             key={category}
             onClick={() => setActiveCategory(category)}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition flex items-center ${
               activeCategory === category
                 ? 'bg-primary text-white'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            {/* {categoryIcons[category]} {category} */}
-            {category}
+            {categoryIcons[category]} {category}
           </button>
         ))}
       </div>
