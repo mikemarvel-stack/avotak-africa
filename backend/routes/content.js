@@ -63,6 +63,8 @@ router.route('/home')
     let homeContent = await HomeContent.findOne();
     if (!homeContent) {
       homeContent = await HomeContent.create({
+        heroTitle: "Welcome to Avotak Africa",
+        heroSubtitle: "Your trusted partner in premium agricultural consultancy and produce.",
         // You can set default values here if needed
         sliderImages: [
           '/src/assets/farm-1.jpg',
