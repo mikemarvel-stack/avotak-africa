@@ -56,7 +56,7 @@ export default function Home() {
         }
 
         // Fetch featured produce
-        const featuredResponse = await api.get('/produce/featured');
+        const featuredResponse = await api.get('/content/produce/featured');
         if (featuredResponse.data && featuredResponse.data.length > 0) {
           // Alias imageUrl to image for ProduceCard compatibility
           const dynamicFeatured = featuredResponse.data.map(item => ({ ...item, image: item.imageUrl }));

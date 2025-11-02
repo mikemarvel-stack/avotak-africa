@@ -1,27 +1,38 @@
-import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-
-// Slider images
-import slide1 from "../assets/slider/slide1.jpg";
-import slide2 from "../assets/slider/slide2.jpg";
-import slide3 from "../assets/slider/slide3.jpg";
-import slide4 from "../assets/slider/slide4.jpg";
+import { motion, AnimatePresence } from "framer-motion";
 import slide5 from "../assets/slider/slide5.jpg";
+import slide3 from "../assets/slider/slide3.jpg";
+import slide2 from "../assets/slider/slide2.jpg";
+import slide1 from "../assets/slider/slide1.jpg";
+import slide4 from "../assets/slider/slide4.jpg";
 
-const images = [slide1, slide2, slide3, slide4, slide5];
+// Static fallback images
+const staticImages = [slide1, slide2, slide3, slide4, slide5];
 
-export default function HomeSlider({ children }) {
+export default function HomeSlider({ children, sliderImages }) {
   const [current, setCurrent] = useState(0);
+  
+  // Use dynamic images if available, otherwise use static ones
+  const images = sliderImages && sliderImages.length > 0 ? sliderImages : staticImages;
 
   useEffect(() => {
+    if (images.length === 0) return; // Don't start timer if no images
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % images.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [images.length]);
 
   const prevSlide = () => setCurrent((prev) => (prev - 1 + images.length) % images.length);
   const nextSlide = () => setCurrent((prev) => (prev + 1) % images.length);
+
+  if (images.length === 0) {
+    return (
+      <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] bg-gray-200 flex items-center justify-center">
+        <p>No images to display.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full overflow-hidden">

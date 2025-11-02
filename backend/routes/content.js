@@ -2,6 +2,7 @@
 import express from 'express';
 import Joi from 'joi';
 import asyncHandler from 'express-async-handler';
+
 import {
   getHomeContent,
   updateHomeContent,
@@ -12,11 +13,14 @@ import {
   updateProduce,
   deleteProduce
 } from '../controllers/contentController.js';
-import { protect } from '../utils/auth.js'; // Corrected import path
+
+import { protect } from '../utils/auth.js';
+import { cloudinary } from '../utils/cloudinary.js';
+
+import HomeContent from '../models/HomeContent.js';
+import Produce from '../models/Produce.js';
 import Project from '../models/Project.js';
 import Gallery from '../models/Gallery.js';
-import HomeContent from '../models/HomeContent.js'; // Import the new model
-import { cloudinary } from '../utils/cloudinary.js';
 
 const router = express.Router();
 
@@ -24,22 +28,20 @@ const router = express.Router();
 
 // Schema for updating home content
 const homeContentSchema = Joi.object({
-  heroTitle: Joi.string().required(),
-  heroSubtitle: Joi.string().required(),
-  // Allow other fields to be present without validation for now
+  hero: Joi.object({
+    title: Joi.string(),
+    subtitle: Joi.string()
+  }),
+  featured: Joi.array().items(Joi.string())
 }).unknown(true);
 
 // Schema for adding/updating produce
 const produceSchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().required(),
-  price: Joi.number().min(0).required(),
-  category: Joi.string().optional().allow(''),
-  imageUrl: Joi.string().uri().optional().allow(''),
-  _id: Joi.any(), // Allow _id for updates
-  id: Joi.any(),
-  image: Joi.any(),
-  __v: Joi.any(),
+  imageUrl: Joi.string().uri().required(),
+  publicId: Joi.string(),
+  featured: Joi.boolean()
 });
 
 // --- Validation Middleware ---
@@ -47,7 +49,6 @@ const produceSchema = Joi.object({
 const validateRequest = (schema) => (req, res, next) => {
   const { error } = schema.validate(req.body);
   if (error) {
-    // Send a 400 Bad Request response if validation fails
     return res.status(400).json({ message: error.details[0].message });
   }
   next();
@@ -58,23 +59,7 @@ const validateRequest = (schema) => (req, res, next) => {
 
 // Home Page Content
 router.route('/home')
-  .get(asyncHandler(async (req, res) => {
-    // Find the single document for home content, or create it if it doesn't exist
-    let homeContent = await HomeContent.findOne();
-    if (!homeContent) {
-      homeContent = await HomeContent.create({
-        heroTitle: "Welcome to Avotak Africa",
-        heroSubtitle: "Your trusted partner in premium agricultural consultancy and produce.",
-        // You can set default values here if needed
-        sliderImages: [
-          '/src/assets/farm-1.jpg',
-          '/src/assets/farm-2.jpg',
-          '/src/assets/farm-3.jpg',
-        ]
-      });
-    }
-    res.json(homeContent);
-  }))
+  .get(asyncHandler(getHomeContent))
   .put(protect, validateRequest(homeContentSchema), asyncHandler(updateHomeContent));
 
 // Services Page Content
@@ -82,10 +67,21 @@ router.route('/services')
   .get(getServicesContent)
   .put(protect, asyncHandler(updateServicesContent));
 
-// Produce Content
+// -------------------- PRODUCE --------------------
 router.route('/produce')
   .get(getProduce)
   .post(protect, validateRequest(produceSchema), asyncHandler(addProduce));
+
+// THIS IS THE NEW ROUTE
+router.get('/produce/featured', asyncHandler(async (req, res) => {
+  // Fetch produce items where 'featured' is true, and limit the result to 4
+  const featuredProduce = await Produce.find({ featured: true }).limit(4);
+  if (!featuredProduce) {
+    res.status(404);
+    throw new Error('No featured produce found');
+  }
+  res.json(featuredProduce);
+}));
 
 router.route('/produce/:id')
   .put(protect, validateRequest(produceSchema), asyncHandler(updateProduce))
