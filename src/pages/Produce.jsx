@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProduceCard from '../components/ProduceCard';
-import useFetch from '../hooks/useFetch'; // Import the hook
-import { categoryIcons } from '../components/CategoryIcons'; // Assuming you extract icons
+import useFetch from '../hooks/useFetch'; // Assuming you have this hook
+import { categoryIcons } from '../data/staticData'; // Assuming you have this
 
 // Import images from src/assets
 import lemonImg from '../assets/lemon.jpg';
@@ -36,7 +36,7 @@ const staticProduce = [
 ];
 
 export default function Produce() {
-  const { data: fetchedProduce, loading, error: fetchError } = useFetch('/produce');
+  const { data: fetchedProduce, loading, error: fetchError } = useFetch('/content/produce');
   const [produce, setProduce] = useState(staticProduce);
   const [activeCategory, setActiveCategory] = useState('All');
 

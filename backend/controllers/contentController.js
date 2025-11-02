@@ -141,3 +141,16 @@ export const deleteProduce = async (req, res) => {
   await Produce.deleteOne({ _id: id });
   res.json({ message: 'Produce item removed' });
 };
+
+// @desc    Get all featured produce
+// @route   GET /api/content/produce/featured
+// @access  Public
+export const getFeaturedProduce = async (req, res) => {
+  try {
+    const featuredProduce = await Produce.find({ isFeatured: true }).limit(4);
+    res.json(featuredProduce);
+  } catch (error) {
+    console.error('Error fetching featured produce:', error);
+    res.status(500).json({ message: 'Server error while fetching featured produce' });
+  }
+};

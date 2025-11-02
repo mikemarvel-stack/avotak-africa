@@ -8,6 +8,23 @@ import dotenv from 'dotenv';
 import healthRoutes from './routes/health.js'; // Import health routes
 import errorHandler from './middleware/errorHandler.js'; // Import the handler
 import userRoutes from './routes/userRoutes.js'; // Import user routes
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { protect } from './middleware/authMiddleware.js';
+import {
+  getHomeContent,
+  updateHomeContent,
+  getServicesContent,
+  updateServicesContent,
+  getAboutContent,
+  updateAboutContent,
+  getProduce,
+  addProduce,
+  updateProduce,
+  deleteProduce,
+  getFeaturedProduce
+} from './controllers/contentController.js';
+import { getGallery, addGalleryImage, deleteGalleryImage } from './controllers/galleryController.js';
 
 dotenv.config();
 
@@ -36,6 +53,38 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/users', userRoutes); // Use user routes
 
+// --- Content Routes ---
+const contentRouter = express.Router();
+
+// Home
+contentRouter.get('/home', getHomeContent);
+contentRouter.put('/home', protect, updateHomeContent);
+
+// Services
+contentRouter.get('/services', getServicesContent);
+contentRouter.put('/services', protect, updateServicesContent);
+
+// About
+contentRouter.get('/about', getAboutContent);
+contentRouter.put('/about', protect, updateAboutContent);
+
+// Produce
+contentRouter.get('/produce/featured', getFeaturedProduce);
+contentRouter.route('/produce')
+  .get(getProduce)
+  .post(protect, addProduce);
+contentRouter.route('/produce/:id')
+  .put(protect, updateProduce)
+  .delete(protect, deleteProduce);
+
+// Gallery
+contentRouter.route('/gallery')
+  .get(getGallery)
+  .post(protect, addGalleryImage);
+contentRouter.delete('/gallery/:id', protect, deleteGalleryImage);
+
+app.use('/api/content', contentRouter);
+
 // Health check
 app.get('/', (req, res) => {
   res.send('Avotak Africa API is running successfully.');
@@ -61,3 +110,12 @@ mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
     console.error('❌ MongoDB connection error:', err.message);
     process.exit(1);
   });
+
+// Serve frontend
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+});
