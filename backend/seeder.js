@@ -28,6 +28,28 @@ const sampleHomeContent = {
   heroTitle: 'Cultivating Prosperity, Harvesting Quality',
   heroSubtitle: 'Your trusted partner in African agriculture, from farm to global market. We specialize in premium produce and expert consultancy.',
   heroImageUrl: 'https://images.unsplash.com/photo-1560493676-04071c5f467b?q=80&w=1974&auto=format&fit=crop',
+  sliderImages: [
+    {
+      url: 'https://res.cloudinary.com/dcvx45xcn/image/upload/v1719503998/avotak-africa/slider/slide1_y2j6jz.jpg',
+      caption: 'Lush green farmlands',
+    },
+    {
+      url: 'https://res.cloudinary.com/dcvx45xcn/image/upload/v1719503998/avotak-africa/slider/slide2_f9j1x5.jpg',
+      caption: 'Freshly harvested produce',
+    },
+    {
+      url: 'https://res.cloudinary.com/dcvx45xcn/image/upload/v1719503998/avotak-africa/slider/slide3_d0qj3p.jpg',
+      caption: 'Ready for the market',
+    },
+    {
+      url: 'https://res.cloudinary.com/dcvx45xcn/image/upload/v1719503998/avotak-africa/slider/slide4_yqj1fg.jpg',
+      caption: 'Sustainable farming practices',
+    },
+    {
+      url: 'https://res.cloudinary.com/dcvx45xcn/image/upload/v1719503998/avotak-africa/slider/slide5_w9z9x8.jpg',
+      caption: 'Quality you can trust',
+    },
+  ],
 };
 
 // Sample data for AboutContent
