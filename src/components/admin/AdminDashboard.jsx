@@ -51,7 +51,7 @@ export default function AdminDashboard() {
         
         setStats({
           projects: responses[0]?.length || 0,
-          services: responses[1]?.length || 0,
+          services: responses[1]?.services?.length || 0,
           produce: responses[2]?.length || 0,
           gallery: responses[3]?.length || 0,
           home: responses[4]?.sliderImages?.length || 0,

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import api from '../services/api';
 import ProduceCard from '../components/ProduceCard';
-import useFetch from '../hooks/useFetch';
-import { FaCarrot, FaLeaf, FaSeedling } from 'react-icons/fa';
 
 // --- Start of Added Hardcoded Data ---
 
@@ -49,20 +49,29 @@ const categoryIcons = {
 // --- End of Added Hardcoded Data ---
 
 export default function Produce() {
-  const { data: fetchedProduce, loading, error: fetchError } = useFetch('/content/produce');
   const [produce, setProduce] = useState(staticProduce);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
-    if (fetchedProduce && fetchedProduce.length > 0) {
-      // The backend sends `imageUrl`, but ProduceCard expects `image`. We alias it here.
-      const dynamicProduce = fetchedProduce.map(item => ({ ...item, image: item.imageUrl }));
-      setProduce(dynamicProduce);
-    } else if (fetchError) {
-      // If there's an error, we can log it. The 'error' message below will handle UI.
-      console.error('Failed to fetch produce:', fetchError);
-    }
-  }, [fetchedProduce, fetchError]);
+    const fetchProduce = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await api.get('/content/produce');
+        // This endpoint returns a direct array
+        setProduce(response.data || []);
+      } catch (err) {
+        console.error('Failed to fetch produce:', err);
+        setError('Our produce list is currently unavailable. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduce();
+  }, []);
 
   const categories = ['All', ...Object.keys(categoryIcons).filter(k => k !== 'All')];
 
@@ -70,44 +79,63 @@ export default function Produce() {
     ? produce
     : produce.filter(item => item.category === activeCategory);
 
-  const error = fetchError ? 'Could not fetch latest produce. Please try again later.' : null;
-
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-4">Our Produce</h1>
-      <p className="text-gray-600 mb-8">
-        Explore our range of high-quality, sustainably sourced produce from East Africa.
-      </p>
+    <div className="bg-white py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
+          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+            Our Produce
+          </h1>
+          <p className="mt-4 text-xl text-gray-600">
+            Fresh, sustainably-grown produce straight from our farms.
+          </p>
+        </motion.div>
 
-      {error && <p className="text-center text-amber-600 bg-amber-100 p-2 rounded-md mb-4">{error}</p>}
+        {error && <p className="text-center text-amber-600 bg-amber-100 p-2 rounded-md mt-4">{error}</p>}
 
-      {/* Category Filter */}
-      <div className="flex flex-wrap justify-center gap-2 mb-8">
-        {categories.map(category => (
-          <button
-            key={category}
-            onClick={() => setActiveCategory(category)}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition flex items-center ${
-              activeCategory === category
-                ? 'bg-primary text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            {categoryIcons[category]} {category}
-          </button>
-        ))}
-      </div>
-
-      {loading && <p className="text-center">Loading produce...</p>}
-
-      {/* Produce Grid */}
-      {!loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProduce.map(item => (
-            <ProduceCard key={item._id || item.id} item={item} />
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-2 mt-8">
+          {categories.map(category => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition flex items-center ${
+                activeCategory === category
+                  ? 'bg-primary text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              {categoryIcons[category]} {category}
+            </button>
           ))}
         </div>
-      )}
+
+        {loading && (
+          <div className="text-center mt-12">
+            <div className="animate-spin rounded-full border-8 border-t-8 border-gray-200 border-t-green-600 h-32 w-32 mx-auto"></div>
+            <p className="mt-4 text-lg text-gray-600">Loading produce...</p>
+          </div>
+        )}
+
+        {/* Produce Grid */}
+        {!loading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-12"
+          >
+            {filteredProduce.map(item => (
+              <ProduceCard key={item._id || item.id} item={item} />
+            ))}
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }
