@@ -102,8 +102,12 @@ if (!mongoUri) {
 }
 
 mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
+  .then(async () => {
     console.log('✅ MongoDB connected');
+    
+    // Run the seeder to populate DB if it's empty
+    await seedDatabase();
+
     app.listen(PORT, () => console.log(`🚀 Backend running on port ${PORT}`));
   })
   .catch(err => {
