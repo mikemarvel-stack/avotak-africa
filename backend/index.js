@@ -12,6 +12,7 @@ import userRoutes from './routes/userRoutes.js'; // Import user routes
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { protect } from './middleware/authMiddleware.js';
+import { seedDatabase } from './utils/seed.js'; // Import the seeder function
 // REMOVED: Unused controller imports that were causing deployment errors.
 // The controllers are correctly imported and used within their respective route files.
 
