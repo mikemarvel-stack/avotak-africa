@@ -12,20 +12,8 @@ import userRoutes from './routes/userRoutes.js'; // Import user routes
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { protect } from './middleware/authMiddleware.js';
-import {
-  getHomeContent,
-  updateHomeContent,
-  getServicesContent,
-  updateServicesContent,
-  getAboutContent,
-  updateAboutContent,
-  getProduce,
-  addProduce,
-  updateProduce,
-  deleteProduce,
-  getFeaturedProduce
-} from './controllers/contentController.js';
-import { getGallery, addGalleryImage, deleteGalleryImage } from './controllers/galleryController.js';
+// REMOVED: Unused controller imports that were causing deployment errors.
+// The controllers are correctly imported and used within their respective route files.
 
 dotenv.config();
 
