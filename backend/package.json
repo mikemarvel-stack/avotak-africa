@@ -1,12 +1,14 @@
 {
-  "name": "avotak-backend",
+  "name": "backend",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "echo 'No build step required'"
+    "seed": "node seeder.js",
+    "destroy": "node seeder.js -d"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
