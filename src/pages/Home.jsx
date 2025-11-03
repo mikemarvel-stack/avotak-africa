@@ -1,156 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import Hero from '../components/Hero';
-import ProduceCard from '../components/ProduceCard';
+import HeroSlider from '../components/HeroSlider';
 import Gallery from '../components/Gallery';
-import api from '../services/api';
-import Testimonials from '../components/Testimonials';
-
-// Import featured produce images manually
-import lemonImg from '../assets/lemon.jpg';
-import basilImg from '../assets/basil.jpg';
-import mangoImg from '../assets/mango.jpg';
-import avocadoImg from '../assets/avocado.jpg';
-import appleImg from '../assets/apple.jpg';
-import spinachImg from '../assets/spinach.jpg';
-import tomatoImg from '../assets/tomato.jpg';
-
-// Default content in case the backend fails
-const defaultHomeContent = {
-  heroTitle: 'Fresh from Our Farms to Your Table',
-  heroSubtitle: 'Discover the taste of quality, sustainably grown produce from the heart of East Africa.',
-  sliderImages: [
-    { url: '/src/assets/farm-1.jpg', caption: 'Our lush green farms' },
-    { url: '/src/assets/farm-2.jpg', caption: 'Ready for harvest' },
-    { url: '/src/assets/farm-3.jpg', caption: 'Sustainable farming practices' },
-  ],
-};
-
-const defaultFeatured = [
-  { id: 1, name: 'Lemon', slug: 'lemon', description: 'Fresh citrus from Kenyan highlands', origin: 'Kiambu', category: 'Fruit', image: lemonImg },
-  { id: 2, name: 'Basil', slug: 'basil', description: 'Aromatic culinary herb', origin: 'Nakuru', category: 'Herb', image: basilImg },
-  { id: 3, name: 'Mango', slug: 'mango', description: 'Sweet seasonal mango', origin: 'Coast', category: 'Fruit', image: mangoImg },
-  { id: 4, name: 'Avocado', slug: 'avocado', description: 'Creamy and nutrient-rich', origin: 'Kenya', category: 'Fruit', image: avocadoImg },
-  { id: 5, name: 'Apple', slug: 'apple', description: 'Crisp and juicy fruit', origin: 'Kenya', category: 'Fruit', image: appleImg },
-  { id: 6, name: 'Spinach', slug: 'spinach', description: 'Fresh green leafy vegetable', origin: 'Tanzania', category: 'Vegetable', image: spinachImg },
-  { id: 7, name: 'Tomato', slug: 'tomato', description: 'Juicy and ripe', origin: 'Kenya', category: 'Vegetable', image: tomatoImg }
-];
+import useFetch from '../hooks/useFetch';
 
 export default function Home() {
-  const [homeContent, setHomeContent] = useState(defaultHomeContent);
-  const [featured, setFeatured] = useState([]); // Start with empty and rely on defaultFeatured if fetch fails
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: homeContent, loading: loadingHome, error: errorHome } = useFetch('/content/home');
+  const { data: featuredProduce, loading: loadingProduce, error: errorProduce } = useFetch('/content/produce/featured');
 
-  useEffect(() => {
-    const fetchHomeData = async () => {
-      try {
-        setLoading(true);
-        // Fetch home page content (hero title, subtitle, sliderImages)
-        const contentResponse = await api.get('/content/home');
-        
-        // Merge fetched data with defaults to ensure all fields are present
-        if (contentResponse.data) {
-          setHomeContent(prevContent => ({
-            ...defaultHomeContent, // Start with defaults
-            ...prevContent,         // Keep existing state
-            ...contentResponse.data // Overwrite with fetched data
-          }));
-        } else {
-          console.warn('API returned no home content, using static data.');
-          setHomeContent(defaultHomeContent); // Explicitly set to default
-        }
+  const sliderImages = homeContent?.sliderImages || [];
+  const featuredItems = featuredProduce?.map(item => ({ ...item, image: item.imageUrl })) || [];
 
-        // Fetch featured produce
-        const featuredResponse = await api.get('/content/produce/featured');
-        if (featuredResponse.data && featuredResponse.data.length > 0) {
-          // Alias imageUrl to image for ProduceCard compatibility
-          const dynamicFeatured = featuredResponse.data.map(item => ({ ...item, image: item.imageUrl }));
-          setFeatured(dynamicFeatured);
-        } else {
-          console.warn('API returned no featured produce, using static data.');
-          // If you have a defaultFeatured array, you can set it here.
-          // For now, it will remain empty if nothing is fetched.
-        }
-      } catch (err) {
-        console.error('Failed to fetch home data, using static data:', err);
-        setError('Could not fetch latest content. Displaying default content.');
-        // On error, ensure we are using the default content
-        setHomeContent(defaultHomeContent);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchHomeData();
-  }, []);
+  const isLoading = loadingHome || loadingProduce;
+  const hasError = errorHome || errorProduce;
 
   return (
     <div>
-      <Hero
-        title={homeContent.heroTitle}
-        subtitle={homeContent.heroSubtitle}
-        sliderImages={homeContent.sliderImages || []}
-        loading={loading}
+      {/* Hero Section with Slider */}
+      <HeroSlider
+        images={sliderImages}
+        title={homeContent?.heroTitle}
+        subtitle={homeContent?.heroSubtitle}
+        loading={loadingHome}
       />
-
-      {error && <p className="text-center text-amber-600 bg-amber-100 p-2 rounded-md my-4 max-w-6xl mx-auto">{error}</p>}
 
       {/* Featured Produce Section */}
       <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl font-bold text-center mb-12"
-          >
-            Featured Produce
-          </motion.h2>
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">Featured Produce</h2>
+          <p className="text-gray-600 mb-8">
+            A selection of our finest, freshly harvested produce.
+          </p>
+          {isLoading && <p>Loading featured produce...</p>}
+          {hasError && !isLoading && <p className="text-amber-600">Could not load featured produce.</p>}
+          {!isLoading && !hasError && featuredItems.length === 0 && <p>No featured produce available at the moment.</p>}
           
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
-            </div>
-          ) : (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {featuredItems.map((item) => (
+              <motion.div
+                key={item._id}
+                className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <img src={item.image} alt={item.name} className="w-full h-48 object-cover" />
+                <div className="p-4">
+                  <h3 className="font-bold text-lg">{item.name}</h3>
+                  <p className="text-gray-600 text-sm">{item.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          <div className="mt-12">
+            <Link
+              to="/produce"
+              className="bg-primary text-white font-bold py-3 px-8 rounded-full hover:bg-primary-dark transition-colors"
             >
-              {featured.length > 0 ? (
-                featured.map((item) => (
-                  <ProduceCard key={item._id || item.id} item={item} />
-                ))
-              ) : (
-                defaultFeatured.map((item) => (
-                  <ProduceCard key={item.id} item={item} />
-                ))
-              )}
-            </motion.div>
-          )}
+              View All Produce
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <Testimonials />
-
-      {/* Farm Gallery */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl font-bold text-center mb-12"
-          >
-            Our Farm Gallery
-          </motion.h2>
-          <Gallery />
-        </div>
-      </section>
+      {/* Gallery Section */}
+      <Gallery />
     </div>
   );
 }
