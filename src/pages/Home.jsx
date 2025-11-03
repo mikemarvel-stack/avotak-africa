@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import HeroSlider from '../components/HeroSlider';
+import HomeSlider from '../components/HomeSlider';
 import Gallery from '../components/Gallery';
 import useFetch from '../hooks/useFetch';
 
@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <div>
       {/* Hero Section with Slider */}
-      <HeroSlider
+      <HomeSlider
         images={sliderImages}
         title={homeContent?.heroTitle}
         subtitle={homeContent?.heroSubtitle}
