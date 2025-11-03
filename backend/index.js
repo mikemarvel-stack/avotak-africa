@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 import express from 'express';
 import authRoutes from './routes/auth.js';
@@ -52,38 +53,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/users', userRoutes); // Use user routes
-
-// --- Content Routes ---
-const contentRouter = express.Router();
-
-// Home
-contentRouter.get('/home', getHomeContent);
-contentRouter.put('/home', protect, updateHomeContent);
-
-// Services
-contentRouter.get('/services', getServicesContent);
-contentRouter.put('/services', protect, updateServicesContent);
-
-// About
-contentRouter.get('/about', getAboutContent);
-contentRouter.put('/about', protect, updateAboutContent);
-
-// Produce
-contentRouter.get('/produce/featured', getFeaturedProduce);
-contentRouter.route('/produce')
-  .get(getProduce)
-  .post(protect, addProduce);
-contentRouter.route('/produce/:id')
-  .put(protect, updateProduce)
-  .delete(protect, deleteProduce);
-
-// Gallery
-contentRouter.route('/gallery')
-  .get(getGallery)
-  .post(protect, addGalleryImage);
-contentRouter.delete('/gallery/:id', protect, deleteGalleryImage);
-
-app.use('/api/content', contentRouter);
 
 // Health check
 app.get('/', (req, res) => {
