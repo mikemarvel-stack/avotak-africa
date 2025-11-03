@@ -1,11 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import ProduceCard from '../components/ProduceCard';
-import useFetch from '../hooks/useFetch'; // Assuming useFetch is in hooks
-import { categoryIcons } from '../data/categoryIcons'; // Assuming this is where icons are
+import useFetch from '../hooks/useFetch';
+import { FaCarrot, FaLeaf, FaSeedling } from 'react-icons/fa';
+
+// --- Start of Added Hardcoded Data ---
+
+// Default content in case the backend fails
+const staticProduce = [
+  {
+    _id: 'static-1',
+    name: 'Avocado',
+    description: 'Creamy and nutritious Hass avocados.',
+    category: 'Fruits',
+    image: '/images/produce/avocado.jpg',
+  },
+  {
+    _id: 'static-2',
+    name: 'Mango',
+    description: 'Sweet and juicy Kent mangoes.',
+    category: 'Fruits',
+    image: '/images/produce/mango.jpg',
+  },
+  {
+    _id: 'static-3',
+    name: 'Coffee Beans',
+    description: 'Rich Arabica coffee beans.',
+    category: 'Grains & Beans',
+    image: '/images/produce/coffee.jpg',
+  },
+  {
+    _id: 'static-4',
+    name: 'Green Beans',
+    description: 'Fresh and crisp green beans.',
+    category: 'Vegetables',
+    image: '/images/produce/beans.jpg',
+  },
+];
+
+// Icons for produce categories
+const categoryIcons = {
+  All: '🌍',
+  Fruits: '🥑',
+  Vegetables: <FaCarrot className="inline mr-1" />,
+  'Grains & Beans': <FaSeedling className="inline mr-1" />,
+  Herbs: <FaLeaf className="inline mr-1" />,
+};
+
+// --- End of Added Hardcoded Data ---
 
 export default function Produce() {
   const { data: fetchedProduce, loading, error: fetchError } = useFetch('/content/produce');
-  const [produce, setProduce] = useState([]); // Initialize with an empty array
+  const [produce, setProduce] = useState(staticProduce);
   const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
