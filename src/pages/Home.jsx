@@ -21,9 +21,9 @@ const defaultHomeContent = {
   heroTitle: 'Fresh from Our Farms to Your Table',
   heroSubtitle: 'Discover the taste of quality, sustainably grown produce from the heart of East Africa.',
   sliderImages: [
-    '/src/assets/farm-1.jpg',
-    '/src/assets/farm-2.jpg',
-    '/src/assets/farm-3.jpg',
+    { url: '/src/assets/farm-1.jpg', caption: 'Our lush green farms' },
+    { url: '/src/assets/farm-2.jpg', caption: 'Ready for harvest' },
+    { url: '/src/assets/farm-3.jpg', caption: 'Sustainable farming practices' },
   ],
 };
 
@@ -39,7 +39,7 @@ const defaultFeatured = [
 
 export default function Home() {
   const [homeContent, setHomeContent] = useState(defaultHomeContent);
-  const [featured, setFeatured] = useState(defaultFeatured);
+  const [featured, setFeatured] = useState([]); // Start with empty and rely on defaultFeatured if fetch fails
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -47,12 +47,19 @@ export default function Home() {
     const fetchHomeData = async () => {
       try {
         setLoading(true);
-        // Fetch home page content (hero title, subtitle)
+        // Fetch home page content (hero title, subtitle, sliderImages)
         const contentResponse = await api.get('/content/home');
+        
+        // Merge fetched data with defaults to ensure all fields are present
         if (contentResponse.data) {
-          setHomeContent(contentResponse.data);
+          setHomeContent(prevContent => ({
+            ...defaultHomeContent, // Start with defaults
+            ...prevContent,         // Keep existing state
+            ...contentResponse.data // Overwrite with fetched data
+          }));
         } else {
           console.warn('API returned no home content, using static data.');
+          setHomeContent(defaultHomeContent); // Explicitly set to default
         }
 
         // Fetch featured produce
@@ -63,10 +70,14 @@ export default function Home() {
           setFeatured(dynamicFeatured);
         } else {
           console.warn('API returned no featured produce, using static data.');
+          // If you have a defaultFeatured array, you can set it here.
+          // For now, it will remain empty if nothing is fetched.
         }
       } catch (err) {
         console.error('Failed to fetch home data, using static data:', err);
         setError('Could not fetch latest content. Displaying default content.');
+        // On error, ensure we are using the default content
+        setHomeContent(defaultHomeContent);
       } finally {
         setLoading(false);
       }
@@ -109,9 +120,15 @@ export default function Home() {
               transition={{ duration: 0.5 }}
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
             >
-              {featured.map((item) => (
-                <ProduceCard key={item._id || item.id} item={item} />
-              ))}
+              {featured.length > 0 ? (
+                featured.map((item) => (
+                  <ProduceCard key={item._id || item.id} item={item} />
+                ))
+              ) : (
+                defaultFeatured.map((item) => (
+                  <ProduceCard key={item.id} item={item} />
+                ))
+              )}
             </motion.div>
           )}
         </div>
