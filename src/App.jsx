@@ -1,50 +1,66 @@
-import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import StickySocials from './components/StickySocials';
-import BackToTop from './components/BackToTop';
-import Footer from './components/Footer';
-import AdminLayout from './components/admin/AdminLayout';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import { Info, Package } from 'lucide-react'; // Added imports
 
-// Pages
-import Home from './pages/Home';
-import Produce from './pages/Produce';
-import Projects from './pages/Projects';
-import Services from './pages/Services';
-import AboutUs from './pages/AboutUs';
-import Contact from './pages/Contact';
-// Dashboard is part of AdminLayout, so it's not directly routed here.
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import Loader from './components/Loader';
+import AdminLayout from './components/admin/AdminLayout';
+import ProtectedRoute from './components/admin/ProtectedRoute';
+
+// Lazy-loaded page components
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Services = lazy(() => import('./pages/Services'));
+const Produce = lazy(() => import('./pages/Produce')); // Import Produce page
+const Projects = lazy(() => import('./pages/Projects'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Login = lazy(() => import('./pages/Login'));
+
+// Lazy-loaded admin components
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminHome = lazy(() => import('./components/admin/AdminHome'));
+const AdminAbout = lazy(() => import('./components/admin/AdminAbout'));
+const AdminProduce = lazy(() => import('./components/admin/AdminProduce'));
 
 export default function App() {
-  const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
-
   return (
-    <>
-      {isAdminRoute ? (
+    <Router basename="/avotak-africa/">
+      <Toaster position="top-center" reverseOrder={false} />
+      <Navbar />
+      <Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader /></div>}>
         <Routes>
-          <Route path="/admin/*" element={<AdminLayout />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/produce" element={<Produce />} /> {/* Added Produce route */}
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* Admin Routes */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="home" element={<AdminHome />} />
+            <Route path="about" element={<AdminAbout />} />
+            <Route path="produce" element={<AdminProduce />} />
+            {/* Add other admin routes here */}
+            {/* <Route path="services" element={<AdminServices />} /> */}
+            {/* <Route path="projects" element={<AdminProjects />} /> */}
+            {/* <Route path="gallery" element={<AdminGallery />} /> */}
+          </Route>
         </Routes>
-      ) : (
-        <div className="min-h-screen flex flex-col relative bg-white text-gray-800 antialiased">
-          <Navbar />
-          <StickySocials />
-          <BackToTop />
-          
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/produce" element={<Produce />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/about" element={<AboutUs />} />
-              <Route path="/contact" element={<Contact />} />
-            </Routes>
-          </main>
-          
-          <Footer />
-        </div>
-      )}
-    </>
+      </Suspense>
+      <Footer />
+    </Router>
   );
 }

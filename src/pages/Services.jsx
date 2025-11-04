@@ -1,119 +1,70 @@
-import { motion } from 'framer-motion';
-import api from '../services/api';
-import { Briefcase, CheckCircle } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import {
+  Leaf,
+  Truck,
+  GraduationCap,
+  LineChart,
+  Factory,
+  Globe,
+} from 'lucide-react';
+import usePublicContent from '../hooks/usePublicContent';
+import Loader from '../components/Loader';
 
-const Services = () => {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const iconMap = {
+  'Farm Advisory & Consulting': <Leaf className="w-8 h-8 text-green-600" />,
+  'Post-Harvest Handling & Quality Management': <Truck className="w-8 h-8 text-green-600" />,
+  'Market Linkages & Export Facilitation': <Globe className="w-8 h-8 text-green-600" />,
+  'Training & Capacity Building': <GraduationCap className="w-8 h-8 text-green-600" />,
+  'Sustainability & Climate-Smart Agriculture': <LineChart className="w-8 h-8 text-green-600" />,
+  'Supply Chain & Value Addition Support': <Factory className="w-8 h-8 text-green-600" />,
+};
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await api.get('/content/services');
-        // The API returns an object like { services: [...] }, so we access the 'services' property.
-        setServices(response.data.services || []);
-      } catch (err) {
-        console.error('Failed to fetch services:', err);
-        setError('Our services are currently unavailable. Please check back later.');
-      } finally {
-        setLoading(false);
-      }
-    };
+export default function Services() {
+  const { content: services, loading, error } = usePublicContent('/services', []);
 
-    fetchServices();
-  }, []);
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen"><Loader /></div>;
+  }
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: i => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-      },
-    }),
-  };
+  if (error) {
+    return <div className="text-center py-20 text-red-500">{error}</div>;
+  }
 
   return (
-    <div className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-            Our Services
-          </h1>
-          <p className="mt-4 text-xl text-gray-600">
-            Providing expert consultancy to elevate your agricultural ventures.
+    <div className="py-12 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <h2 className="text-base text-green-600 font-semibold tracking-wide uppercase">Our Services</h2>
+          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+            Comprehensive Agricultural Solutions
           </p>
-        </motion.div>
+          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+            From farm to market, we provide expert guidance and support at every step.
+          </p>
+        </div>
 
-        {loading && (
-          <div className="text-center mt-12">
-            <div className="animate-spin rounded-full border-8 border-t-8 border-gray-200 border-t-green-600 h-32 w-32 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading Services...</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="mt-12 text-center bg-red-100 text-red-700 p-4 rounded-lg">
-            {error}
-          </div>
-        )}
-
-        {!loading && !error && (
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {services.length > 0 ? (
-              services.map((service, index) => (
-                <motion.div
-                  key={index}
-                  custom={index}
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate="visible"
-                  className="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300"
-                >
-                  <div className="p-8">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0">
-                        <Briefcase className="h-8 w-8 text-green-600" />
-                      </div>
-                      <div className="ml-4">
-                        <h3 className="text-xl font-bold text-gray-900">{service.title}</h3>
-                      </div>
+        <div className="mt-10">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((service) => (
+              <div key={service._id} className="pt-6">
+                <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-md">
+                  <div className="-mt-6">
+                    <div className="flex items-center justify-center">
+                      <span className="p-3 bg-green-50 rounded-md shadow-lg">
+                        {iconMap[service.name] || <Leaf className="w-8 h-8 text-green-600" />}
+                      </span>
                     </div>
-                    <p className="mt-4 text-gray-600">{service.description}</p>
-                    {service.points && service.points.length > 0 && (
-                      <ul className="mt-4 space-y-2">
-                        {service.points.map((point, pIndex) => (
-                          <li key={pIndex} className="flex items-start">
-                            <CheckCircle className="flex-shrink-0 h-5 w-5 text-green-500 mt-1" />
-                            <span className="ml-3 text-gray-600">{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight text-center">{service.name}</h3>
+                    <p className="mt-5 text-base text-gray-500 text-center">
+                      {service.description}
+                    </p>
                   </div>
-                </motion.div>
-              ))
-            ) : (
-              <p className="col-span-full text-center text-gray-500 mt-8">
-                No services have been added yet.
-              </p>
-            )}
+                </div>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
-};
-
-export default Services;
+}

@@ -11,7 +11,15 @@ import {
   getProduce,
   addProduce,
   updateProduce,
-  deleteProduce
+  deleteProduce,
+  getProjects,
+  addProject,
+  updateProject,
+  deleteProject,
+  getGallery,
+  addGalleryItem,
+  updateGalleryItem,
+  deleteGalleryItem
 } from '../controllers/contentController.js';
 
 import { protect } from '../utils/auth.js';
@@ -88,69 +96,21 @@ router.route('/produce/:id')
   .delete(protect, asyncHandler(deleteProduce));
 
 // -------------------- PROJECTS --------------------
-router.get('/projects', asyncHandler(async (req, res) => {
-  const projects = await Project.find().sort('order');
-  res.json(projects);
-}));
+router.route('/projects')
+  .get(asyncHandler(getProjects))
+  .post(protect, asyncHandler(addProject));
 
-router.post('/projects', protect, asyncHandler(async (req, res) => {
-  const project = new Project(req.body);
-  await project.save();
-  res.status(201).json(project);
-}));
-
-router.put('/projects/:id', protect, asyncHandler(async (req, res) => {
-  const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  if (!project) {
-    res.status(404);
-    throw new Error('Project not found');
-  }
-  res.json(project);
-}));
-
-router.delete('/projects/:id', protect, asyncHandler(async (req, res) => {
-  const project = await Project.findByIdAndDelete(req.params.id);
-  if (!project) {
-    res.status(404);
-    throw new Error('Project not found');
-  }
-  res.json({ message: 'Project removed' });
-}));
+router.route('/projects/:id')
+  .put(protect, asyncHandler(updateProject))
+  .delete(protect, asyncHandler(deleteProject));
 
 // -------------------- GALLERY --------------------
-router.get('/gallery', asyncHandler(async (req, res) => {
-  const gallery = await Gallery.find().sort('order');
-  res.json(gallery);
-}));
+router.route('/gallery')
+  .get(asyncHandler(getGallery))
+  .post(protect, asyncHandler(addGalleryItem));
 
-router.post('/gallery', protect, asyncHandler(async (req, res) => {
-  const item = new Gallery(req.body);
-  await item.save();
-  res.status(201).json(item);
-}));
-
-router.put('/gallery/:id', protect, asyncHandler(async (req, res) => {
-  const item = await Gallery.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  if (!item) {
-    res.status(404);
-    throw new Error('Gallery item not found');
-  }
-  res.json(item);
-}));
-
-router.delete('/gallery/:id', protect, asyncHandler(async (req, res) => {
-  const item = await Gallery.findById(req.params.id);
-  if (!item) {
-    res.status(404);
-    throw new Error('Gallery item not found');
-  }
-
-  if (item.publicId) {
-    await cloudinary.uploader.destroy(item.publicId);
-  }
-
-  await item.deleteOne();
-  res.json({ message: 'Gallery item removed' });
-}));
+router.route('/gallery/:id')
+  .put(protect, asyncHandler(updateGalleryItem))
+  .delete(protect, asyncHandler(deleteGalleryItem));
 
 export default router;

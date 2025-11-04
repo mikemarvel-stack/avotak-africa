@@ -1,154 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import useAdminStore from '../../store/useAdminStore';
-import ImageUpload from './ImageUpload';
+import React from 'react';
 import { Loader2 } from 'lucide-react';
+import useAdminContent from '../../hooks/useAdminContent';
 
 export default function AdminHome() {
-  const [content, setContent] = useState({ heroTitle: '', heroSubtitle: '', sliderImages: [] });
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const apiCall = useAdminStore(state => state.apiCall);
+  const {
+    content,
+    setContent,
+    loading,
+    saving,
+    error,
+    success,
+    handleSubmit,
+  } = useAdminContent('/content/home', { title: '', subtitle: '' });
 
-  useEffect(() => {
-    loadContent();
-  }, []);
-
-  const loadContent = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await apiCall('/content/home');
-      setContent({ heroTitle: '', heroSubtitle: '', sliderImages: [], ...response });
-    } catch (err) {
-      console.error('Failed to load home content:', err);
-      setError('Failed to load home content.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSaving(true);
-    try {
-      setError(null);
-      setSuccess(null);
-      await apiCall('/content/home', 'PUT', content);
-      await loadContent();
-      setSuccess('Home page content updated successfully.');
-      setTimeout(() => setSuccess(null), 3000); // Clear success message after 3 seconds
-    } catch (err) {
-      console.error('Failed to update home content:', err);
-      setError('Failed to save changes.');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleAddSliderImage = () => {
-    setContent(prev => ({
-      ...prev,
-      sliderImages: [...(prev.sliderImages || []), { url: '', caption: '' }]
-    }));
-  };
-
-  const handleUpdateSliderImage = (index, field, value) => {
-    const updatedImages = [...(content.sliderImages || [])];
-    updatedImages[index] = { ...updatedImages[index], [field]: value };
-    setContent(prev => ({ ...prev, sliderImages: updatedImages }));
-  };
-
-  const handleRemoveSliderImage = (index) => {
-    setContent(prev => ({
-      ...prev,
-      sliderImages: prev.sliderImages.filter((_, i) => i !== index)
-    }));
+  const handleFieldChange = (field, value) => {
+    setContent(prev => ({ ...prev, [field]: value }));
   };
 
   if (loading) return <div className="p-4 flex items-center justify-center"><Loader2 className="animate-spin h-8 w-8" /></div>;
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Manage Home Page</h1>
+      <h1 className="text-2xl font-bold mb-6">Manage Home Page Content</h1>
       {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">{error}</div>}
       {success && <div className="bg-green-100 text-green-700 p-3 rounded-md mb-4">{success}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Hero Section */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold mb-4">Hero Section</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Hero Title</label>
-              <input
-                value={content.heroTitle}
-                onChange={(e) => setContent({ ...content, heroTitle: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Hero Subtitle</label>
-              <textarea
-                value={content.heroSubtitle}
-                onChange={(e) => setContent({ ...content, heroSubtitle: e.target.value })}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                rows="3"
-                required
-              />
-            </div>
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md space-y-6">
+        <div className="border-b pb-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Hero Section</h2>
+          <div>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+            <input
+              type="text"
+              id="title"
+              value={content.title || ''}
+              onChange={(e) => handleFieldChange('title', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="e.g., Avotak Africa Ltd"
+            />
           </div>
-        </div>
-
-        {/* Slider Images */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">Slider Images</h2>
-            <button type="button" onClick={handleAddSliderImage} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-              Add Image
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            {(content.sliderImages || []).map((image, index) => (
-              <div key={index} className="flex items-start space-x-4 p-4 border rounded-lg">
-                <div className="flex-grow grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
-                    <ImageUpload 
-                      onImageUploaded={(url) => handleUpdateSliderImage(index, 'url', url)} 
-                      initialUrl={image.url}
-                    />
-                    {image.url && <img src={image.url} alt={`Slide ${index + 1}`} className="h-24 w-24 object-cover rounded mt-2" />}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Caption</label>
-                    <input 
-                      type="text" 
-                      value={image.caption} 
-                      onChange={(e) => handleUpdateSliderImage(index, 'caption', e.target.value)} 
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" 
-                    />
-                  </div>
-                </div>
-                <button type="button" onClick={() => handleRemoveSliderImage(index)} className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
-                  Remove
-                </button>
-              </div>
-            ))}
+          <div className="mt-4">
+            <label htmlFor="subtitle" className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
+            <textarea
+              id="subtitle"
+              rows="3"
+              value={content.subtitle || ''}
+              onChange={(e) => handleFieldChange('subtitle', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              placeholder="e.g., Your trusted partner in agriculture..."
+            />
           </div>
         </div>
 
         <div className="flex justify-end">
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={saving}
-            className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 flex items-center"
+            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
           >
-            {saving && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
-            {saving ? 'Saving...' : 'Save Changes'}
+            {saving && <Loader2 className="animate-spin" size={16} />}
+            Save Changes
           </button>
         </div>
       </form>

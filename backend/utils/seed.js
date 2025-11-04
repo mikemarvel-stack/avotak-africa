@@ -1,6 +1,7 @@
 
-import HomeContent from '../models/HomeContent.js';
+import Home from '../models/Home.js';
 import Produce from '../models/Produce.js';
+import Project from '../models/Project.js'; // 1. Import the Project model
 
 // --- DEFAULT HOME CONTENT ---
 // IMPORTANT: Replace these placeholder URLs with actual URLs of images
@@ -49,12 +50,10 @@ const defaultProduceData = [
 
 const seedHomeContent = async () => {
   try {
-    const count = await HomeContent.countDocuments();
-    if (count === 0) {
-      console.log('No home content found. Seeding default home content...');
-      await HomeContent.create(defaultHomeData);
-      console.log('✅ Default home content seeded.');
-    }
+    await Home.deleteMany(); // Use deleteMany for consistency
+    console.log('Seeding default home content...');
+    await Home.create(defaultHomeData);
+    console.log('✅ Default home content seeded.');
   } catch (error) {
     console.error('❌ Error seeding home content:', error);
   }
@@ -62,18 +61,47 @@ const seedHomeContent = async () => {
 
 const seedProduce = async () => {
   try {
-    const count = await Produce.countDocuments();
-    if (count === 0) {
-      console.log('No produce found. Seeding default produce items...');
-      await Produce.insertMany(defaultProduceData);
-      console.log('✅ Default produce items seeded.');
-    }
+    await Produce.deleteMany(); // Use deleteMany for consistency
+    console.log('Seeding default produce items...');
+    await Produce.insertMany(defaultProduceData);
+    console.log('✅ Default produce items seeded.');
   } catch (error) {
     console.error('❌ Error seeding produce:', error);
   }
 };
 
+// 2. Add a function to seed projects
+const seedProjects = async () => {
+  try {
+    await Project.deleteMany(); // Clear existing projects
+
+    const projects = [
+      {
+        title: 'Sustainable Avocado Farming Initiative',
+        description: 'A project focused on implementing eco-friendly farming practices for avocado cultivation, improving yield and quality while preserving the environment.',
+        image: '/path/to/your/image.jpg', // Use appropriate image paths
+        tags: ['Sustainability', 'Avocado', 'Farming'],
+        order: 1,
+      },
+      {
+        title: 'Community Mango Export Program',
+        description: 'Empowering local communities by creating direct market linkages for high-quality mango exports to international markets.',
+        image: '/path/to/your/image2.jpg',
+        tags: ['Community', 'Export', 'Mango'],
+        order: 2,
+      },
+    ];
+
+    await Project.insertMany(projects);
+    console.log('Projects have been seeded');
+  } catch (error) {
+    console.error('Error seeding projects:', error);
+  }
+};
+
+
 export const seedDatabase = async () => {
   await seedHomeContent();
   await seedProduce();
+  await seedProjects(); // 3. Call the new seed function
 };

@@ -154,3 +154,66 @@ export const getFeaturedProduce = async (req, res) => {
     res.status(500).json({ message: 'Server error while fetching featured produce' });
   }
 };
+
+// -------------------- PROJECTS --------------------
+export const getProjects = async (req, res) => {
+  const projects = await Project.find().sort('order');
+  res.json(projects);
+};
+
+export const addProject = async (req, res) => {
+  const project = new Project(req.body);
+  await project.save();
+  res.status(201).json(project);
+};
+
+export const updateProject = async (req, res) => {
+  const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  if (!project) {
+    res.status(404);
+    throw new Error('Project not found');
+  }
+  res.json(project);
+};
+
+export const deleteProject = async (req, res) => {
+  const project = await Project.findByIdAndDelete(req.params.id);
+  if (!project) {
+    res.status(404);
+    throw new Error('Project not found');
+  }
+  // Note: Add Cloudinary image deletion logic here if applicable
+  res.json({ message: 'Project removed' });
+};
+
+
+// -------------------- GALLERY --------------------
+export const getGallery = async (req, res) => {
+  const gallery = await Gallery.find().sort('order');
+  res.json(gallery);
+};
+
+export const addGalleryItem = async (req, res) => {
+  const item = new Gallery(req.body);
+  await item.save();
+  res.status(201).json(item);
+};
+
+export const updateGalleryItem = async (req, res) => {
+  const item = await Gallery.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  if (!item) {
+    res.status(404);
+    throw new Error('Gallery item not found');
+  }
+  res.json(item);
+};
+
+export const deleteGalleryItem = async (req, res) => {
+  const item = await Gallery.findByIdAndDelete(req.params.id);
+  if (!item) {
+    res.status(404);
+    throw new Error('Gallery item not found');
+  }
+  // Note: Add Cloudinary image deletion logic here if applicable
+  res.json({ message: 'Gallery item removed' });
+};

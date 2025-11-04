@@ -11,6 +11,8 @@ import {
   LogOut,
   Menu,
   X,
+  Info,
+  Package,
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -23,9 +25,10 @@ export default function AdminSidebar() {
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: <BarChart2 className="w-5 h-5" /> },
     { path: '/home', label: 'Home Page', icon: <Home className="w-5 h-5" /> },
+    { path: '/about', label: 'About Page', icon: <Info className="w-5 h-5" /> },
     { path: '/services', label: 'Services', icon: <Briefcase className="w-5 h-5" /> },
+    { path: '/produce', label: 'Produce', icon: <Package className="w-5 h-5" /> },
     { path: '/projects', label: 'Projects', icon: <Clipboard className="w-5 h-5" /> },
-    { path: '/produce', label: 'Produce', icon: <ShoppingCart className="w-5 h-5" /> },
     { path: '/gallery', label: 'Gallery', icon: <Image className="w-5 h-5" /> },
   ];
 
