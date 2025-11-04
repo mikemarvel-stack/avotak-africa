@@ -1,12 +1,12 @@
 
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
-import Home from '../models/Home.js';
+import Home from '../models/HomeContent.js'; // Corrected import
 import Service from '../models/Service.js';
 import Produce from '../models/Produce.js';
-import User from '../models/User.js';
 import Project from '../models/Project.js';
-import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
 
 dotenv.config();
 

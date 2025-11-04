@@ -12,7 +12,6 @@ import userRoutes from './routes/userRoutes.js'; // Import user routes
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { protect } from './middleware/authMiddleware.js';
-import { seedDatabase } from './utils/seed.js'; // Import the seeder function
 // REMOVED: Unused controller imports that were causing deployment errors.
 // The controllers are correctly imported and used within their respective route files.
 
@@ -63,8 +62,8 @@ mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(async () => {
     console.log('✅ MongoDB connected');
     
-    // Run the seeder to populate DB if it's empty
-    await seedDatabase();
+    // REMOVED: Seeder should not run on every server start in production.
+    // It should be run manually or as a one-time setup job.
 
     app.listen(PORT, () => console.log(`🚀 Backend running on port ${PORT}`));
   })
