@@ -1,19 +1,19 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { Info, Package } from 'lucide-react'; // Added imports
+import { Info, Package } from 'lucide-react';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Loader from './components/Loader';
 import AdminLayout from './components/admin/AdminLayout';
-import ProtectedRoute from './components/admin/ProtectedRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Lazy-loaded page components
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Services = lazy(() => import('./pages/Services'));
-const Produce = lazy(() => import('./pages/Produce')); // Import Produce page
+const Produce = lazy(() => import('./pages/Produce'));
 const Projects = lazy(() => import('./pages/Projects'));
 const Contact = lazy(() => import('./pages/Contact'));
 const Login = lazy(() => import('./pages/Login'));
@@ -26,7 +26,7 @@ const AdminProduce = lazy(() => import('./components/admin/AdminProduce'));
 
 export default function App() {
   return (
-    <Router basename="/avotak-africa/">
+    <Router>
       <Toaster position="top-center" reverseOrder={false} />
       <Navbar />
       <Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader /></div>}>
@@ -34,7 +34,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/produce" element={<Produce />} /> {/* Added Produce route */}
+          <Route path="/produce" element={<Produce />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
