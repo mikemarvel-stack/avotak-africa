@@ -1,11 +1,11 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { Info, Package } from 'lucide-react';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Loader from './components/Loader';
+import Loader from './components/Loader'; // This path should now work
 import AdminLayout from './components/admin/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -26,7 +26,7 @@ const AdminProduce = lazy(() => import('./components/admin/AdminProduce'));
 
 export default function App() {
   return (
-    <Router>
+    <>
       <Toaster position="top-center" reverseOrder={false} />
       <Navbar />
       <Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader /></div>}>
@@ -61,6 +61,6 @@ export default function App() {
         </Routes>
       </Suspense>
       <Footer />
-    </Router>
+    </>
   );
 }
