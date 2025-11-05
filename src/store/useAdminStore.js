@@ -46,7 +46,13 @@ const useAdminStore = create(
       apiCall: async (endpoint, method = 'GET', body = null) => {
         try {
           const config = { method, url: endpoint };
-          if (body) config.data = body;
+          if (body) {
+            config.data = body;
+            // Handle FormData for file uploads
+            if (body instanceof FormData) {
+              config.headers = { 'Content-Type': 'multipart/form-data' };
+            }
+          }
           const response = await api(config);
           return response.data;
         } catch (err) {
