@@ -6,7 +6,7 @@ import avocadoImg from '../assets/avocado.jpg';
 import mangoImg from '../assets/mango.jpg';
 import basilImg from '../assets/basil.jpg';
 import gingerImg from '../assets/ginger.jpg';
-import herbsImg from '../assets/herbs.jpg';
+import herbsImg from '../assets/herb-field.jpg';
 import tomatoImg from '../assets/tomato.jpg';
 
 const FALLBACK_IMAGES = [
