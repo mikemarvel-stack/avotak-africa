@@ -10,9 +10,9 @@
 ### 2. Get Your Credentials
 1. Go to **Dashboard** → **Account Details**
 2. Copy these values:
-   - **Cloud Name**: `dxxxxxxxx`
-   - **API Key**: `123456789012345`
-   - **API Secret**: `xxxxxxxxxxxxxxxxxxxx`
+   - **Cloud Name**: 
+   - **API Key**: 
+   - **API Secret**: 
 
 ### 3. Configure Backend
 

@@ -166,7 +166,17 @@ export const getFeaturedProduce = async (req, res) => {
 // -------------------- PROJECTS --------------------
 export const getProjects = async (req, res) => {
   const projects = await Project.find().sort('order');
-  res.json(projects);
+  res.json({ projects });
+};
+
+export const updateProjects = async (req, res) => {
+  const { projects } = req.body;
+  if (!projects || !Array.isArray(projects)) {
+    return res.status(400).json({ message: 'Projects array is required' });
+  }
+  await Project.deleteMany({});
+  const createdProjects = await Project.insertMany(projects);
+  res.json({ projects: createdProjects });
 };
 
 export const addProject = async (req, res) => {
@@ -190,7 +200,6 @@ export const deleteProject = async (req, res) => {
     res.status(404);
     throw new Error('Project not found');
   }
-  // Note: Add Cloudinary image deletion logic here if applicable
   res.json({ message: 'Project removed' });
 };
 

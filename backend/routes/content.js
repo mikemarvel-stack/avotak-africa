@@ -13,6 +13,7 @@ import {
   updateProduce,
   deleteProduce,
   getProjects,
+  updateProjects,
   addProject,
   updateProject,
   deleteProject,
@@ -99,6 +100,7 @@ router.route('/produce/:id')
 // -------------------- PROJECTS --------------------
 router.route('/projects')
   .get(asyncHandler(getProjects))
+  .put(protect, asyncHandler(updateProjects))
   .post(protect, asyncHandler(addProject));
 
 router.route('/projects/:id')
