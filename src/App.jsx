@@ -12,7 +12,7 @@ import TawkChat from './components/TawkChat';
 
 // Lazy-loaded page components
 const Home = lazy(() => import('./pages/Home'));
-const About = lazy(() => import('./pages/About'));
+const AboutUs = lazy(() => import('./pages/AboutUs'));
 const Services = lazy(() => import('./pages/Services'));
 const Produce = lazy(() => import('./pages/Produce'));
 const Projects = lazy(() => import('./pages/Projects'));
@@ -34,7 +34,7 @@ export default function App() {
       <Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader /></div>}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="/services" element={<Services />} />
           <Route path="/produce" element={<Produce />} />
           <Route path="/projects" element={<Projects />} />

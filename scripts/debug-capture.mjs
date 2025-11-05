@@ -57,7 +57,8 @@ async function capture() {
       contentSnippet: content.slice(0, 2000)
     }
 
-    const outputPath = path.join(process.cwd(), 'debug-capture.json')
+    const safeDir = path.resolve(process.cwd())
+    const outputPath = path.join(safeDir, 'debug-capture.json')
     fs.writeFileSync(outputPath, JSON.stringify(data, null, 2))
     console.log('Saved capture to', outputPath)
   } catch (err) {

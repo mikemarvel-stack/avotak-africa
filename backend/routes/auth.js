@@ -7,9 +7,13 @@ dotenv.config();
 
 const router = express.Router();
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-const JWT_SECRET = process.env.JWT_SECRET;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || '';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const JWT_SECRET = process.env.JWT_SECRET || '';
+
+if (!ADMIN_EMAIL || !ADMIN_PASSWORD || !JWT_SECRET) {
+  console.error('Missing required environment variables');
+}
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -23,7 +27,8 @@ router.post('/login', async (req, res) => {
   if (email.length > 255 || password.length > 255)
     return res.status(400).json({ message: 'Input too long' });
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailPattern = '^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$';
+  const emailRegex = new RegExp(emailPattern);
   if (!emailRegex.test(email))
     return res.status(400).json({ message: 'Invalid email format' });
 
