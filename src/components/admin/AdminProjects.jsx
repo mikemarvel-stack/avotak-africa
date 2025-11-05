@@ -1,201 +1,174 @@
 import React, { useState, useEffect } from 'react';
-import { Loader2, Plus, Trash2, Calendar } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import useAdminStore from '../../store/useAdminStore';
-import ImageUpload from './ImageUpload';
+import useAdminContent from '../../hooks/useAdminContent';
 
 export default function AdminProjects() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const apiCall = useAdminStore(state => state.apiCall);
+  const { projects, loading, fetchProjects, updateProjects } = useAdminContent();
+  const [editingProjects, setEditingProjects] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    loadProjects();
+    fetchProjects();
   }, []);
 
-  const loadProjects = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await apiCall('/content/projects');
-      setProjects(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error('Failed to load projects:', err);
-      setError('Failed to load projects.');
-      setProjects([]);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (projects.length > 0) {
+      setEditingProjects(projects);
     }
-  };
+  }, [projects]);
 
-  const handleAddProject = () => {
-    setProjects(prev => [...prev, { 
+  const handleAdd = () => {
+    setEditingProjects([...editingProjects, { 
       title: '', 
       description: '', 
-      category: '',
+      category: 'Export',
       impact: '',
-      date: '',
-      imageUrl: '',
-      tags: [] 
+      duration: ''
     }]);
+    setIsEditing(true);
   };
 
-  const handleUpdateProject = (index, field, value) => {
-    const updated = [...projects];
-    updated[index] = { ...updated[index], [field]: value };
-    setProjects(updated);
+  const handleChange = (index, field, value) => {
+    const updated = [...editingProjects];
+    updated[index][field] = value;
+    setEditingProjects(updated);
   };
 
-  const handleRemoveProject = async (index) => {
-    if (!confirm('Are you sure you want to delete this project?')) return;
-    
-    const project = projects[index];
-    if (project._id) {
-      const toastId = toast.loading('Deleting...');
-      try {
-        await apiCall(`/content/projects/${project._id}`, 'DELETE');
-        toast.success('Deleted successfully', { id: toastId });
-      } catch (err) {
-        console.error('Failed to delete project:', err);
-        toast.error('Failed to delete project', { id: toastId });
-        return;
-      }
-    }
-    setProjects(prev => prev.filter((_, i) => i !== index));
+  const handleDelete = (index) => {
+    setEditingProjects(editingProjects.filter((_, i) => i !== index));
   };
 
   const handleSave = async () => {
-    const toastId = toast.loading('Saving changes...');
     try {
-      setError(null);
-      for (const project of projects) {
-        if (!project.title || !project.description) {
-          toast.error('Please fill all required fields', { id: toastId });
-          return;
-        }
-        if (project._id) {
-          await apiCall(`/content/projects/${project._id}`, 'PUT', project);
-        } else {
-          await apiCall('/content/projects', 'POST', project);
-        }
-      }
-      toast.success('Saved successfully!', { id: toastId });
-      await loadProjects();
-    } catch (err) {
-      console.error('Failed to save projects:', err);
-      toast.error('Failed to save changes', { id: toastId });
-      setError('Failed to save projects.');
+      await updateProjects(editingProjects);
+      toast.success('Projects updated successfully');
+      setIsEditing(false);
+      fetchProjects();
+    } catch (error) {
+      toast.error('Failed to update projects');
     }
   };
 
-  if (loading) return <div className="p-4 flex items-center justify-center"><Loader2 className="animate-spin h-8 w-8" /></div>;
+  const handleCancel = () => {
+    setEditingProjects(projects);
+    setIsEditing(false);
+  };
+
+  if (loading) return <div className="text-center py-8">Loading...</div>;
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Manage Projects</h1>
-      {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">{error}</div>}
-
-      <div className="space-y-6">
-        {projects.map((project, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md border">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
-                <input
-                  type="text"
-                  value={project.title || ''}
-                  onChange={(e) => handleUpdateProject(index, 'title', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="Project title"
-                  aria-label={`Project ${index + 1} title`}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                <input
-                  type="text"
-                  value={project.category || ''}
-                  onChange={(e) => handleUpdateProject(index, 'category', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="e.g., Agriculture, Export"
-                  aria-label={`Project ${index + 1} category`}
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
-              <textarea
-                value={project.description || ''}
-                onChange={(e) => handleUpdateProject(index, 'description', e.target.value)}
-                rows="3"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder="Project description"
-                aria-label={`Project ${index + 1} description`}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Impact</label>
-                <input
-                  type="text"
-                  value={project.impact || ''}
-                  onChange={(e) => handleUpdateProject(index, 'impact', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="e.g., 150 farmers trained"
-                  aria-label={`Project ${index + 1} impact`}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                <input
-                  type="text"
-                  value={project.date || ''}
-                  onChange={(e) => handleUpdateProject(index, 'date', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="e.g., Jan 2024 - Mar 2024"
-                  aria-label={`Project ${index + 1} date`}
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
-              <ImageUpload onImageUploaded={(url) => handleUpdateProject(index, 'imageUrl', url)} />
-              {project.imageUrl && (
-                <img src={project.imageUrl} alt={project.title} className="mt-2 h-32 w-auto object-cover rounded-md" />
-              )}
-            </div>
-
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={() => handleRemoveProject(index)}
-                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1"
-                aria-label="Remove project"
-              >
-                <Trash2 className="w-4 h-4" /> Remove
-              </button>
-            </div>
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">Manage Projects</h1>
+        {!isEditing ? (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            <Edit2 className="w-4 h-4" />
+            Edit Projects
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            <button
+              onClick={handleSave}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              <Save className="w-4 h-4" />
+              Save
+            </button>
+            <button
+              onClick={handleCancel}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+            >
+              <X className="w-4 h-4" />
+              Cancel
+            </button>
           </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {editingProjects.map((project, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white p-6 rounded-lg shadow-md"
+          >
+            {isEditing ? (
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  value={project.title}
+                  onChange={(e) => handleChange(index, 'title', e.target.value)}
+                  placeholder="Project Title"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                />
+                <textarea
+                  value={project.description}
+                  onChange={(e) => handleChange(index, 'description', e.target.value)}
+                  placeholder="Project Description"
+                  rows="3"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                />
+                <select
+                  value={project.category}
+                  onChange={(e) => handleChange(index, 'category', e.target.value)}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                >
+                  <option value="Export">Export</option>
+                  <option value="Training">Training</option>
+                  <option value="Sustainability">Sustainability</option>
+                </select>
+                <input
+                  type="text"
+                  value={project.impact}
+                  onChange={(e) => handleChange(index, 'impact', e.target.value)}
+                  placeholder="Impact (e.g., 50+ farmers)"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                />
+                <input
+                  type="text"
+                  value={project.duration}
+                  onChange={(e) => handleChange(index, 'duration', e.target.value)}
+                  placeholder="Duration (e.g., 2023-2024)"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                />
+                <button
+                  onClick={() => handleDelete(index)}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </button>
+              </div>
+            ) : (
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{project.title}</h3>
+                <p className="text-gray-600 mb-2">{project.description}</p>
+                <div className="flex gap-2 text-sm text-gray-500">
+                  <span className="bg-green-100 text-green-700 px-2 py-1 rounded">{project.category}</span>
+                  {project.impact && <span>{project.impact}</span>}
+                  {project.duration && <span>{project.duration}</span>}
+                </div>
+              </div>
+            )}
+          </motion.div>
         ))}
       </div>
 
-      <div className="flex justify-between mt-6">
+      {isEditing && (
         <button
-          onClick={handleAddProject}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center gap-2"
+          onClick={handleAdd}
+          className="mt-6 flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
-          <Plus className="w-4 h-4" /> Add Project
+          <Plus className="w-4 h-4" />
+          Add Project
         </button>
-        <button
-          onClick={handleSave}
-          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Save All Changes
-        </button>
-      </div>
+      )}
     </div>
   );
 }

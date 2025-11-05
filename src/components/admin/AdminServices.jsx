@@ -1,146 +1,140 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Plus, Edit2, Trash2, Save, X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import useAdminStore from '../../store/useAdminStore';
-import { Loader2, Plus, Trash2 } from 'lucide-react';
-
-// A list of available icons to choose from
-const availableIcons = ['Leaf', 'Truck', 'GraduationCap', 'LineChart', 'Factory', 'Globe'];
+import useAdminContent from '../../hooks/useAdminContent';
 
 export default function AdminServices() {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const apiCall = useAdminStore(state => state.apiCall);
+  const { services, loading, fetchServices, updateServices } = useAdminContent();
+  const [editingServices, setEditingServices] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    loadServices();
+    fetchServices();
   }, []);
 
-  const loadServices = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await apiCall('/content/services');
-      setServices(data?.services || []);
-    } catch (err) {
-      console.error('Failed to load services:', err);
-      setError('Failed to load services.');
-      setServices([]);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (services.length > 0) {
+      setEditingServices(services);
     }
+  }, [services]);
+
+  const handleAdd = () => {
+    setEditingServices([...editingServices, { title: '', description: '', icon: 'Briefcase' }]);
+    setIsEditing(true);
+  };
+
+  const handleChange = (index, field, value) => {
+    const updated = [...editingServices];
+    updated[index][field] = value;
+    setEditingServices(updated);
+  };
+
+  const handleDelete = (index) => {
+    setEditingServices(editingServices.filter((_, i) => i !== index));
   };
 
   const handleSave = async () => {
-    const toastId = toast.loading('Saving services...');
-    setSaving(true);
-    setError(null);
-    setSuccess(null);
     try {
-      const invalidService = services.find(s => !s.name || !s.description);
-      if (invalidService) {
-        toast.error('Please fill all required fields (name and description)', { id: toastId });
-        setSaving(false);
-        return;
-      }
-      await apiCall('/content/services', 'PUT', { services });
-      toast.success('Services updated successfully!', { id: toastId });
-      setSuccess('Services updated successfully!');
-      setTimeout(() => setSuccess(null), 3000);
-    } catch (err) {
-      console.error('Failed to save services:', err);
-      toast.error('Failed to save services', { id: toastId });
-      setError('Failed to save services.');
-    } finally {
-      setSaving(false);
+      await updateServices(editingServices);
+      toast.success('Services updated successfully');
+      setIsEditing(false);
+      fetchServices();
+    } catch (error) {
+      toast.error('Failed to update services');
     }
   };
 
-  const handleAddService = () => {
-    setServices([...services, { name: '', description: '', icon: 'Leaf' }]);
+  const handleCancel = () => {
+    setEditingServices(services);
+    setIsEditing(false);
   };
 
-  const handleRemoveService = (index) => {
-    setServices(services.filter((_, i) => i !== index));
-  };
-
-  const handleUpdateService = (index, field, value) => {
-    const updatedServices = [...services];
-    updatedServices[index] = { ...updatedServices[index], [field]: value };
-    setServices(updatedServices);
-  };
-
-  if (loading) return <div className="p-4 flex justify-center"><Loader2 className="animate-spin h-8 w-8" /></div>;
+  if (loading) return <div className="text-center py-8">Loading...</div>;
 
   return (
-    <div className="p-8">
+    <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Manage Services</h1>
-        <button onClick={handleAddService} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center">
-          <Plus className="w-4 h-4 mr-2" /> Add Service
-        </button>
+        <h1 className="text-3xl font-bold text-gray-900">Manage Services</h1>
+        {!isEditing ? (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            <Edit2 className="w-4 h-4" />
+            Edit Services
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            <button
+              onClick={handleSave}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              <Save className="w-4 h-4" />
+              Save
+            </button>
+            <button
+              onClick={handleCancel}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+            >
+              <X className="w-4 h-4" />
+              Cancel
+            </button>
+          </div>
+        )}
       </div>
 
-      {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">{error}</div>}
-      {success && <div className="bg-green-100 text-green-700 p-3 rounded-md mb-4">{success}</div>}
-
       <div className="space-y-4">
-        {services.map((service, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-md border">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Service Name *</label>
+        {editingServices.map((service, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white p-6 rounded-lg shadow-md"
+          >
+            {isEditing ? (
+              <div className="space-y-4">
                 <input
                   type="text"
-                  value={service.name || service.title || ''}
-                  onChange={(e) => handleUpdateService(index, 'name', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  placeholder="e.g., Farm Advisory & Consulting"
-                  aria-label={`Service ${index + 1} name`}
+                  value={service.title}
+                  onChange={(e) => handleChange(index, 'title', e.target.value)}
+                  placeholder="Service Title"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Icon</label>
-                <select
-                  value={service.icon || 'Leaf'}
-                  onChange={(e) => handleUpdateService(index, 'icon', e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  aria-label={`Service ${index + 1} icon`}
+                <textarea
+                  value={service.description}
+                  onChange={(e) => handleChange(index, 'description', e.target.value)}
+                  placeholder="Service Description"
+                  rows="3"
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                />
+                <button
+                  onClick={() => handleDelete(index)}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
                 >
-                  {availableIcons.map(iconName => (
-                    <option key={iconName} value={iconName}>{iconName}</option>
-                  ))}
-                </select>
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </button>
               </div>
-            </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
-              <textarea
-                value={service.description || service.desc || ''}
-                onChange={(e) => handleUpdateService(index, 'description', e.target.value)}
-                rows="3"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder="Describe the service..."
-                aria-label={`Service ${index + 1} description`}
-              />
-            </div>
-            <div className="flex justify-end mt-4">
-              <button onClick={() => handleRemoveService(index)} className="text-red-600 hover:text-red-800">
-                <Trash2 className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
+            ) : (
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">{service.title}</h3>
+                <p className="text-gray-600">{service.description}</p>
+              </div>
+            )}
+          </motion.div>
         ))}
       </div>
 
-      <div className="flex justify-end mt-6">
-        <button onClick={handleSave} disabled={saving} className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center">
-          {saving && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
-          {saving ? 'Saving...' : 'Save All Changes'}
+      {isEditing && (
+        <button
+          onClick={handleAdd}
+          className="mt-6 flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          <Plus className="w-4 h-4" />
+          Add Service
         </button>
-      </div>
+      )}
     </div>
   );
 }

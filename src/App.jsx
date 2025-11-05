@@ -23,7 +23,10 @@ const Login = lazy(() => import('./pages/Login'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminHome = lazy(() => import('./components/admin/AdminHome'));
 const AdminAbout = lazy(() => import('./components/admin/AdminAbout'));
+const AdminServices = lazy(() => import('./components/admin/AdminServices'));
 const AdminProduce = lazy(() => import('./components/admin/AdminProduce'));
+const AdminProjects = lazy(() => import('./components/admin/AdminProjects'));
+const AdminGallery = lazy(() => import('./components/admin/AdminGallery'));
 
 export default function App() {
   return (
@@ -54,11 +57,10 @@ export default function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="home" element={<AdminHome />} />
             <Route path="about" element={<AdminAbout />} />
+            <Route path="services" element={<AdminServices />} />
             <Route path="produce" element={<AdminProduce />} />
-            {/* Add other admin routes here */}
-            {/* <Route path="services" element={<AdminServices />} /> */}
-            {/* <Route path="projects" element={<AdminProjects />} /> */}
-            {/* <Route path="gallery" element={<AdminGallery />} /> */}
+            <Route path="projects" element={<AdminProjects />} />
+            <Route path="gallery" element={<AdminGallery />} />
           </Route>
         </Routes>
       </Suspense>
