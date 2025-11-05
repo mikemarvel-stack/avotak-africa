@@ -105,12 +105,19 @@ const FALLBACK_PRODUCE = [
 
 export default function Produce() {
   const { content, loading, error } = usePublicContent('/content/produce', []);
+  const [selectedCategory, setSelectedCategory] = React.useState('All');
   
   // Prioritize API data, use fallback only if API fails or returns empty
   let produceList = FALLBACK_PRODUCE;
   if (!loading && !error && Array.isArray(content) && content.length > 0) {
     produceList = content;
   }
+
+  const categories = ['All', 'Fruits', 'Vegetables', 'Herbs', 'Spices'];
+
+  const filteredProduce = selectedCategory === 'All' 
+    ? produceList 
+    : produceList.filter(p => p.category === selectedCategory);
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen"><Loader /></div>;
@@ -119,13 +126,6 @@ export default function Produce() {
   if (error) {
     return <div className="text-center py-20 text-red-500">{error}</div>;
   }
-
-  const categories = ['All', 'Fruits', 'Vegetables', 'Herbs', 'Spices'];
-  const [selectedCategory, setSelectedCategory] = React.useState('All');
-
-  const filteredProduce = selectedCategory === 'All' 
-    ? produceList 
-    : produceList.filter(p => p.category === selectedCategory);
 
   return (
     <div className="bg-gradient-to-b from-green-50 to-white py-16">
