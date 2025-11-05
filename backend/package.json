@@ -7,8 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "seed": "node seeder.js",
-    "destroy": "node seeder.js -d"
+    "seed": "node seeders/seedData.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
