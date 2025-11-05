@@ -28,7 +28,7 @@ export default function AdminProduce() {
   };
 
   const handleAddProduce = () => {
-    setProduceList(prev => [...prev, { name: '', description: '', price: 0 }]);
+    setProduceList(prev => [...prev, { name: '', description: '', category: 'Fruits', imageUrl: '' }]);
   };
 
   const handleUpdateProduce = (index, field, value) => {
@@ -60,8 +60,8 @@ export default function AdminProduce() {
     try {
       setError(null);
       for (const produce of produceList) {
-        if (!produce.name || !produce.description) {
-          toast.error('Please fill all required fields', { id: toastId });
+        if (!produce.name || !produce.description || !produce.category) {
+          toast.error('Please fill all required fields (name, description, category)', { id: toastId });
           return;
         }
         if (produce._id) {
@@ -86,37 +86,70 @@ export default function AdminProduce() {
       <h1 className="text-2xl font-bold mb-6">Manage Produce</h1>
       {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">{error}</div>}
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {produceList.map((item, index) => (
-          <div key={index} className="bg-white p-4 rounded shadow flex flex-col md:flex-row md:space-x-4 space-y-2 md:space-y-0">
-            <input
-              type="text"
-              value={item.name}
-              onChange={(e) => handleUpdateProduce(index, 'name', e.target.value)}
-              placeholder="Name"
-              className="flex-1 rounded border-gray-300 p-2"
-            />
-            <input
-              type="text"
-              value={item.description}
-              onChange={(e) => handleUpdateProduce(index, 'description', e.target.value)}
-              placeholder="Description"
-              className="flex-2 rounded border-gray-300 p-2"
-            />
-            <input
-              type="number"
-              value={item.price}
-              onChange={(e) => handleUpdateProduce(index, 'price', parseFloat(e.target.value))}
-              placeholder="Price"
-              className="flex-1 rounded border-gray-300 p-2"
-            />
-            <button
-              onClick={() => handleRemoveProduce(index)}
-              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1"
-              aria-label="Remove produce item"
-            >
-              <Trash2 className="w-4 h-4" /> Remove
-            </button>
+          <div key={index} className="bg-white p-6 rounded-lg shadow-md border">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                <input
+                  type="text"
+                  value={item.name || ''}
+                  onChange={(e) => handleUpdateProduce(index, 'name', e.target.value)}
+                  placeholder="Product name"
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  aria-label={`Produce ${index + 1} name`}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                <select
+                  value={item.category || 'Fruits'}
+                  onChange={(e) => handleUpdateProduce(index, 'category', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  aria-label={`Produce ${index + 1} category`}
+                >
+                  <option value="Fruits">Fruits</option>
+                  <option value="Vegetables">Vegetables</option>
+                  <option value="Herbs">Herbs</option>
+                  <option value="Spices">Spices</option>
+                </select>
+              </div>
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+              <textarea
+                value={item.description || ''}
+                onChange={(e) => handleUpdateProduce(index, 'description', e.target.value)}
+                placeholder="Product description"
+                rows="3"
+                className="w-full p-2 border border-gray-300 rounded-md"
+                aria-label={`Produce ${index + 1} description`}
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+              <input
+                type="text"
+                value={item.imageUrl || ''}
+                onChange={(e) => handleUpdateProduce(index, 'imageUrl', e.target.value)}
+                placeholder="Image URL"
+                className="w-full p-2 border border-gray-300 rounded-md"
+                aria-label={`Produce ${index + 1} image`}
+              />
+              {item.imageUrl && (
+                <img src={item.imageUrl} alt={item.name} className="mt-2 h-32 w-auto object-cover rounded-md" />
+              )}
+            </div>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => handleRemoveProduce(index)}
+                className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1"
+                aria-label="Remove produce item"
+              >
+                <Trash2 className="w-4 h-4" /> Remove
+              </button>
+            </div>
           </div>
         ))}
       </div>

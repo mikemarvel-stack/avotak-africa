@@ -39,9 +39,10 @@ export default function AdminServices() {
     setError(null);
     setSuccess(null);
     try {
-      const invalidService = services.find(s => !s.title || !s.desc);
+      const invalidService = services.find(s => !s.name || !s.description);
       if (invalidService) {
-        toast.error('Please fill all required fields', { id: toastId });
+        toast.error('Please fill all required fields (name and description)', { id: toastId });
+        setSaving(false);
         return;
       }
       await apiCall('/content/services', 'PUT', { services });
@@ -58,7 +59,7 @@ export default function AdminServices() {
   };
 
   const handleAddService = () => {
-    setServices([...services, { title: '', desc: '', icon: 'Leaf' }]);
+    setServices([...services, { name: '', description: '', icon: 'Leaf' }]);
   };
 
   const handleRemoveService = (index) => {
@@ -90,21 +91,22 @@ export default function AdminServices() {
           <div key={index} className="bg-white p-4 rounded-lg shadow-md border">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Title</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Service Name *</label>
                 <input
                   type="text"
-                  value={service.title}
-                  onChange={(e) => handleUpdateService(index, 'title', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                  aria-label={`Service ${index + 1} title`}
+                  value={service.name || service.title || ''}
+                  onChange={(e) => handleUpdateService(index, 'name', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="e.g., Farm Advisory & Consulting"
+                  aria-label={`Service ${index + 1} name`}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Icon</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Icon</label>
                 <select
-                  value={service.icon}
+                  value={service.icon || 'Leaf'}
                   onChange={(e) => handleUpdateService(index, 'icon', e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                  className="w-full p-2 border border-gray-300 rounded-md"
                   aria-label={`Service ${index + 1} icon`}
                 >
                   {availableIcons.map(iconName => (
@@ -114,12 +116,13 @@ export default function AdminServices() {
               </div>
             </div>
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
               <textarea
-                value={service.desc}
-                onChange={(e) => handleUpdateService(index, 'desc', e.target.value)}
+                value={service.description || service.desc || ''}
+                onChange={(e) => handleUpdateService(index, 'description', e.target.value)}
                 rows="3"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Describe the service..."
                 aria-label={`Service ${index + 1} description`}
               />
             </div>

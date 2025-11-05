@@ -28,30 +28,36 @@ export default function AdminHome() {
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md space-y-6">
         <div className="border-b pb-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Hero Section</h2>
+          <p className="text-sm text-gray-600 mb-4">Customize the main hero section of your homepage</p>
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Hero Title</label>
             <input
               type="text"
               id="title"
-              value={content.title || ''}
-              onChange={(e) => handleFieldChange('title', e.target.value)}
+              value={content.title || content.heroTitle || ''}
+              onChange={(e) => handleFieldChange('heroTitle', e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="e.g., Avotak Africa Ltd"
+              placeholder="e.g., Premium African Produce"
               aria-label="Hero section title"
             />
           </div>
           <div className="mt-4">
-            <label htmlFor="subtitle" className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
+            <label htmlFor="subtitle" className="block text-sm font-medium text-gray-700 mb-1">Hero Subtitle</label>
             <textarea
               id="subtitle"
               rows="3"
-              value={content.subtitle || ''}
-              onChange={(e) => handleFieldChange('subtitle', e.target.value)}
+              value={content.subtitle || content.heroSubtitle || ''}
+              onChange={(e) => handleFieldChange('heroSubtitle', e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="e.g., Your trusted partner in agriculture..."
+              placeholder="e.g., Fresh from our farms to your table"
               aria-label="Hero section subtitle"
             />
           </div>
+        </div>
+        
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 mb-2">Slider Images</h2>
+          <p className="text-sm text-gray-600 mb-4">Manage homepage slider images (coming soon)</p>
         </div>
 
         <div className="flex justify-end">

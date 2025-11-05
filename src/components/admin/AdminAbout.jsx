@@ -29,26 +29,57 @@ export default function AdminAbout() {
 
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md space-y-6">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">About Us Content</h2>
+          <p className="text-sm text-gray-600 mb-4">Customize your About Us page content</p>
+        </div>
+        
+        <div>
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
           <input
             type="text"
             id="title"
             value={content.title || ''}
             onChange={(e) => handleFieldChange('title', e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="e.g., Avotak Africa Limited"
             aria-label="About page title"
           />
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Company Description</label>
           <textarea
             id="description"
             rows="6"
             value={content.description || ''}
             onChange={(e) => handleFieldChange('description', e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Tell your company story..."
             aria-label="About page description"
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="mission" className="block text-sm font-medium text-gray-700 mb-1">Mission Statement</label>
+          <textarea
+            id="mission"
+            rows="3"
+            value={content.mission || ''}
+            onChange={(e) => handleFieldChange('mission', e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Your company mission..."
+          />
+        </div>
+        
+        <div>
+          <label htmlFor="vision" className="block text-sm font-medium text-gray-700 mb-1">Vision Statement</label>
+          <textarea
+            id="vision"
+            rows="3"
+            value={content.vision || ''}
+            onChange={(e) => handleFieldChange('vision', e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            placeholder="Your company vision..."
           />
         </div>
 
