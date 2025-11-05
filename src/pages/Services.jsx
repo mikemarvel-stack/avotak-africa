@@ -10,18 +10,59 @@ import {
 import usePublicContent from '../hooks/usePublicContent';
 import Loader from '../components/Loader';
 
+const DEFAULT_SERVICES = [
+  {
+    _id: '1',
+    name: 'Farm Advisory & Consulting',
+    description: 'Expert guidance on crop selection, soil management, and sustainable farming practices to maximize yields and profitability.',
+    icon: 'Leaf'
+  },
+  {
+    _id: '2',
+    name: 'Post-Harvest Handling & Quality Management',
+    description: 'Professional support in handling, storage, and quality control to reduce losses and maintain premium standards.',
+    icon: 'Truck'
+  },
+  {
+    _id: '3',
+    name: 'Market Linkages & Export Facilitation',
+    description: 'Direct connections to local and international markets, with full export documentation and logistics support.',
+    icon: 'Globe'
+  },
+  {
+    _id: '4',
+    name: 'Training & Capacity Building',
+    description: 'Comprehensive training programs for farmers on modern agricultural techniques and business management.',
+    icon: 'GraduationCap'
+  },
+  {
+    _id: '5',
+    name: 'Sustainability & Climate-Smart Agriculture',
+    description: 'Implementing eco-friendly practices and climate-resilient farming methods for long-term sustainability.',
+    icon: 'LineChart'
+  },
+  {
+    _id: '6',
+    name: 'Supply Chain & Value Addition Support',
+    description: 'End-to-end supply chain management and value addition services to increase product value and market reach.',
+    icon: 'Factory'
+  },
+];
+
 const iconMap = {
-  'Farm Advisory & Consulting': <Leaf className="w-8 h-8 text-green-600" />,
-  'Post-Harvest Handling & Quality Management': <Truck className="w-8 h-8 text-green-600" />,
-  'Market Linkages & Export Facilitation': <Globe className="w-8 h-8 text-green-600" />,
-  'Training & Capacity Building': <GraduationCap className="w-8 h-8 text-green-600" />,
-  'Sustainability & Climate-Smart Agriculture': <LineChart className="w-8 h-8 text-green-600" />,
-  'Supply Chain & Value Addition Support': <Factory className="w-8 h-8 text-green-600" />,
+  'Leaf': <Leaf className="w-8 h-8 text-green-600" />,
+  'Truck': <Truck className="w-8 h-8 text-green-600" />,
+  'Globe': <Globe className="w-8 h-8 text-green-600" />,
+  'GraduationCap': <GraduationCap className="w-8 h-8 text-green-600" />,
+  'LineChart': <LineChart className="w-8 h-8 text-green-600" />,
+  'Factory': <Factory className="w-8 h-8 text-green-600" />,
 };
 
 export default function Services() {
   const { content, loading, error } = usePublicContent('/content/services', { services: [] });
-  const services = Array.isArray(content?.services) ? content.services : [];
+  const services = Array.isArray(content?.services) && content.services.length > 0 
+    ? content.services 
+    : DEFAULT_SERVICES;
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen"><Loader /></div>;
@@ -53,7 +94,7 @@ export default function Services() {
                   <div className="-mt-6">
                     <div className="flex items-center justify-center">
                       <span className="p-3 bg-green-50 rounded-md shadow-lg">
-                        {iconMap[service.name] || <Leaf className="w-8 h-8 text-green-600" />}
+                        {iconMap[service.icon] || iconMap['Leaf']}
                       </span>
                     </div>
                     <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight text-center">{service.name}</h3>

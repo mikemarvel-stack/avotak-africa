@@ -1,18 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Leaf, TrendingUp, Users, Award } from 'lucide-react';
 import HomeSlider from '../components/HomeSlider';
 import Gallery from '../components/Gallery';
 import useFetch from '../hooks/useFetch';
+import avocadoImg from '../assets/avocado.jpg';
+import mangoImg from '../assets/mango.jpg';
+import basilImg from '../assets/basil.jpg';
+import gingerImg from '../assets/ginger.jpg';
+
+const FALLBACK_PRODUCE = [
+  { _id: '1', name: 'Hass Avocado', description: 'Premium quality avocados', image: avocadoImg },
+  { _id: '2', name: 'Fresh Mango', description: 'Sweet tropical mangoes', image: mangoImg },
+  { _id: '3', name: 'Organic Basil', description: 'Aromatic fresh basil', image: basilImg },
+  { _id: '4', name: 'Fresh Ginger', description: 'Organic ginger root', image: gingerImg },
+];
 
 export default function Home() {
   const { data: homeContent, loading: loadingHome, error: errorHome } = useFetch('/content/home');
   const { data: featuredProduce, loading: loadingProduce, error: errorProduce } = useFetch('/content/produce/featured');
 
   const sliderImages = homeContent?.sliderImages || [];
-  const featuredItems = Array.isArray(featuredProduce) 
-    ? featuredProduce.map(item => ({ ...item, image: item.imageUrl })) 
-    : [];
+  const featuredItems = Array.isArray(featuredProduce) && featuredProduce.length > 0
+    ? featuredProduce.map(item => ({ ...item, image: item.imageUrl || item.image })) 
+    : FALLBACK_PRODUCE;
 
   const isLoading = loadingHome || loadingProduce;
   const hasError = errorHome || errorProduce;
@@ -34,10 +46,6 @@ export default function Home() {
           <p className="text-gray-600 mb-8">
             A selection of our finest, freshly harvested produce.
           </p>
-          {isLoading && <p>Loading featured produce...</p>}
-          {hasError && !isLoading && <p className="text-amber-600">Could not load featured produce.</p>}
-          {!isLoading && !hasError && featuredItems.length === 0 && <p>No featured produce available at the moment.</p>}
-          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredItems.map((item, index) => (
               <motion.div
@@ -62,6 +70,43 @@ export default function Home() {
             >
               View All Produce
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Why Choose Avotak Africa</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Leaf className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Sustainable Farming</h3>
+              <p className="text-gray-600 text-sm">Eco-friendly practices for better yields</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <TrendingUp className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Market Access</h3>
+              <p className="text-gray-600 text-sm">Direct links to premium markets</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Expert Support</h3>
+              <p className="text-gray-600 text-sm">Professional guidance at every step</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Quality Assured</h3>
+              <p className="text-gray-600 text-sm">Premium standards guaranteed</p>
+            </div>
           </div>
         </div>
       </section>

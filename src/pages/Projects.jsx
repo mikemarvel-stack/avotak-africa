@@ -1,95 +1,82 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import api from '../services/api'; // Ensure you have an api service utility
-
-// Dynamically import all images from assets folder
-const images = import.meta.glob('../assets/*.{jpg,jpeg,png}', { eager: true, import: 'default', query: '?url' });
+import { Calendar, Target, Users } from 'lucide-react';
+import api from '../services/api';
+import herbNurseryImg from '../assets/Herb Nursery.jpg';
+import exportMangoImg from '../assets/Export Mango Pilot.jpg';
+import exportProcessImg from '../assets/Export Process Facilitation.jpg';
+import basilCultivationImg from '../assets/Basil Cultivation Program.jpg';
+import marketLinkagesImg from '../assets/Fresh Produce Market Linkages.jpg';
+import herbFieldImg from '../assets/herb-field.jpg';
 
 // Helper to normalize strings (lowercase, remove spaces & special chars)
 const normalize = (str) =>
   str.toLowerCase().replace(/[\s\W]/g, '');
 
-// Initial static data to be used as a fallback
 const staticProjects = [
-    {
-      id: 1,
-      title: 'Avocado Export Program',
-      description: 'A successful partnership with local farmers to export high-quality Hass avocados to European markets, ensuring fair trade practices and sustainable farming.',
-      image: '/src/assets/project-avocado.jpg',
-      tags: ['Avocado', 'Export', 'Sustainability']
-    },
-    {
-      id: 2,
-      title: 'Herb Cultivation Initiative',
-      description: 'Empowering small-scale farmers by providing training and resources for cultivating high-demand herbs like basil and rosemary for local and international markets.',
-      image: '/src/assets/project-herbs.jpg',
-      tags: ['Herbs', 'Community', 'Training']
-    },
-    {
-      id: 3,
-      title: 'Mango Value Addition',
-      description: 'A project focused on reducing post-harvest losses by processing fresh mangoes into dried fruit snacks, creating more value for farmers.',
-      image: '/src/assets/project-mango.jpg',
-      tags: ['Mango', 'Processing', 'Value Addition']
-    },
-    {
-      id: 4,
-      title: 'Herb Nursery',
-      category: 'Agriculture',
-      summary: 'Set up of herb propagation nursery to support local farmers.',
-      impact: 'Seed stock for 120 farmers.',
-      date: 'Jan 2024 - Mar 2024',
-    },
-    {
-      id: 5,
-      title: 'Export Mango Pilot',
-      category: 'Export Facilitation',
-      summary: 'Implemented quality improvement measures for mango exports.',
-      impact: '20% increase in buyer acceptance.',
-      date: 'Apr 2024 - Jun 2024',
-    },
-    {
-      id: 6,
-      title: 'Export Process Facilitation',
-      category: 'Trade & Logistics',
-      summary: 'Streamlined export procedures and documentation for small-scale farmers.',
-      impact: 'Reduced export lead time by 30%.',
-      date: 'Jul 2024 - Sep 2024',
-    },
-    {
-      id: 7,
-      title: 'Basil Cultivation Program',
-      category: 'Agriculture',
-      summary: 'Trained farmers on best practices for basil cultivation.',
-      impact: '150 farmers trained; yield improved by 25%.',
-      date: 'Oct 2024 - Dec 2024',
-    },
-    {
-      id: 8,
-      title: 'Fresh Produce Market Linkages',
-      category: 'Market Access',
-      summary: 'Connected local farmers to regional supermarkets and buyers.',
-      impact: 'Increased farmer revenue by 40%.',
-      date: 'Jan 2025 - Present',
-    },
+  {
+    id: 1,
+    title: 'Herb Nursery',
+    category: 'Agriculture',
+    description: 'Set up of herb propagation nursery to support local farmers with quality seedlings.',
+    impact: 'Seed stock for 120 farmers',
+    date: 'Jan 2024 - Mar 2024',
+    image: herbNurseryImg,
+    tags: ['Agriculture', 'Herbs', 'Community']
+  },
+  {
+    id: 2,
+    title: 'Export Mango Pilot',
+    category: 'Export Facilitation',
+    description: 'Implemented quality improvement measures for mango exports to international markets.',
+    impact: '20% increase in buyer acceptance',
+    date: 'Apr 2024 - Jun 2024',
+    image: exportMangoImg,
+    tags: ['Export', 'Mango', 'Quality']
+  },
+  {
+    id: 3,
+    title: 'Export Process Facilitation',
+    category: 'Trade & Logistics',
+    description: 'Streamlined export procedures and documentation for small-scale farmers.',
+    impact: 'Reduced export lead time by 30%',
+    date: 'Jul 2024 - Sep 2024',
+    image: exportProcessImg,
+    tags: ['Export', 'Logistics', 'Efficiency']
+  },
+  {
+    id: 4,
+    title: 'Basil Cultivation Program',
+    category: 'Agriculture',
+    description: 'Trained farmers on best practices for basil cultivation and post-harvest handling.',
+    impact: '150 farmers trained; yield improved by 25%',
+    date: 'Oct 2024 - Dec 2024',
+    image: basilCultivationImg,
+    tags: ['Training', 'Basil', 'Capacity Building']
+  },
+  {
+    id: 5,
+    title: 'Fresh Produce Market Linkages',
+    category: 'Market Access',
+    description: 'Connected local farmers to regional supermarkets and premium buyers.',
+    impact: 'Increased farmer revenue by 40%',
+    date: 'Jan 2025 - Present',
+    image: marketLinkagesImg,
+    tags: ['Market Access', 'Revenue', 'Partnership']
+  },
+  {
+    id: 6,
+    title: 'Sustainable Herb Farming',
+    category: 'Sustainability',
+    description: 'Promoting eco-friendly farming practices for herb cultivation.',
+    impact: 'Reduced water usage by 35%',
+    date: 'Ongoing',
+    image: herbFieldImg,
+    tags: ['Sustainability', 'Herbs', 'Environment']
+  },
 ];
 
-// Match project title to corresponding image from assets for static data
-const getImage = (title) => {
-  const normTitle = normalize(title);
-  const key = Object.keys(images).find((path) =>
-    normalize(path.split('/').pop().split('.')[0]) === normTitle
-  );
-  return key ? images[key] : '';
-};
-
-// Add image URLs to static projects
-const initialProjects = staticProjects.map(p => {
-  if (p.title && !p.image) {
-    return { ...p, image: getImage(p.title) };
-  }
-  return p;
-});
+const initialProjects = staticProjects;
 
 // A reusable card component for displaying a project
 const ProjectCard = ({ project }) => (
@@ -98,10 +85,18 @@ const ProjectCard = ({ project }) => (
     whileHover={{ y: -5 }}
     transition={{ duration: 0.3 }}
   >
-    <img src={project.image || '/src/assets/placeholder.jpg'} alt={project.title} className="w-full h-48 object-cover" />
+    <img src={project.image} alt={project.title} className="w-full h-56 object-cover" />
     <div className="p-6">
+      <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
+        <Calendar className="w-4 h-4" />
+        <span>{project.date}</span>
+      </div>
       <h3 className="text-xl font-bold text-green-800 mb-2">{project.title}</h3>
-      <p className="text-gray-700 mb-4">{project.description || project.summary}</p>
+      <p className="text-gray-700 mb-3">{project.description}</p>
+      <div className="flex items-start gap-2 mb-4">
+        <Target className="w-4 h-4 text-green-600 mt-1" />
+        <p className="text-sm text-green-700 font-medium">{project.impact}</p>
+      </div>
       {project.tags && (
         <div className="flex flex-wrap gap-2">
           {project.tags.map((tag, index) => (
