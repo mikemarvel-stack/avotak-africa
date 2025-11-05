@@ -3,6 +3,10 @@ import path from 'path'
 import { chromium } from 'playwright'
 
 const url = process.argv[2] || 'http://localhost:3005'
+if (!/^https?:\/\//.test(url)) {
+  console.error('Invalid URL format')
+  process.exit(1)
+}
 console.log('Testing URL:', url)
 
 async function capture() {
@@ -38,7 +42,6 @@ async function capture() {
   try {
     await page.goto(url, { waitUntil: 'networkidle' })
     
-    // Wait up to 5s for React content
     await page.waitForFunction(() => {
       return document.getElementById('root').children.length > 0
     }, { timeout: 5000 }).catch(() => {
@@ -54,7 +57,7 @@ async function capture() {
       contentSnippet: content.slice(0, 2000)
     }
 
-    const outputPath = path.resolve(process.cwd(), 'debug-capture.json')
+    const outputPath = path.join(process.cwd(), 'debug-capture.json')
     fs.writeFileSync(outputPath, JSON.stringify(data, null, 2))
     console.log('Saved capture to', outputPath)
   } catch (err) {

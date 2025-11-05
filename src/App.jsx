@@ -5,9 +5,10 @@ import { Info, Package } from 'lucide-react';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Loader from './components/Loader'; // This path should now work
+import Loader from './components/Loader';
 import AdminLayout from './components/admin/AdminLayout';
 import ProtectedRoute from './components/ProtectedRoute';
+import TawkChat from './components/TawkChat';
 
 // Lazy-loaded page components
 const Home = lazy(() => import('./pages/Home'));
@@ -29,6 +30,7 @@ export default function App() {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <Navbar />
+      <TawkChat />
       <Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader /></div>}>
         <Routes>
           <Route path="/" element={<Home />} />

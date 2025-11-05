@@ -23,6 +23,10 @@ router.post('/login', async (req, res) => {
   if (email.length > 255 || password.length > 255)
     return res.status(400).json({ message: 'Input too long' });
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email))
+    return res.status(400).json({ message: 'Invalid email format' });
+
   if (email !== ADMIN_EMAIL)
     return res.status(401).json({ message: 'Invalid credentials' });
 

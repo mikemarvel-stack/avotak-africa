@@ -37,18 +37,19 @@ const router = express.Router();
 // Schema for updating home content
 const homeContentSchema = Joi.object({
   hero: Joi.object({
-    title: Joi.string(),
-    subtitle: Joi.string()
+    title: Joi.string().max(200),
+    subtitle: Joi.string().max(500)
   }),
-  featured: Joi.array().items(Joi.string())
+  featured: Joi.array().max(20).items(Joi.string().max(100))
 }).unknown(true);
 
 // Schema for adding/updating produce
 const produceSchema = Joi.object({
-  name: Joi.string().required(),
-  description: Joi.string().required(),
-  imageUrl: Joi.string().uri().required(),
-  publicId: Joi.string(),
+  name: Joi.string().max(200).required(),
+  description: Joi.string().max(2000).required(),
+  imageUrl: Joi.string().uri().max(500).required(),
+  publicId: Joi.string().max(200),
+  category: Joi.string().max(100),
   featured: Joi.boolean()
 });
 

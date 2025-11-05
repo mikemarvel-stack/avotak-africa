@@ -91,7 +91,7 @@ console.log('Testing URL:', url)
 
   const content = await page.content()
   const out = { url, timestamp: new Date().toISOString(), logs, contentSnippet: content.slice(0, 2000) }
-  const outputPath = path.resolve(process.cwd(), 'playwright-capture.json')
+  const outputPath = path.join(process.cwd(), 'playwright-capture.json')
   fs.writeFileSync(outputPath, JSON.stringify(out, null, 2))
   console.log('Saved capture to', outputPath)
 

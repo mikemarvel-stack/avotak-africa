@@ -21,6 +21,22 @@ router.post(
   '/login',
   asyncHandler(async (req, res) => {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      res.status(400);
+      throw new Error('Email and password required');
+    }
+
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      res.status(400);
+      throw new Error('Invalid input format');
+    }
+
+    if (email.length > 255 || password.length > 255) {
+      res.status(400);
+      throw new Error('Input too long');
+    }
+
     const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
@@ -45,6 +61,21 @@ router.post(
   '/',
   asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      res.status(400);
+      throw new Error('All fields required');
+    }
+
+    if (typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string') {
+      res.status(400);
+      throw new Error('Invalid input format');
+    }
+
+    if (name.length > 100 || email.length > 255 || password.length > 255) {
+      res.status(400);
+      throw new Error('Input too long');
+    }
 
     const userExists = await User.findOne({ email });
 

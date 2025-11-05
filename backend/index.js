@@ -3,17 +3,18 @@ import mongoose from 'mongoose';
 import express from 'express';
 import authRoutes from './routes/auth.js';
 import cors from 'cors';
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
 import dashboardRoutes from './routes/dashboard.js';
-import contentRoutes from './routes/content.js'; // This should now correctly point to your main content router
+import contentRoutes from './routes/content.js';
 import dotenv from 'dotenv';
-import healthRoutes from './routes/health.js'; // Import health routes
-import errorHandler from './middleware/errorHandler.js'; // Import the handler
-import userRoutes from './routes/userRoutes.js'; // Import user routes
+import healthRoutes from './routes/health.js';
+import errorHandler from './middleware/errorHandler.js';
+import userRoutes from './routes/userRoutes.js';
+import { loginLimiter, apiLimiter } from './middleware/rateLimiter.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { protect } from './middleware/authMiddleware.js';
-// REMOVED: Unused controller imports that were causing deployment errors.
-// The controllers are correctly imported and used within their respective route files.
 
 dotenv.config();
 
@@ -32,15 +33,17 @@ app.use(cors({
 }));
 
 // -------------------- MIDDLEWARE --------------------
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(helmet());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(mongoSanitize());
 
 // -------------------- ROUTES --------------------
-app.use('/api/health', healthRoutes); // Add health check route
-app.use('/api/auth', authRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/content', contentRoutes);
-app.use('/api/users', userRoutes); // Use user routes
+app.use('/api/health', healthRoutes);
+app.use('/api/auth', loginLimiter, authRoutes);
+app.use('/api/dashboard', apiLimiter, dashboardRoutes);
+app.use('/api/content', apiLimiter, contentRoutes);
+app.use('/api/users', apiLimiter, userRoutes);
 
 // Health check
 app.get('/', (req, res) => {
@@ -79,8 +82,12 @@ const __dirname = path.dirname(__filename);
 const distPath = path.resolve(__dirname, '../dist');
 const indexPath = path.resolve(distPath, 'index.html');
 
-app.use(express.static(distPath));
+app.use(express.static(distPath, {
+  maxAge: '1d',
+  etag: true
+}));
 
 app.get('*', (req, res) => {
-  res.sendFile(indexPath);
+  const safePath = path.normalize(indexPath).replace(/^(\.\.[\/\\])+/, '');
+  res.sendFile(safePath);
 });
