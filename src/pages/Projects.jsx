@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Target, MapPin, ArrowRight, Filter, X } from 'lucide-react';
 import api from '../services/api';
-import herbNurseryImg from '../assets/Herb Nursery.jpg';
-import exportMangoImg from '../assets/Export Mango Pilot.jpg';
-import exportProcessImg from '../assets/Export Process Facilitation.jpg';
-import basilCultivationImg from '../assets/Basil Cultivation Program.jpg';
-import marketLinkagesImg from '../assets/Fresh Produce Market Linkages.jpg';
-import herbFieldImg from '../assets/herb-field.jpg';
 import avocadoImg from '../assets/avocado.jpg';
-import basilImg from '../assets/basil.jpg';
-import tomatoImg from '../assets/tomato.jpg';
 import mangoImg from '../assets/mango.jpg';
+import basilImg from '../assets/basil.jpg';
+import gingerImg from '../assets/ginger.jpg';
+import herbFieldImg from '../assets/herb-field.jpg';
+import tomatoImg from '../assets/tomato.jpg';
+import rosemaryImg from '../assets/rosemary.jpg';
+import corianderImg from '../assets/coriander.jpg';
 
 // Helper to normalize strings (lowercase, remove spaces & special chars)
 const normalize = (str) =>
@@ -20,123 +18,83 @@ const normalize = (str) =>
 const staticProjects = [
   {
     id: 1,
-    title: 'Herb Nursery Development',
-    category: 'Agriculture',
-    description: 'Established a state-of-the-art herb propagation nursery providing quality seedlings to local farmers. The facility includes modern greenhouse technology, drip irrigation systems, and organic growing media. We trained 15 nursery operators on best practices for herb propagation, pest management, and quality control.',
-    impact: 'Supplied quality seedlings to 120+ farmers across 5 regions',
-    date: 'Jan 2024 - Mar 2024',
-    image: herbNurseryImg,
-    tags: ['Agriculture', 'Herbs', 'Community', 'Training']
+    title: 'Hass Avocado Export Program',
+    category: 'Export',
+    description: 'Established direct export channels for premium Hass avocados from Kenya to European markets. Trained 80 farmers on GAP standards, post-harvest handling, and quality grading. Implemented traceability systems and obtained GlobalGAP certification. Negotiated contracts with importers in Netherlands, UK, and France ensuring fair prices and consistent demand.',
+    impact: '80 farmers exporting, 200 tons annually, 40% income increase',
+    date: 'Jan 2024 - Ongoing',
+    image: avocadoImg,
+    tags: ['Avocado', 'Export', 'Europe', 'Premium']
   },
   {
     id: 2,
-    title: 'Export Mango Quality Improvement',
-    category: 'Export Facilitation',
-    description: 'Comprehensive quality improvement program for mango exports targeting European and Middle Eastern markets. Implemented GAP (Good Agricultural Practices), post-harvest handling protocols, and traceability systems. Conducted farmer training on pruning, pest control, and harvest timing to meet international standards.',
-    impact: '20% increase in export acceptance rate, 35% premium pricing',
-    date: 'Apr 2024 - Jun 2024',
-    image: exportMangoImg,
-    tags: ['Export', 'Mango', 'Quality', 'International Markets']
+    title: 'Kent Mango Quality Improvement',
+    category: 'Training',
+    description: 'Comprehensive training program for mango farmers focusing on pruning, pest management, and harvest timing. Introduced hot water treatment for fruit flies and improved packaging. Established collection centers with quality grading equipment. Connected farmers to premium buyers in Middle East and Asia.',
+    impact: '120 farmers trained, 35% premium pricing, reduced rejections by 60%',
+    date: 'Mar 2024 - Present',
+    image: mangoImg,
+    tags: ['Mango', 'Quality', 'Training', 'Markets']
   },
   {
     id: 3,
-    title: 'Export Process Facilitation',
-    category: 'Trade & Logistics',
-    description: 'Streamlined export procedures and documentation for small-scale farmers accessing international markets. Provided support with phytosanitary certificates, export permits, customs clearance, and shipping logistics. Established partnerships with freight forwarders and clearing agents to reduce costs.',
-    impact: 'Reduced export lead time by 30%, saved farmers 25% on logistics costs',
-    date: 'Jul 2024 - Sep 2024',
-    image: exportProcessImg,
-    tags: ['Export', 'Logistics', 'Efficiency', 'Documentation']
+    title: 'Fresh Basil Production for Export',
+    category: 'Export',
+    description: 'Developed commercial basil production for European supermarkets. Provided seedlings, drip irrigation kits, and technical support to 50 farmers. Established cold chain from farm to airport. Trained farmers on harvesting, bunching, and packaging to meet buyer specifications. Weekly airfreight to UK and Germany.',
+    impact: '50 farmers, 5 tons weekly exports, consistent year-round income',
+    date: 'Feb 2024 - Ongoing',
+    image: basilImg,
+    tags: ['Basil', 'Herbs', 'Export', 'Fresh']
   },
   {
     id: 4,
-    title: 'Basil Cultivation Training Program',
-    category: 'Agriculture',
-    description: 'Intensive training program covering all aspects of commercial basil production - from land preparation and seedling transplanting to pest management and post-harvest handling. Farmers learned about optimal spacing, irrigation scheduling, organic fertilization, and proper harvesting techniques to maximize quality and shelf life.',
-    impact: '150 farmers trained, 25% yield increase, 40% reduction in post-harvest losses',
-    date: 'Oct 2024 - Dec 2024',
-    image: basilCultivationImg,
-    tags: ['Training', 'Basil', 'Capacity Building', 'Best Practices']
+    title: 'Organic Ginger Certification Project',
+    category: 'Training',
+    description: 'Supported 30 farmer groups to achieve organic certification for ginger production. Provided training on organic farming practices, composting, and natural pest control. Facilitated certification process and connected farmers to organic buyers in Europe and USA. Premium prices justified the 3-year transition period.',
+    impact: '30 groups certified, 50% price premium, 150 farmers benefiting',
+    date: 'Jan 2023 - Dec 2024',
+    image: gingerImg,
+    tags: ['Ginger', 'Organic', 'Certification', 'Premium']
   },
   {
     id: 5,
-    title: 'Fresh Produce Market Linkages',
-    category: 'Market Access',
-    description: 'Created direct market linkages between smallholder farmers and premium buyers including supermarket chains, hotels, and restaurants. Established farmer aggregation centers, implemented quality grading systems, and negotiated favorable payment terms. Provided market intelligence and demand forecasting to help farmers plan production.',
-    impact: 'Increased farmer revenue by 40%, connected 200+ farmers to 15 premium buyers',
-    date: 'Jan 2025 - Present',
-    image: marketLinkagesImg,
-    tags: ['Market Access', 'Revenue', 'Partnership', 'Value Chain']
+    title: 'Sustainable Herb Farming Initiative',
+    category: 'Training',
+    description: 'Promoted climate-smart practices for rosemary, coriander, and basil cultivation. Introduced drip irrigation, mulching, and integrated pest management. Established demonstration plots and farmer field schools. Trained 200 farmers on water conservation, soil health, and biodiversity. Reduced chemical use while maintaining yields.',
+    impact: '200 farmers trained, 40% water savings, 50% less chemicals',
+    date: 'Jun 2024 - Ongoing',
+    image: herbFieldImg,
+    tags: ['Herbs', 'Sustainability', 'Climate-Smart', 'Water']
   },
   {
     id: 6,
-    title: 'Sustainable Herb Farming Initiative',
-    category: 'Sustainability',
-    description: 'Promoting climate-smart and eco-friendly farming practices for herb cultivation. Introduced drip irrigation, mulching, composting, and integrated pest management. Trained farmers on water conservation, soil health management, and biodiversity preservation. Established demonstration plots showcasing sustainable practices.',
-    impact: 'Reduced water usage by 35%, improved soil health, 50% reduction in chemical inputs',
-    date: 'Ongoing',
-    image: herbFieldImg,
-    tags: ['Sustainability', 'Herbs', 'Environment', 'Climate-Smart']
+    title: 'Cherry Tomato Market Linkages',
+    category: 'Export',
+    description: 'Connected smallholder farmers to premium cherry tomato markets in regional supermarkets and hotels. Provided greenhouse technology, quality seeds, and technical support. Established aggregation centers with cooling facilities. Negotiated contracts ensuring stable prices and consistent offtake. Farmers receive payment within 7 days.',
+    impact: '60 farmers linked, 15 premium buyers, 45% revenue increase',
+    date: 'Apr 2024 - Present',
+    image: tomatoImg,
+    tags: ['Tomato', 'Markets', 'Greenhouse', 'Premium']
   },
   {
     id: 7,
-    title: 'Avocado Orchard Establishment',
-    category: 'Agriculture',
-    description: 'Supported 80 farmers in establishing commercial Hass avocado orchards across Kenya and Uganda. Provided grafted seedlings, training on orchard management, spacing, fertilization, and pest control. Implemented drip irrigation systems and mulching for water efficiency. Farmers received ongoing technical support through field visits and farmer field schools.',
-    impact: '80 farmers, 200 hectares planted, first harvest expected in 2026',
-    date: 'Feb 2024 - Ongoing',
-    image: avocadoImg,
-    tags: ['Avocado', 'Orchard', 'Investment', 'Long-term']
+    title: 'Fresh Rosemary Export Development',
+    category: 'Export',
+    description: 'Developed fresh rosemary supply chain for European markets. Trained farmers on proper harvesting, bunching, and post-harvest handling. Established cold storage and packaging facility. Implemented quality control systems and traceability. Weekly airfreight to UK, Netherlands, and Germany. Consistent quality and supply maintained.',
+    impact: '40 farmers exporting, 2 tons weekly, new income stream created',
+    date: 'May 2024 - Ongoing',
+    image: rosemaryImg,
+    tags: ['Rosemary', 'Herbs', 'Export', 'Europe']
   },
   {
     id: 8,
-    title: 'Organic Certification Support',
-    category: 'Certification',
-    description: 'Guided 25 farmer groups through organic certification process for herbs and vegetables. Provided training on organic standards, record keeping, and internal control systems. Supported farmers in transitioning from conventional to organic farming practices. Facilitated audits and certification with international certification bodies.',
-    impact: '25 groups certified organic, 30% price premium achieved',
-    date: 'Mar 2024 - Dec 2024',
-    image: basilImg,
-    tags: ['Organic', 'Certification', 'Premium', 'Standards']
-  },
-  {
-    id: 9,
-    title: 'Cold Chain Infrastructure Development',
-    category: 'Infrastructure',
-    description: 'Established 3 cold storage facilities and 5 collection centers in key production areas. Facilities equipped with modern cooling systems, quality grading equipment, and packaging materials. Trained staff on cold chain management, temperature monitoring, and quality control. Reduced post-harvest losses and extended shelf life of fresh produce.',
-    impact: '60% reduction in post-harvest losses, 500+ farmers benefiting',
-    date: 'May 2024 - Present',
-    image: herbFieldImg,
-    tags: ['Infrastructure', 'Cold Chain', 'Quality', 'Technology']
-  },
-  {
-    id: 10,
-    title: 'Women Farmers Empowerment Program',
-    category: 'Social Impact',
-    description: 'Targeted program supporting women farmers in vegetable and herb production. Provided training, inputs, and market access specifically designed for women-led enterprises. Established women farmer groups, savings and credit schemes, and leadership training. Connected women farmers to premium markets and negotiated favorable terms.',
-    impact: '120 women farmers, 45% income increase, 15 women-led cooperatives formed',
-    date: 'Jun 2024 - Ongoing',
-    image: tomatoImg,
-    tags: ['Women', 'Empowerment', 'Social', 'Inclusion']
-  },
-  {
-    id: 11,
-    title: 'Smart Irrigation Technology Pilot',
-    category: 'Technology',
-    description: 'Piloted smart drip irrigation systems with soil moisture sensors and automated controls on 50 farms. Farmers received training on system operation, maintenance, and water management. Monitored water usage, crop performance, and cost savings. Technology significantly reduced water consumption while improving yields.',
-    impact: '50% water savings, 20% yield increase, 50 farms equipped',
-    date: 'Aug 2024 - Present',
-    image: herbNurseryImg,
-    tags: ['Technology', 'Irrigation', 'Innovation', 'Water']
-  },
-  {
-    id: 12,
-    title: 'Youth in Agriculture Initiative',
-    category: 'Youth Development',
-    description: 'Engaged 100 young people in commercial agriculture through training, mentorship, and startup support. Provided business development training, access to land, inputs, and markets. Established youth farmer groups and linked them to financial services. Created employment opportunities and changed perceptions about farming as a career.',
-    impact: '100 youth engaged, 40 agribusinesses started, 200+ jobs created',
-    date: 'Sep 2024 - Ongoing',
-    image: mangoImg,
-    tags: ['Youth', 'Employment', 'Entrepreneurship', 'Future']
+    title: 'Coriander Production Training',
+    category: 'Training',
+    description: 'Intensive training program on commercial coriander production for local and export markets. Covered land preparation, seed selection, irrigation, pest management, and harvesting. Provided quality seeds and drip irrigation kits. Connected farmers to buyers in hotels, restaurants, and supermarkets. Established farmer groups for collective marketing.',
+    impact: '100 farmers trained, 30% yield increase, reliable market access',
+    date: 'Jul 2024 - Present',
+    image: corianderImg,
+    tags: ['Coriander', 'Training', 'Production', 'Markets']
   },
 ];
 
@@ -198,7 +156,7 @@ export default function Projects() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const categories = ['All', ...new Set(staticProjects.map(p => p.category))];
+  const categories = ['All', 'Export', 'Training'];
 
   useEffect(() => {
     const fetchProjects = async () => {
