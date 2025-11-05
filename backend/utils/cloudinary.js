@@ -15,8 +15,11 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'avotak',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'gif'],
-    transformation: [{ width: 1000, height: 1000, crop: 'limit' }]
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    transformation: [
+      { width: 1200, height: 1200, crop: 'limit', quality: 'auto:good', fetch_format: 'auto' }
+    ],
+    resource_type: 'image'
   }
 });
 
