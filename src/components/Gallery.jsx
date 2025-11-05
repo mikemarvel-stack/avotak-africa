@@ -14,6 +14,13 @@ import turmericImg from '../assets/turmeric.jpg';
 import spinachImg from '../assets/spinach.jpg';
 import carrotImg from '../assets/carrot.jpg';
 import bananaImg from '../assets/banana.jpg';
+import appleImg from '../assets/apple.jpg';
+import lemonImg from '../assets/lemon.jpg';
+import herbNurseryImg from '../assets/Herb Nursery.jpg';
+import exportMangoImg from '../assets/Export Mango Pilot.jpg';
+import exportProcessImg from '../assets/Export Process Facilitation.jpg';
+import freshProduceImg from '../assets/Fresh Produce Market Linkages.jpg';
+import basilCultivationImg from '../assets/Basil Cultivation Program.jpg';
 
 const FALLBACK_IMAGES = [
   { url: avocadoImg, title: 'Fresh Avocados' },
@@ -28,6 +35,13 @@ const FALLBACK_IMAGES = [
   { url: spinachImg, title: 'Green Spinach' },
   { url: carrotImg, title: 'Fresh Carrots' },
   { url: bananaImg, title: 'Ripe Bananas' },
+  { url: appleImg, title: 'Fresh Apples' },
+  { url: lemonImg, title: 'Organic Lemons' },
+  { url: herbNurseryImg, title: 'Herb Nursery Project' },
+  { url: exportMangoImg, title: 'Export Mango Pilot' },
+  { url: exportProcessImg, title: 'Export Facilitation' },
+  { url: freshProduceImg, title: 'Fresh Produce Market' },
+  { url: basilCultivationImg, title: 'Basil Cultivation' },
 ];
 
 export default function Gallery() {
@@ -41,14 +55,46 @@ export default function Gallery() {
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {images.map((img, i) => (
+      {/* Horizontal Scrolling Gallery */}
+      <div className="relative">
+        <div className="overflow-x-auto pb-4 scrollbar-hide">
+          <div className="flex gap-4 min-w-max px-2">
+            {images.map((img, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.03 }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="relative w-64 h-64 rounded-xl overflow-hidden shadow-lg cursor-pointer group flex-shrink-0"
+                onClick={() => setLightboxIndex(i)}
+              >
+                <img 
+                  src={img.url || img.imageUrl || img} 
+                  alt={img.title || `Gallery ${i + 1}`} 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                  <p className="text-white text-sm font-semibold">{img.title || 'View Image'}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        {/* Scroll Indicator */}
+        <div className="absolute right-0 top-0 bottom-4 w-20 bg-gradient-to-l from-white to-transparent pointer-events-none" />
+      </div>
+      
+      {/* Grid View for larger screens */}
+      <div className="hidden lg:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mt-8">
+        {images.slice(0, 18).map((img, i) => (
           <motion.div
-            key={i}
+            key={`grid-${i}`}
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.3, delay: i * 0.05 }}
+            transition={{ duration: 0.3, delay: i * 0.02 }}
             whileHover={{ scale: 1.05, y: -5 }}
             className="relative aspect-square rounded-xl overflow-hidden shadow-lg cursor-pointer group"
             onClick={() => setLightboxIndex(i)}
@@ -59,7 +105,7 @@ export default function Gallery() {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-              <p className="text-white text-sm font-medium">{img.title || 'View Image'}</p>
+              <p className="text-white text-xs font-medium">{img.title || 'View Image'}</p>
             </div>
           </motion.div>
         ))}

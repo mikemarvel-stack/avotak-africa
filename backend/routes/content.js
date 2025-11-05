@@ -6,6 +6,8 @@ import asyncHandler from 'express-async-handler';
 import {
   getHomeContent,
   updateHomeContent,
+  getAboutContent,
+  updateAboutContent,
   getServicesContent,
   updateServicesContent,
   getProduce,
@@ -71,6 +73,11 @@ const validateRequest = (schema) => (req, res, next) => {
 router.route('/home')
   .get(asyncHandler(getHomeContent))
   .put(protect, validateRequest(homeContentSchema), asyncHandler(updateHomeContent));
+
+// About Page Content
+router.route('/about')
+  .get(asyncHandler(getAboutContent))
+  .put(protect, asyncHandler(updateAboutContent));
 
 // Services Page Content
 router.route('/services')
