@@ -8,14 +8,26 @@ import basilImg from '../assets/basil.jpg';
 import gingerImg from '../assets/ginger.jpg';
 import herbsImg from '../assets/herb-field.jpg';
 import tomatoImg from '../assets/tomato.jpg';
+import rosemaryImg from '../assets/rosemary.jpg';
+import corianderImg from '../assets/coriander.jpg';
+import turmericImg from '../assets/turmeric.jpg';
+import spinachImg from '../assets/spinach.jpg';
+import carrotImg from '../assets/carrot.jpg';
+import bananaImg from '../assets/banana.jpg';
 
 const FALLBACK_IMAGES = [
   { url: avocadoImg, title: 'Fresh Avocados' },
   { url: mangoImg, title: 'Ripe Mangoes' },
   { url: basilImg, title: 'Organic Basil' },
   { url: gingerImg, title: 'Fresh Ginger' },
-  { url: herbsImg, title: 'Mixed Herbs' },
+  { url: herbsImg, title: 'Herb Field' },
   { url: tomatoImg, title: 'Vine Tomatoes' },
+  { url: rosemaryImg, title: 'Fresh Rosemary' },
+  { url: corianderImg, title: 'Coriander Leaves' },
+  { url: turmericImg, title: 'Organic Turmeric' },
+  { url: spinachImg, title: 'Green Spinach' },
+  { url: carrotImg, title: 'Fresh Carrots' },
+  { url: bananaImg, title: 'Ripe Bananas' },
 ];
 
 export default function Gallery() {

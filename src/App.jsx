@@ -34,8 +34,9 @@ export default function App() {
       <Toaster position="top-center" reverseOrder={false} />
       <Navbar />
       <TawkChat />
-      <Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader /></div>}>
-        <Routes>
+      <div className="pt-20">
+        <Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader /></div>}>
+          <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/services" element={<Services />} />
@@ -62,8 +63,9 @@ export default function App() {
             <Route path="projects" element={<AdminProjects />} />
             <Route path="gallery" element={<AdminGallery />} />
           </Route>
-        </Routes>
-      </Suspense>
+          </Routes>
+        </Suspense>
+      </div>
       <Footer />
     </>
   );

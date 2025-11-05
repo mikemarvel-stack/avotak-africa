@@ -9,6 +9,8 @@ import {
   Mail,
   Phone,
   MapPin,
+  Leaf,
+  ArrowRight,
 } from 'lucide-react';
 
 export default function Footer() {
@@ -23,128 +25,122 @@ export default function Footer() {
 
   return (
     <motion.footer
-      className="bg-gray-50 border-t text-gray-700 relative z-10"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
+      className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 text-white overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
     >
-      <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Company Info */}
-        <div>
-          <div className="font-bold text-xl text-green-800 mb-2">Avotak Africa Ltd</div>
-          <div className="text-sm text-gray-600 mb-4">
-            Sustainable agricultural consulting • Fresh fruits & herbs • Value chain support
-          </div>
-          <div className="flex items-center gap-3 text-gray-600 mb-1">
-            <MapPin className="w-4 h-4" />
-            <span>123 Greenway Rd, Nairobi, Kenya</span>
-          </div>
-          <div className="flex items-center gap-3 text-gray-600 mb-1">
-            <Phone className="w-4 h-4" />
-            <span
-              onClick={() => handleNavigate('/contact')}
-              className={linkStyle}
-            >
-              +254 711 281 829
-            </span>
-          </div>
-          <div className="flex items-center gap-3 text-gray-600">
-            <Mail className="w-4 h-4" />
-            <span
-              onClick={() => handleNavigate('/contact')}
-              className={linkStyle}
-            >
-              info@avotakafrica.com
-            </span>
-          </div>
-        </div>
-
-        {/* Quick Links */}
-        <div>
-          <div className="font-semibold text-green-800 mb-4">Quick Links</div>
-          <ul className="space-y-2 text-gray-600">
-            <li>
-              <span
-                onClick={() => handleNavigate('/about')}
-                className={linkStyle}
-              >
-                About Us
-              </span>
-            </li>
-            <li>
-              <span
-                onClick={() => handleNavigate('/produce')}
-                className={linkStyle}
-              >
-                Produce
-              </span>
-            </li>
-            <li>
-              <span
-                onClick={() => handleNavigate('/services')}
-                className={linkStyle}
-              >
-                Services
-              </span>
-            </li>
-            <li>
-              <span
-                onClick={() => handleNavigate('/projects')}
-                className={linkStyle}
-              >
-                Projects
-              </span>
-            </li>
-            <li>
-              <span
-                onClick={() => handleNavigate('/contact')}
-                className={linkStyle}
-              >
-                Contact
-              </span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Social & Newsletter */}
-        <div>
-          <div className="font-semibold text-green-800 mb-4">Connect With Us</div>
-          <div className="flex items-center gap-4 mb-4">
-            <a href="#" aria-label="Facebook" className="hover:text-green-700 transition">
-              <Facebook className="w-6 h-6" />
-            </a>
-            <a href="#" aria-label="Twitter" className="hover:text-green-700 transition">
-              <Twitter className="w-6 h-6" />
-            </a>
-            <a href="#" aria-label="Instagram" className="hover:text-green-700 transition">
-              <Instagram className="w-6 h-6" />
-            </a>
-            <a href="#" aria-label="LinkedIn" className="hover:text-green-700 transition">
-              <Linkedin className="w-6 h-6" />
-            </a>
-          </div>
-          <div className="text-sm text-gray-600 mb-2">
-            Subscribe to our newsletter for updates:
-          </div>
-          <form className="flex gap-2">
-            <input
-              type="email"
-              placeholder="Your email"
-              className="flex-1 px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
-            <button
-              type="submit"
-              className="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 transition"
-            >
-              Subscribe
-            </button>
-          </form>
-        </div>
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
       </div>
 
-      {/* Footer Bottom */}
-      <div className="border-t border-gray-200 py-4 text-center text-gray-500 text-sm">
-        © {new Date().getFullYear()} Avotak Africa Ltd. All rights reserved.
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          {/* Company Info */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-gradient-to-br from-green-400 to-green-600 p-2.5 rounded-xl shadow-lg">
+                <Leaf className="w-6 h-6 text-white" />
+              </div>
+              <div className="font-bold text-2xl">Avotak Africa</div>
+            </div>
+            <p className="text-gray-300 text-sm leading-relaxed mb-6">
+              Empowering African farmers through sustainable practices, expert consultancy, and market access.
+            </p>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3 text-gray-300 text-sm group">
+                <MapPin className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
+                <span className="group-hover:text-white transition-colors">123 Greenway Rd, Nairobi, Kenya</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-300 text-sm group cursor-pointer" onClick={() => handleNavigate('/contact')}>
+                <Phone className="w-5 h-5 text-green-400 flex-shrink-0" />
+                <span className="group-hover:text-white transition-colors">+254 711 281 829</span>
+              </div>
+              <div className="flex items-center gap-3 text-gray-300 text-sm group cursor-pointer" onClick={() => handleNavigate('/contact')}>
+                <Mail className="w-5 h-5 text-green-400 flex-shrink-0" />
+                <span className="group-hover:text-white transition-colors">info@avotakafrica.com</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="font-bold text-lg mb-6 text-white">Quick Links</h3>
+            <ul className="space-y-3">
+              {[{ name: 'About Us', path: '/about' }, { name: 'Our Produce', path: '/produce' }, { name: 'Services', path: '/services' }, { name: 'Projects', path: '/projects' }, { name: 'Contact', path: '/contact' }].map((link) => (
+                <li key={link.path}>
+                  <span
+                    onClick={() => handleNavigate(link.path)}
+                    className="text-gray-300 hover:text-green-400 transition-colors cursor-pointer flex items-center gap-2 group"
+                  >
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    {link.name}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Services */}
+          <div>
+            <h3 className="font-bold text-lg mb-6 text-white">Our Services</h3>
+            <ul className="space-y-3 text-gray-300 text-sm">
+              <li className="hover:text-green-400 transition-colors cursor-pointer">Farm Advisory</li>
+              <li className="hover:text-green-400 transition-colors cursor-pointer">Quality Management</li>
+              <li className="hover:text-green-400 transition-colors cursor-pointer">Export Facilitation</li>
+              <li className="hover:text-green-400 transition-colors cursor-pointer">Training Programs</li>
+              <li className="hover:text-green-400 transition-colors cursor-pointer">Supply Chain Support</li>
+            </ul>
+          </div>
+
+          {/* Newsletter */}
+          <div>
+            <h3 className="font-bold text-lg mb-6 text-white">Stay Connected</h3>
+            <p className="text-gray-300 text-sm mb-4">
+              Subscribe for updates on fresh produce and agricultural insights.
+            </p>
+            <form className="mb-6">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="email"
+                  placeholder="Your email"
+                  className="flex-1 px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all"
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg font-medium hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                >
+                  Subscribe
+                </button>
+              </div>
+            </form>
+            <div className="flex items-center gap-4">
+              {[{ Icon: Facebook, label: 'Facebook' }, { Icon: Twitter, label: 'Twitter' }, { Icon: Instagram, label: 'Instagram' }, { Icon: Linkedin, label: 'LinkedIn' }].map(({ Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  aria-label={label}
+                  className="p-2.5 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-green-600 transition-all hover:scale-110 group"
+                >
+                  <Icon className="w-5 h-5 text-gray-300 group-hover:text-white transition-colors" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Bottom */}
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-gray-400 text-sm">
+            © {new Date().getFullYear()} Avotak Africa Ltd. All rights reserved.
+          </p>
+          <div className="flex items-center gap-6 text-sm text-gray-400">
+            <span className="hover:text-green-400 transition-colors cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-green-400 transition-colors cursor-pointer">Terms of Service</span>
+            <span className="hover:text-green-400 transition-colors cursor-pointer">Sitemap</span>
+          </div>
+        </div>
       </div>
     </motion.footer>
   );

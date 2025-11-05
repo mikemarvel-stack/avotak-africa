@@ -292,8 +292,8 @@ MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
 
 # Authentication
 JWT_SECRET=your_random_32_character_minimum_secret_key
-ADMIN_EMAIL=admin@avotak.com
-ADMIN_PASSWORD=YourSecurePassword123!
+ADMIN_EMAIL=*admin@avotak.com*
+ADMIN_PASSWORD=*YourSecurePassword123!*
 
 # Cloudinary
 CLOUDINARY_CLOUD_NAME=your_cloud_name
