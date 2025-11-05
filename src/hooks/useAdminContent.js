@@ -67,7 +67,13 @@ export default function useAdminContent(endpoint, initialContent = {}) {
   };
 
   const updateServices = async (servicesData) => {
-    await apiCall('/content/services', 'PUT', { services: servicesData });
+    try {
+      await apiCall('/content/services', 'PUT', { services: servicesData });
+      return true;
+    } catch (err) {
+      console.error('Failed to update services:', err);
+      throw err;
+    }
   };
 
   const fetchProjects = async () => {
@@ -83,7 +89,13 @@ export default function useAdminContent(endpoint, initialContent = {}) {
   };
 
   const updateProjects = async (projectsData) => {
-    await apiCall('/content/projects', 'PUT', { projects: projectsData });
+    try {
+      await apiCall('/content/projects', 'PUT', { projects: projectsData });
+      return true;
+    } catch (err) {
+      console.error('Failed to update projects:', err);
+      throw err;
+    }
   };
 
   const fetchGallery = async () => {
@@ -99,13 +111,25 @@ export default function useAdminContent(endpoint, initialContent = {}) {
   };
 
   const addGalleryImage = async (file) => {
-    const formData = new FormData();
-    formData.append('image', file);
-    await apiCall('/content/gallery', 'POST', formData);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      await apiCall('/content/gallery', 'POST', formData);
+      return true;
+    } catch (err) {
+      console.error('Failed to add gallery image:', err);
+      throw err;
+    }
   };
 
   const deleteGalleryImage = async (id) => {
-    await apiCall(`/content/gallery/${id}`, 'DELETE');
+    try {
+      await apiCall(`/content/gallery/${id}`, 'DELETE');
+      return true;
+    } catch (err) {
+      console.error('Failed to delete gallery image:', err);
+      throw err;
+    }
   };
 
   return {

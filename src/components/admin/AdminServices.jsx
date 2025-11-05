@@ -39,9 +39,10 @@ export default function AdminServices() {
       await updateServices(editingServices);
       toast.success('Services updated successfully');
       setIsEditing(false);
-      fetchServices();
+      await fetchServices();
     } catch (error) {
-      toast.error('Failed to update services');
+      console.error('Save error:', error);
+      toast.error(error.message || 'Failed to update services');
     }
   };
 

@@ -45,9 +45,10 @@ export default function AdminProjects() {
       await updateProjects(editingProjects);
       toast.success('Projects updated successfully');
       setIsEditing(false);
-      fetchProjects();
+      await fetchProjects();
     } catch (error) {
-      toast.error('Failed to update projects');
+      console.error('Save error:', error);
+      toast.error(error.message || 'Failed to update projects');
     }
   };
 
