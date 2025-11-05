@@ -43,67 +43,73 @@ const GALLERY_IMAGES = [
 
 export default function Gallery() {
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const images = GALLERY_IMAGES;
+  const visibleCount = 4;
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  const getVisibleImages = () => {
+    const visible = [];
+    for (let i = 0; i < visibleCount; i++) {
+      visible.push(images[(currentIndex + i) % images.length]);
+    }
+    return visible;
+  };
 
   const nextImage = () => setLightboxIndex((lightboxIndex + 1) % images.length);
   const prevImage = () => setLightboxIndex((lightboxIndex - 1 + images.length) % images.length);
 
   return (
     <>
-      {/* Horizontal Scrolling Gallery */}
+      {/* Auto-scrolling Carousel */}
       <div className="relative">
-        <div className="overflow-x-auto pb-4 scrollbar-hide">
-          <div className="flex gap-4 min-w-max px-2">
-            {images.map((img, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.03 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="relative w-64 h-64 rounded-xl overflow-hidden shadow-lg cursor-pointer group flex-shrink-0"
-                onClick={() => setLightboxIndex(i)}
-              >
-                <img 
-                  src={img.url || img.imageUrl || img} 
-                  alt={img.title || `Gallery ${i + 1}`} 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                  <p className="text-white text-sm font-semibold">{img.title || 'View Image'}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <AnimatePresence mode="popLayout">
+            {getVisibleImages().map((img, i) => {
+              const actualIndex = (currentIndex + i) % images.length;
+              return (
+                <motion.div
+                  key={actualIndex}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.5 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="relative aspect-square rounded-xl overflow-hidden shadow-lg cursor-pointer group"
+                  onClick={() => setLightboxIndex(actualIndex)}
+                >
+                  <img 
+                    src={img.url} 
+                    alt={img.title} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                    <p className="text-white text-sm font-semibold">{img.title}</p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
         </div>
-        {/* Scroll Indicator */}
-        <div className="absolute right-0 top-0 bottom-4 w-20 bg-gradient-to-l from-white to-transparent pointer-events-none" />
-      </div>
-      
-      {/* Grid View for larger screens */}
-      <div className="hidden lg:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mt-8">
-        {images.map((img, i) => (
-          <motion.div
-            key={`grid-${i}`}
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.3, delay: i * 0.02 }}
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="relative aspect-square rounded-xl overflow-hidden shadow-lg cursor-pointer group"
-            onClick={() => setLightboxIndex(i)}
-          >
-            <img 
-              src={img.url || img.imageUrl || img} 
-              alt={img.title || `Gallery ${i + 1}`} 
-              className="w-full h-full object-cover"
+        
+        {/* Progress Indicator */}
+        <div className="flex justify-center gap-2 mt-6">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              className={`h-2 rounded-full transition-all ${
+                i === currentIndex ? 'w-8 bg-green-600' : 'w-2 bg-gray-300'
+              }`}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-              <p className="text-white text-xs font-medium">{img.title || 'View Image'}</p>
-            </div>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Lightbox */}
