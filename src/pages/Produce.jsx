@@ -4,7 +4,8 @@ import Loader from '../components/Loader';
 import { Package } from 'lucide-react';
 
 export default function Produce() {
-  const { content: produceList, loading, error } = usePublicContent('/content/produce', []);
+  const { content, loading, error } = usePublicContent('/content/produce', []);
+  const produceList = Array.isArray(content) ? content : [];
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen"><Loader /></div>;
@@ -22,9 +23,9 @@ export default function Produce() {
           <p className="text-lg text-gray-600 mt-2">Fresh from our farms, cultivated with care.</p>
         </div>
         
-        {produceList.length > 0 ? (
+        {produceList && produceList.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {produceList.map((produce) => (
+            {produceList.map((produce, index) => (
               <div key={produce._id} className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
                 <div className="p-6">
                   <h3 className="text-2xl font-bold text-primary mb-2">{produce.name}</h3>

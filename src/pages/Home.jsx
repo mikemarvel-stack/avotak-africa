@@ -10,7 +10,9 @@ export default function Home() {
   const { data: featuredProduce, loading: loadingProduce, error: errorProduce } = useFetch('/content/produce/featured');
 
   const sliderImages = homeContent?.sliderImages || [];
-  const featuredItems = featuredProduce?.map(item => ({ ...item, image: item.imageUrl })) || [];
+  const featuredItems = Array.isArray(featuredProduce) 
+    ? featuredProduce.map(item => ({ ...item, image: item.imageUrl })) 
+    : [];
 
   const isLoading = loadingHome || loadingProduce;
   const hasError = errorHome || errorProduce;
@@ -37,7 +39,7 @@ export default function Home() {
           {!isLoading && !hasError && featuredItems.length === 0 && <p>No featured produce available at the moment.</p>}
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredItems.map((item) => (
+            {featuredItems.map((item, index) => (
               <motion.div
                 key={item._id}
                 className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300"

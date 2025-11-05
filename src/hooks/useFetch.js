@@ -8,8 +8,21 @@ export default function useFetch(url){
 
   useEffect(()=> {
     let mounted = true
-    api.get(url).then(res => { if(mounted) setData(res.data) }).catch(err => { if(mounted) setError(err) }).finally(()=> { if(mounted) setLoading(false) })
-    return () => mounted = false
+    api.get(url)
+      .then(res => { 
+        if(mounted) setData(res.data) 
+      })
+      .catch(err => { 
+        if(mounted) {
+          console.error(`Fetch error for ${url}:`, err)
+          setError(err)
+          setData(null)
+        }
+      })
+      .finally(()=> { 
+        if(mounted) setLoading(false) 
+      })
+    return () => { mounted = false }
   }, [url])
 
   return { data, loading, error }

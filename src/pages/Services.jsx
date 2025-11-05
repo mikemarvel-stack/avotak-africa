@@ -20,7 +20,8 @@ const iconMap = {
 };
 
 export default function Services() {
-  const { content: services, loading, error } = usePublicContent('/services', []);
+  const { content, loading, error } = usePublicContent('/content/services', { services: [] });
+  const services = Array.isArray(content?.services) ? content.services : [];
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen"><Loader /></div>;
@@ -44,9 +45,10 @@ export default function Services() {
         </div>
 
         <div className="mt-10">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (
-              <div key={service._id} className="pt-6">
+          {services && services.length > 0 ? (
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {services.map((service, index) => (
+                <div key={service._id || index} className="pt-6">
                 <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow-md">
                   <div className="-mt-6">
                     <div className="flex items-center justify-center">
@@ -60,9 +62,14 @@ export default function Services() {
                     </p>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16 bg-white rounded-lg shadow-md">
+              <p className="text-gray-500">No services available at the moment.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

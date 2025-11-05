@@ -8,21 +8,31 @@ export default function usePublicContent(endpoint, initialContent = {}) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let mounted = true;
+    
     const fetchContent = async () => {
       try {
         setLoading(true);
         setError(null);
         const response = await api.get(endpoint);
-        setContent(response.data);
+        if (mounted) {
+          setContent(response.data || initialContent);
+        }
       } catch (err) {
         console.error(`Failed to fetch content from ${endpoint}:`, err);
-        setError('Failed to load content. Please try again later.');
+        if (mounted) {
+          setError('Failed to load content. Please try again later.');
+          setContent(initialContent);
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchContent();
+    return () => { mounted = false; };
   }, [endpoint]);
 
   return { content, loading, error };
