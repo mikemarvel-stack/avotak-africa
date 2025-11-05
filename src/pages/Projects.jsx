@@ -162,10 +162,13 @@ export default function Projects() {
     const fetchProjects = async () => {
       try {
         const response = await api.get('/content/projects');
-        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-          const dynamicProjects = response.data.map(p => ({ 
+        const projectsData = response.data?.projects || response.data;
+        if (projectsData && Array.isArray(projectsData) && projectsData.length > 0) {
+          const dynamicProjects = projectsData.map(p => ({ 
             ...p, 
-            image: p.imageUrl || p.image 
+            image: p.imageUrl || p.image,
+            date: p.duration || p.date,
+            tags: p.tags || []
           }));
           setProjects(dynamicProjects);
           setFilteredProjects(dynamicProjects);

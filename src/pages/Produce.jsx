@@ -107,11 +107,10 @@ export default function Produce() {
   const { content, loading, error } = usePublicContent('/content/produce', []);
   const [selectedCategory, setSelectedCategory] = React.useState('All');
   
-  // Prioritize API data, use fallback only if API fails or returns empty
-  let produceList = FALLBACK_PRODUCE;
-  if (!loading && !error && Array.isArray(content) && content.length > 0) {
-    produceList = content;
-  }
+  // Use API data, fallback only on error
+  const produceList = (!loading && Array.isArray(content) && content.length > 0) 
+    ? content.map(p => ({ ...p, imageUrl: p.imageUrl || p.image }))
+    : FALLBACK_PRODUCE;
 
   const categories = ['All', 'Fruits', 'Vegetables', 'Herbs', 'Spices'];
 
