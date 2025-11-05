@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Loader2, Plus, Trash2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import useAdminStore from '../../store/useAdminStore';
 import ImageUpload from './ImageUpload';
 
@@ -37,13 +39,17 @@ export default function AdminGallery() {
   };
 
   const handleRemoveItem = async (index) => {
+    if (!confirm('Are you sure you want to delete this gallery item?')) return;
+    
     const item = gallery[index];
     if (item._id) {
+      const toastId = toast.loading('Deleting...');
       try {
         await apiCall(`/content/gallery/${item._id}`, 'DELETE');
+        toast.success('Deleted successfully', { id: toastId });
       } catch (err) {
         console.error('Failed to delete item:', err);
-        alert('Failed to delete item.');
+        toast.error('Failed to delete item', { id: toastId });
         return;
       }
     }
@@ -51,24 +57,30 @@ export default function AdminGallery() {
   };
 
   const handleSave = async () => {
+    const toastId = toast.loading('Saving changes...');
     try {
       setError(null);
       for (const item of gallery) {
+        if (!item.url) {
+          toast.error('Please upload an image for all items', { id: toastId });
+          return;
+        }
         if (item._id) {
           await apiCall(`/content/gallery/${item._id}`, 'PUT', item);
         } else {
           await apiCall('/content/gallery', 'POST', item);
         }
       }
-      alert('Gallery saved successfully.');
-      loadGallery();
+      toast.success('Saved successfully!', { id: toastId });
+      await loadGallery();
     } catch (err) {
       console.error('Failed to save gallery:', err);
+      toast.error('Failed to save changes', { id: toastId });
       setError('Failed to save gallery.');
     }
   };
 
-  if (loading) return <div className="p-4">Loading gallery...</div>;
+  if (loading) return <div className="p-4 flex items-center justify-center"><Loader2 className="animate-spin h-8 w-8" /></div>;
 
   return (
     <div className="p-8">
@@ -93,9 +105,10 @@ export default function AdminGallery() {
             />
             <button
               onClick={() => handleRemoveItem(index)}
-              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1"
+              aria-label="Remove gallery item"
             >
-              Remove
+              <Trash2 className="w-4 h-4" /> Remove
             </button>
           </div>
         ))}
@@ -104,9 +117,9 @@ export default function AdminGallery() {
       <div className="mt-6 flex justify-between">
         <button
           onClick={handleAddItem}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center gap-2"
         >
-          Add Item
+          <Plus className="w-4 h-4" /> Add Item
         </button>
         <button
           onClick={handleSave}

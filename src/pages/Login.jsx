@@ -35,10 +35,11 @@ export default function Login() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({ message: 'Invalid response from server' }));
 
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        const errorMsg = data.message || `Login failed (${response.status})`;
+        throw new Error(errorMsg);
       }
 
       if (data.token) {

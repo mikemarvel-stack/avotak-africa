@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Loader2, Plus, Trash2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import useAdminStore from '../../store/useAdminStore';
 
 export default function AdminProduce() {
@@ -36,13 +38,17 @@ export default function AdminProduce() {
   };
 
   const handleRemoveProduce = async (index) => {
+    if (!confirm('Are you sure you want to delete this item?')) return;
+    
     const produce = produceList[index];
     if (produce._id) {
+      const toastId = toast.loading('Deleting...');
       try {
         await apiCall(`/content/produce/${produce._id}`, 'DELETE');
+        toast.success('Deleted successfully', { id: toastId });
       } catch (err) {
         console.error('Failed to delete produce:', err);
-        alert('Failed to delete produce.');
+        toast.error('Failed to delete item', { id: toastId });
         return;
       }
     }
@@ -50,24 +56,30 @@ export default function AdminProduce() {
   };
 
   const handleSave = async () => {
+    const toastId = toast.loading('Saving changes...');
     try {
       setError(null);
       for (const produce of produceList) {
+        if (!produce.name || !produce.description) {
+          toast.error('Please fill all required fields', { id: toastId });
+          return;
+        }
         if (produce._id) {
           await apiCall(`/content/produce/${produce._id}`, 'PUT', produce);
         } else {
           await apiCall('/content/produce', 'POST', produce);
         }
       }
-      alert('Produce saved successfully.');
-      loadProduce();
+      toast.success('Saved successfully!', { id: toastId });
+      await loadProduce();
     } catch (err) {
       console.error('Failed to save produce:', err);
+      toast.error('Failed to save changes', { id: toastId });
       setError('Failed to save produce.');
     }
   };
 
-  if (loading) return <div className="p-4">Loading produce...</div>;
+  if (loading) return <div className="p-4 flex items-center justify-center"><Loader2 className="animate-spin h-8 w-8" /></div>;
 
   return (
     <div className="p-8">
@@ -100,9 +112,10 @@ export default function AdminProduce() {
             />
             <button
               onClick={() => handleRemoveProduce(index)}
-              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1"
+              aria-label="Remove produce item"
             >
-              Remove
+              <Trash2 className="w-4 h-4" /> Remove
             </button>
           </div>
         ))}
@@ -111,9 +124,9 @@ export default function AdminProduce() {
       <div className="mt-6 flex justify-between">
         <button
           onClick={handleAddProduce}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center gap-2"
         >
-          Add Produce
+          <Plus className="w-4 h-4" /> Add Produce
         </button>
         <button
           onClick={handleSave}

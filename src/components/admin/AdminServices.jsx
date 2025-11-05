@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import useAdminStore from '../../store/useAdminStore';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
 
@@ -20,25 +21,36 @@ export default function AdminServices() {
   const loadServices = async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await apiCall('/content/services');
-      setServices(data);
+      setServices(data?.services || []);
     } catch (err) {
+      console.error('Failed to load services:', err);
       setError('Failed to load services.');
+      setServices([]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleSave = async () => {
+    const toastId = toast.loading('Saving services...');
     setSaving(true);
     setError(null);
     setSuccess(null);
     try {
-      // We'll assume a new endpoint or an updated one that accepts the whole array
+      const invalidService = services.find(s => !s.title || !s.desc);
+      if (invalidService) {
+        toast.error('Please fill all required fields', { id: toastId });
+        return;
+      }
       await apiCall('/content/services', 'PUT', { services });
+      toast.success('Services updated successfully!', { id: toastId });
       setSuccess('Services updated successfully!');
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
+      console.error('Failed to save services:', err);
+      toast.error('Failed to save services', { id: toastId });
       setError('Failed to save services.');
     } finally {
       setSaving(false);
