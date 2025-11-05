@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import useFetch from '../hooks/useFetch';
 import avocadoImg from '../assets/avocado.jpg';
 import mangoImg from '../assets/mango.jpg';
 import basilImg from '../assets/basil.jpg';
@@ -15,14 +14,13 @@ import spinachImg from '../assets/spinach.jpg';
 import carrotImg from '../assets/carrot.jpg';
 import bananaImg from '../assets/banana.jpg';
 import appleImg from '../assets/apple.jpg';
-import lemonImg from '../assets/lemon.jpg';
 import herbNurseryImg from '../assets/Herb Nursery.jpg';
 import exportMangoImg from '../assets/Export Mango Pilot.jpg';
 import exportProcessImg from '../assets/Export Process Facilitation.jpg';
 import freshProduceImg from '../assets/Fresh Produce Market Linkages.jpg';
 import basilCultivationImg from '../assets/Basil Cultivation Program.jpg';
 
-const FALLBACK_IMAGES = [
+const GALLERY_IMAGES = [
   { url: avocadoImg, title: 'Fresh Avocados' },
   { url: mangoImg, title: 'Ripe Mangoes' },
   { url: basilImg, title: 'Organic Basil' },
@@ -36,7 +34,6 @@ const FALLBACK_IMAGES = [
   { url: carrotImg, title: 'Fresh Carrots' },
   { url: bananaImg, title: 'Ripe Bananas' },
   { url: appleImg, title: 'Fresh Apples' },
-  { url: lemonImg, title: 'Organic Lemons' },
   { url: herbNurseryImg, title: 'Herb Nursery Project' },
   { url: exportMangoImg, title: 'Export Mango Pilot' },
   { url: exportProcessImg, title: 'Export Facilitation' },
@@ -45,10 +42,8 @@ const FALLBACK_IMAGES = [
 ];
 
 export default function Gallery() {
-  const { data: galleryData } = useFetch('/content/gallery');
   const [lightboxIndex, setLightboxIndex] = useState(null);
-
-  const images = (galleryData && galleryData.length > 0) ? galleryData : FALLBACK_IMAGES;
+  const images = GALLERY_IMAGES;
 
   const nextImage = () => setLightboxIndex((lightboxIndex + 1) % images.length);
   const prevImage = () => setLightboxIndex((lightboxIndex - 1 + images.length) % images.length);
@@ -88,7 +83,7 @@ export default function Gallery() {
       
       {/* Grid View for larger screens */}
       <div className="hidden lg:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mt-8">
-        {images.slice(0, 18).map((img, i) => (
+        {images.map((img, i) => (
           <motion.div
             key={`grid-${i}`}
             initial={{ opacity: 0, scale: 0.9 }}
