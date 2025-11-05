@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const ProduceSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
-  imageUrl: { type: String, required: true },
+  imageUrl: { type: String },
   category: { type: String, required: true },
   price: { type: String },
   unit: { type: String },
