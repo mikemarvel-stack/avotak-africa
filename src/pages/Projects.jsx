@@ -119,16 +119,18 @@ export default function Projects() {
     const fetchProjects = async () => {
       try {
         const response = await api.get('/content/projects');
-        if (response.data && response.data.length > 0) {
-          // Alias imageUrl to image for consistency
-          const dynamicProjects = response.data.map(p => ({ ...p, image: p.imageUrl }));
+        if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+          // Use API data - alias imageUrl to image for consistency
+          const dynamicProjects = response.data.map(p => ({ 
+            ...p, 
+            image: p.imageUrl || p.image 
+          }));
           setProjects(dynamicProjects);
-        } else {
-          console.warn('API returned no projects, using static data.');
         }
+        // If API returns empty array, keep using initialProjects (fallback)
       } catch (err) {
-        setError('Failed to load projects.');
         console.error("Failed to fetch projects:", err);
+        // Keep using initialProjects (fallback) on error
       } finally {
         setLoading(false);
       }

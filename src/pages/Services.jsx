@@ -60,9 +60,12 @@ const iconMap = {
 
 export default function Services() {
   const { content, loading, error } = usePublicContent('/content/services', { services: [] });
-  const services = Array.isArray(content?.services) && content.services.length > 0 
-    ? content.services 
-    : DEFAULT_SERVICES;
+  
+  // Prioritize API data, use fallback only if API fails or returns empty
+  let services = DEFAULT_SERVICES;
+  if (!loading && !error && Array.isArray(content?.services) && content.services.length > 0) {
+    services = content.services;
+  }
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen"><Loader /></div>;

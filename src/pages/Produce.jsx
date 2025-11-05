@@ -24,7 +24,12 @@ const FALLBACK_PRODUCE = [
 
 export default function Produce() {
   const { content, loading, error } = usePublicContent('/content/produce', []);
-  const produceList = Array.isArray(content) && content.length > 0 ? content : FALLBACK_PRODUCE;
+  
+  // Prioritize API data, use fallback only if API fails or returns empty
+  let produceList = FALLBACK_PRODUCE;
+  if (!loading && !error && Array.isArray(content) && content.length > 0) {
+    produceList = content;
+  }
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen"><Loader /></div>;
@@ -40,6 +45,7 @@ export default function Produce() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-800">Our Produce</h1>
           <p className="text-lg text-gray-600 mt-2">Fresh from our farms, cultivated with care.</p>
+          {loading && <p className="text-sm text-gray-500 mt-2">Loading latest products...</p>}
         </div>
         
         {produceList && produceList.length > 0 ? (

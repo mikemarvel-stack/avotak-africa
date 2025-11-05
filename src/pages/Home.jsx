@@ -22,9 +22,15 @@ export default function Home() {
   const { data: featuredProduce, loading: loadingProduce, error: errorProduce } = useFetch('/content/produce/featured');
 
   const sliderImages = homeContent?.sliderImages || [];
-  const featuredItems = Array.isArray(featuredProduce) && featuredProduce.length > 0
-    ? featuredProduce.map(item => ({ ...item, image: item.imageUrl || item.image })) 
-    : FALLBACK_PRODUCE;
+  
+  // Prioritize API data, use fallback only if API fails or returns empty
+  let featuredItems = FALLBACK_PRODUCE;
+  if (!loadingProduce && !errorProduce && Array.isArray(featuredProduce) && featuredProduce.length > 0) {
+    featuredItems = featuredProduce.map(item => ({ 
+      ...item, 
+      image: item.imageUrl || item.image 
+    }));
+  }
 
   const isLoading = loadingHome || loadingProduce;
   const hasError = errorHome || errorProduce;
@@ -46,6 +52,7 @@ export default function Home() {
           <p className="text-gray-600 mb-8">
             A selection of our finest, freshly harvested produce.
           </p>
+          {loadingProduce && <p className="text-sm text-gray-500 mb-4">Loading latest products...</p>}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredItems.map((item, index) => (
               <motion.div
