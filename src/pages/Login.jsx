@@ -25,7 +25,7 @@ export default function Login() {
         throw new Error('Email and password are required');
       }
       
-      const apiBase = import.meta.env.VITE_API_BASE || '/api';
+      const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
       const response = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: {
