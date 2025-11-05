@@ -37,18 +37,26 @@ export const updateHomeContent = async (req, res) => {
 // --- Services Content ---
 export const getServicesContent = async (req, res) => {
   try {
-    // Using Service model directly as there is no ServicesContent model
     const services = await Service.find({});
-    res.json(services);
+    res.json({ services });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching services content', error: error.message });
   }
 };
 
 export const updateServicesContent = async (req, res) => {
-  // This function might need further implementation based on how you want to update services.
-  // For now, it will return an error as it's not fully implemented.
-  res.status(501).json({ message: 'Updating services content is not implemented yet.' });
+  try {
+    const { services } = req.body;
+    if (!services || !Array.isArray(services)) {
+      return res.status(400).json({ message: 'Services array is required' });
+    }
+
+    await Service.deleteMany({});
+    const createdServices = await Service.insertMany(services);
+    res.json({ services: createdServices });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating services', error: error.message });
+  }
 };
 
 // --- About Content ---

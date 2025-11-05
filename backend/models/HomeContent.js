@@ -15,6 +15,14 @@ const HomeContentSchema = new mongoose.Schema({
   capped: { size: 4096, max: 1 } // Increased size to accommodate richer data
 });
 
+HomeContentSchema.statics.findOneOrCreate = async function() {
+  let content = await this.findOne();
+  if (!content) {
+    content = await this.create({});
+  }
+  return content;
+};
+
 const Home = mongoose.model('Home', HomeContentSchema);
 
 export default Home;
