@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import useAdminContent from '../../hooks/useAdminContent';
 
 export default function AdminGallery() {
-  const { gallery, loading, fetchGallery, addGalleryImage, deleteGalleryImage } = useAdminContent();
+  const { gallery, loading, fetchGallery, addGalleryImage, deleteGalleryImage } = useAdminContent(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {

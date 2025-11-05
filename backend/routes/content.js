@@ -50,11 +50,11 @@ const homeContentSchema = Joi.object({
 const produceSchema = Joi.object({
   name: Joi.string().max(200).required(),
   description: Joi.string().max(2000).required(),
-  imageUrl: Joi.string().uri().max(500).required(),
-  publicId: Joi.string().max(200),
+  imageUrl: Joi.string().uri().max(500).allow('', null),
+  publicId: Joi.string().max(200).allow('', null),
   category: Joi.string().max(100),
   featured: Joi.boolean()
-});
+}).unknown(true);
 
 // --- Validation Middleware ---
 
