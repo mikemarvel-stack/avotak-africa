@@ -1,137 +1,416 @@
+# 🌿 Avotak Africa
 
-## 🌿 Avotak Africa – Agricultural Consultancy Company
+<div align="center">
 
-### Overview
+![Avotak Africa](https://img.shields.io/badge/Avotak-Africa-green?style=for-the-badge)
+![React](https://img.shields.io/badge/React-18.x-blue?style=for-the-badge&logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-18.x-green?style=for-the-badge&logo=node.js)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?style=for-the-badge&logo=mongodb)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
+
+**Professional Agricultural Consultancy Platform**
+
+[Live Demo](https://avotakafrica.netlify.app) · [Report Bug](https://github.com/mikemarvel-stack/avotak-africa/issues) · [Request Feature](https://github.com/mikemarvel-stack/avotak-africa/issues)
+
+</div>
+
 ---
-Avotak Africa is a responsive React web application for an agricultural consultancy company. The website showcases the company’s expertise, services, and farm produce projects while highlighting quality, origin, and sustainable farming practices.
 
-The platform is designed to help clients, partners, and farmers explore consultancy services, view project highlights, and learn about agricultural solutions offered by Avotak Africa.
+## 📋 Table of Contents
 
-### Features
+- [About](#about)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Environment Variables](#environment-variables)
+- [Deployment](#deployment)
+- [Security](#security)
+- [Contributing](#contributing)
+- [License](#license)
+
 ---
+
+## 🌍 About
+
+Avotak Africa is a full-stack web application for an agricultural consultancy company specializing in sustainable farming practices, export facilitation, and farmer empowerment across Africa. The platform connects farmers with markets, provides expert agricultural guidance, and showcases high-quality African produce.
+
+### 🎯 Mission
+
+Empowering African farmers through expert consultancy, market access, and sustainable agricultural practices.
+
+### ✨ Key Highlights
+
+- 🌱 **12+ Premium Produce Items** - Avocados, Mangoes, Herbs, Spices
+- 🚀 **6+ Active Projects** - From herb nurseries to export facilitation
+- 🎓 **Comprehensive Services** - Farm advisory, training, market linkages
+- 💬 **Live Chat Support** - Tawk.to integration on all pages
+- 🔒 **Enterprise Security** - Rate limiting, input validation, security headers
+- 📱 **Fully Responsive** - Optimized for mobile, tablet, and desktop
+
+---
+
+## 🚀 Features
+
+### 🏠 Public Pages
+
 #### Home Page
+- Hero section with compelling call-to-action
+- Featured produce showcase
+- "Why Choose Us" section with key benefits
+- Responsive image slider
+- Live chat widget
 
-- Hero Section: Engaging introduction to Avotak Africa and its mission.
-- Featured Projects / Produce: Highlights selected farm projects, crops, and services.
-- Gallery: Visual showcase of farms, project sites, and sustainable practices.
+#### About Us
+- Company mission and vision
+- Core values with icons
+- Services breakdown
+- Team introduction
+- Gradient CTA section
 
-#### Produce / Projects Page
+#### Services
+- 6 comprehensive service offerings:
+  - Farm Advisory & Consulting
+  - Post-Harvest Handling & Quality Management
+  - Market Linkages & Export Facilitation
+  - Training & Capacity Building
+  - Sustainability & Climate-Smart Agriculture
+  - Supply Chain & Value Addition Support
+- Icon-based service cards
+- Detailed descriptions
 
-- Listing of produce or projects handled by Avotak Africa.
-- Each item shows:
-	- Name and description
-	- Origin or project location
-	- Interactive cards with subtle hover effects using Framer Motion.
+#### Produce
+- 12 African produce items with categories:
+  - 🥑 Fruits (Avocado, Mango, Banana, Apple)
+  - 🥬 Vegetables (Tomato, Spinach, Carrot)
+  - 🌿 Herbs (Basil, Rosemary, Coriander)
+  - 🧄 Spices (Ginger, Turmeric)
+- Category filtering
+- High-quality images
+- Detailed descriptions
+- Framer Motion animations
 
-#### Reusable Components
+#### Projects
+- 6 impactful projects:
+  - Herb Nursery
+  - Export Mango Pilot
+  - Export Process Facilitation
+  - Basil Cultivation Program
+  - Fresh Produce Market Linkages
+  - Sustainable Herb Farming
+- Impact metrics
+- Project timelines
+- Tag-based categorization
 
-- ProduceCard: Displays project or produce details consistently.
-- Gallery: Handles dynamic arrays of images in a responsive layout.
-- Hero: Engaging header section for landing page.
+#### Contact
+- Contact form with validation
+- Company information
+- Social media links
+- Integrated Tawk.to chat
 
-#### Responsive Design
+### 🔐 Admin Panel
 
-Fully responsive layout using Tailwind CSS, optimized for desktop, tablet, and mobile devices.
+- Secure authentication (JWT)
+- Dashboard with quick links
+- CRUD operations for:
+  - Home content
+  - About content
+  - Services
+  - Produce items
+  - Projects
+  - Gallery images
+- Image upload to Cloudinary
+- Toast notifications
+- Protected routes
 
-#### Scalable Structure
+### 🛡️ Security Features
 
-Modular components allow for easy addition of new projects, images, or services.
+- **Rate Limiting**: 5 login attempts per 15 min, 100 API requests per 15 min
+- **Helmet.js**: Security headers (XSS, CSP, HSTS)
+- **Input Validation**: Email format, length limits, type checking
+- **NoSQL Injection Prevention**: MongoDB query sanitization
+- **Path Traversal Protection**: Safe file path handling
+- **File Upload Security**: Image type validation, size limits
+- **JWT Authentication**: Token-based auth with 2-hour expiration
 
-Centralized image management ensures maintainability.
-
-
-### Tech Stack
 ---
-Frontend: React
 
-Styling: Tailwind CSS
+## 🛠️ Tech Stack
 
-Animations: Framer Motion
+### Frontend
 
-State Management: React Hooks (useState, useEffect)
+- **React 18** - UI library
+- **Vite** - Build tool and dev server
+- **React Router** - Client-side routing
+- **Tailwind CSS** - Utility-first styling
+- **Framer Motion** - Animations
+- **Zustand** - State management
+- **Axios** - HTTP client
+- **React Hot Toast** - Notifications
+- **Lucide React** - Icon library
+- **Tawk.to** - Live chat widget
 
-Build Tool: Vite / Create React App
+### Backend
 
-Assets: Local images stored in src/assets/
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **MongoDB** - Database (Atlas)
+- **Mongoose** - ODM
+- **JWT** - Authentication
+- **Bcrypt** - Password hashing
+- **Cloudinary** - Image hosting
+- **Multer** - File uploads
+- **Helmet** - Security headers
+- **Express Rate Limit** - Rate limiting
+- **Express Mongo Sanitize** - NoSQL injection prevention
+- **Joi** - Schema validation
 
-### Installation & Setup
+### Deployment
+
+- **Frontend**: Netlify
+- **Backend**: Render
+- **Database**: MongoDB Atlas
+- **CDN**: Cloudinary
+
 ---
-```
-Clone the repository
 
-git clone <[https://github.com/mikemarvel-stack/avotak-africa]>
+## 🏁 Getting Started
 
+### Prerequisites
+
+- Node.js 18.x or higher
+- npm or yarn
+- MongoDB Atlas account
+- Cloudinary account
+
+### Installation
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/mikemarvel-stack/avotak-africa.git
 cd avotak-africa
+```
 
+2. **Install frontend dependencies**
 
-Install dependencies
-
+```bash
 npm install
+```
 
+3. **Install backend dependencies**
 
-Run the development server
+```bash
+cd backend
+npm install
+```
 
-npm start
-# or for Vite
+4. **Set up environment variables**
+
+Create `backend/.env` from template:
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+Edit `.env` with your credentials (see [Environment Variables](#environment-variables))
+
+5. **Start development servers**
+
+**Backend** (from `backend/` directory):
+```bash
 npm run dev
-
-
-Open in browser
-Navigate to http://localhost:5173
 ```
-### Project Structure
+
+**Frontend** (from root directory):
+```bash
+npm run dev
 ```
-src/
- ├─ assets/          # Images for projects, produce, gallery, etc.
- ├─ components/      # Reusable React components (ProduceCard, Gallery, Hero)
- ├─ pages/           # Page components (Home.jsx, Produce.jsx)
- ├─ App.jsx          # Main app container
- └─ index.js         # Entry point
-public/
- └─ index.html       # Static HTML template
-screenshots/         # Placeholder screenshots for README
- ├─ home.png
- ├─ produce.png
- ├─ gallery.png
- └─ demo.gif
+
+6. **Open in browser**
+
+Navigate to `http://localhost:5173`
+
+---
+
+## 📁 Project Structure
+
 ```
-### Purpose
+avotak-africa/
+├── backend/
+│   ├── controllers/        # Request handlers
+│   ├── middleware/         # Auth, rate limiting, error handling
+│   ├── models/            # MongoDB schemas
+│   ├── routes/            # API routes
+│   ├── utils/             # Helper functions
+│   ├── .env.example       # Environment template
+│   ├── index.js           # Server entry point
+│   └── package.json
+├── src/
+│   ├── assets/            # Images and static files
+│   ├── components/        # Reusable React components
+│   │   ├── admin/        # Admin panel components
+│   │   ├── Footer.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── TawkChat.jsx
+│   │   └── ...
+│   ├── hooks/            # Custom React hooks
+│   ├── pages/            # Page components
+│   │   ├── admin/       # Admin pages
+│   │   ├── Home.jsx
+│   │   ├── About.jsx
+│   │   ├── Services.jsx
+│   │   ├── Produce.jsx
+│   │   ├── Projects.jsx
+│   │   └── Contact.jsx
+│   ├── services/         # API service layer
+│   ├── store/           # Zustand stores
+│   ├── utils/           # Helper functions
+│   ├── App.jsx          # Main app component
+│   └── main.jsx         # Entry point
+├── public/              # Static assets
+├── .env.example         # Frontend env template
+├── index.html
+├── package.json
+├── tailwind.config.js
+├── vite.config.js
+├── SECURITY.md          # Security documentation
+├── ENV_SETUP.md         # Environment setup guide
+└── README.md
+```
+
 ---
 
-Avotak Africa provides professional agricultural consultancy services by:
+## 🔐 Environment Variables
 
-Showcasing sustainable farm practices and projects
+### Backend (`backend/.env`)
 
-Highlighting produce and crops handled by the company
+```bash
+# Database
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
 
-Educating clients and partners on agricultural solutions
+# Authentication
+JWT_SECRET=your_random_32_character_minimum_secret_key
+ADMIN_EMAIL=admin@avotak.com
+ADMIN_PASSWORD=YourSecurePassword123!
 
-Building a visually appealing online presence for the company
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 
-This platform positions Avotak Africa as a trusted consultancy in the agricultural sector while providing an interactive and modern digital experience.
+# Environment
+NODE_ENV=development
+PORT=5000
+```
 
-### Future Enhancements
+### Frontend (`.env`)
+
+```bash
+VITE_API_URL=http://localhost:5000
+```
+
+**Generate JWT Secret:**
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
 ---
-Add a services page to detail consultancy offerings
 
-Add client testimonials and case studies
+## 🚀 Deployment
 
-Implement contact forms for inquiries
+### Backend (Render)
 
-Integrate with a backend for dynamic project and produce management
+1. Create new Web Service on Render
+2. Connect GitHub repository
+3. Set build command: `cd backend && npm install`
+4. Set start command: `cd backend && npm start`
+5. Add environment variables from `backend/.env.example`
+6. Deploy
 
-### Contributing
+### Frontend (Netlify)
+
+1. Connect GitHub repository
+2. Set build command: `npm run build`
+3. Set publish directory: `dist`
+4. Add environment variable: `VITE_API_URL=https://your-backend.onrender.com`
+5. Deploy
+
+**Detailed deployment guide**: See [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
+
 ---
-Fork the repository
 
-Create a new branch (git checkout -b feature-name)
+## 🔒 Security
 
-Make changes and commit (git commit -m "Feature description")
+This project implements enterprise-grade security:
 
-Push to the branch (git push origin feature-name)
+- ✅ Rate limiting (prevents brute force)
+- ✅ Input validation (prevents injection)
+- ✅ Security headers (Helmet.js)
+- ✅ NoSQL injection prevention
+- ✅ Path traversal protection
+- ✅ File upload validation
+- ✅ JWT authentication
+- ✅ Password hashing (bcrypt)
+- ✅ CORS configuration
+- ✅ Environment variable protection
 
-Open a Pull Request
+**Security documentation**: See [SECURITY.md](./backend/SECURITY.md)
 
-### License
 ---
-This project is open-source under the MIT License.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow existing code style
+- Write meaningful commit messages
+- Test your changes thoroughly
+- Update documentation as needed
+- Add comments for complex logic
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👥 Team
+
+**Avotak Africa Development Team**
+
+- Website: [avotakafrica.netlify.app](https://avotakafrica.netlify.app)
+- Email: admin@avotak.com
+- GitHub: [@mikemarvel-stack](https://github.com/mikemarvel-stack)
+
+---
+
+## 🙏 Acknowledgments
+
+- React community for excellent documentation
+- Tailwind CSS for the utility-first framework
+- Framer Motion for smooth animations
+- MongoDB Atlas for reliable database hosting
+- Cloudinary for image management
+- Render and Netlify for seamless deployment
+
+---
+
+<div align="center">
+
+**Made with ❤️ for African Agriculture**
+
+⭐ Star this repo if you find it helpful!
+
+</div>
