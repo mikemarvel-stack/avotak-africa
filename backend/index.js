@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import dashboardRoutes from './routes/dashboard.js';
 import contentRoutes from './routes/content.js';
+import uploadRoutes from './routes/upload.js';
 import dotenv from 'dotenv';
 import healthRoutes from './routes/health.js';
 import errorHandler from './middleware/errorHandler.js';
@@ -44,6 +45,7 @@ app.use('/api/auth', loginLimiter, authRoutes);
 app.use('/api/dashboard', apiLimiter, dashboardRoutes);
 app.use('/api/content', apiLimiter, contentRoutes);
 app.use('/api/users', apiLimiter, userRoutes);
+app.use('/api', apiLimiter, uploadRoutes);
 
 // Health check
 app.get('/', (req, res) => {

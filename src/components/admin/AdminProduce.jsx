@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAdminStore from '../../store/useAdminStore';
+import ImageUpload from './ImageUpload';
 
 export default function AdminProduce() {
   const [produceList, setProduceList] = useState([]);
@@ -128,18 +129,11 @@ export default function AdminProduce() {
               />
             </div>
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-              <input
-                type="text"
-                value={item.imageUrl || ''}
-                onChange={(e) => handleUpdateProduce(index, 'imageUrl', e.target.value)}
-                placeholder="Image URL"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                aria-label={`Produce ${index + 1} image`}
+              <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
+              <ImageUpload
+                existingUrl={item.imageUrl}
+                onImageUploaded={(url) => handleUpdateProduce(index, 'imageUrl', url)}
               />
-              {item.imageUrl && (
-                <img src={item.imageUrl} alt={item.name} className="mt-2 h-32 w-auto object-cover rounded-md" />
-              )}
             </div>
             <div className="flex justify-end mt-4">
               <button

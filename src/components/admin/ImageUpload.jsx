@@ -1,142 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Upload, Loader2, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 import useAdminStore from '../../store/useAdminStore';
-import ImageUpload from './ImageUpload';
 
-export default function AdminGallery() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export default function ImageUpload({ existingUrl, onImageUploaded }) {
+  const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState(existingUrl || null);
   const apiCall = useAdminStore(state => state.apiCall);
 
-  // Load gallery items
-  useEffect(() => {
-    loadItems();
-  }, []);
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const loadItems = async () => {
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('image', file);
+
     try {
-      setLoading(true);
-      setError(null);
-      const data = await apiCall('/content/gallery');
-      setItems(data);
-    } catch (err) {
-      console.error('Failed to load gallery items:', err);
-      setError('Failed to load gallery items.');
+      const response = await apiCall('/upload', 'POST', formData);
+      const imageUrl = response.url || response.imageUrl;
+      setPreview(imageUrl);
+      onImageUploaded(imageUrl);
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error('Failed to upload image');
     } finally {
-      setLoading(false);
+      setUploading(false);
     }
   };
 
-  // Add new empty gallery item
-  const handleAddItem = () => {
-    setItems(prev => [...prev, { title: '', url: '', description: '' }]);
+  const handleRemove = () => {
+    setPreview(null);
+    onImageUploaded('');
   };
-
-  // Update a field in a gallery item
-  const handleUpdateItem = (index, field, value) => {
-    const updated = [...items];
-    updated[index] = { ...updated[index], [field]: value };
-    setItems(updated);
-  };
-
-  // Remove a gallery item
-  const handleRemoveItem = async (index) => {
-    const item = items[index];
-    if (item._id) {
-      try {
-        await apiCall(`/content/gallery/${item._id}`, 'DELETE');
-      } catch (err) {
-        console.error('Failed to delete gallery item:', err);
-        alert('Failed to delete item.');
-        return;
-      }
-    }
-    setItems(prev => prev.filter((_, i) => i !== index));
-  };
-
-  // Save all gallery items (create or update)
-  const handleSave = async () => {
-    try {
-      setError(null);
-      for (const item of items) {
-        if (item._id) {
-          await apiCall(`/content/gallery/${item._id}`, 'PUT', item);
-        } else {
-          await apiCall('/content/gallery', 'POST', item);
-        }
-      }
-      alert('Gallery items saved successfully.');
-      loadItems();
-    } catch (err) {
-      console.error('Failed to save gallery items:', err);
-      setError('Failed to save gallery items.');
-    }
-  };
-
-  if (loading) return <div className="p-4">Loading gallery...</div>;
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Manage Gallery</h1>
-      {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">{error}</div>}
-
-      <div className="space-y-6">
-        {items.map((item, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-4">
-            <div className="flex-grow">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-              <input
-                type="text"
-                value={item.title}
-                onChange={(e) => handleUpdateItem(index, 'title', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                aria-label={`Gallery item ${index + 1} title`}
-              />
-            </div>
-            <div className="flex-grow">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <input
-                type="text"
-                value={item.description}
-                onChange={(e) => handleUpdateItem(index, 'description', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                aria-label={`Gallery item ${index + 1} description`}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
-              <ImageUpload
-                existingUrl={item.url}
-                onImageUploaded={(url) => handleUpdateItem(index, 'url', url)}
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => handleRemoveItem(index)}
-              className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 self-start md:self-auto"
-            >
-              Remove
-            </button>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-6 flex justify-between">
-        <button
-          type="button"
-          onClick={handleAddItem}
-          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-        >
-          Add New Item
-        </button>
-        <button
-          type="button"
-          onClick={handleSave}
-          className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          Save Changes
-        </button>
-      </div>
+    <div className="space-y-2">
+      {preview ? (
+        <div className="relative inline-block">
+          <img src={preview} alt="Preview" className="h-32 w-32 object-cover rounded-lg border" />
+          <button
+            type="button"
+            onClick={handleRemove}
+            className="absolute -top-2 -right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      ) : (
+        <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-green-500 transition-colors">
+          {uploading ? (
+            <Loader2 className="w-8 h-8 text-gray-400 animate-spin" />
+          ) : (
+            <>
+              <Upload className="w-8 h-8 text-gray-400" />
+              <span className="mt-2 text-xs text-gray-500">Upload</span>
+            </>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={uploading}
+            className="hidden"
+          />
+        </label>
+      )}
     </div>
   );
 }
