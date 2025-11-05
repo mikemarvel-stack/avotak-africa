@@ -1,10 +1,10 @@
 import express from 'express';
 import { upload } from '../utils/cloudinary.js';
-import { verifyToken } from '../utils/auth.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/upload', verifyToken, upload.single('image'), async (req, res) => {
+router.post('/upload', protect, upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
