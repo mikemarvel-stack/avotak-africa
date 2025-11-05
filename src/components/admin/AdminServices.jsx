@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import useAdminContent from '../../hooks/useAdminContent';
 
 export default function AdminServices() {
-  const { services, loading, fetchServices, updateServices } = useAdminContent();
+  const { services, loading, fetchServices, updateServices } = useAdminContent(null);
   const [editingServices, setEditingServices] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 

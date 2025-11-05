@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import useAdminContent from '../../hooks/useAdminContent';
 
 export default function AdminProjects() {
-  const { projects, loading, fetchProjects, updateProjects } = useAdminContent();
+  const { projects, loading, fetchProjects, updateProjects } = useAdminContent(null);
   const [editingProjects, setEditingProjects] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 

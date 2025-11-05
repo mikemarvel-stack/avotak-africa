@@ -14,6 +14,10 @@ export default function useAdminContent(endpoint, initialContent = {}) {
   const apiCall = useAdminStore(state => state.apiCall);
 
   const loadContent = useCallback(async () => {
+    if (!endpoint) {
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       setError(null);
@@ -29,12 +33,8 @@ export default function useAdminContent(endpoint, initialContent = {}) {
   }, [apiCall, endpoint]);
 
   useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      loadContent();
-    }
-    return () => { mounted = false; };
-  }, []);
+    loadContent();
+  }, [loadContent]);
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
