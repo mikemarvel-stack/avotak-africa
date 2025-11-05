@@ -2,9 +2,12 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 
-export default function ContactForm(){
+export default function ContactForm({ onSubmit: customOnSubmit, formData, setFormData }){
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
+    if (customOnSubmit) {
+      customOnSubmit({ preventDefault: () => {} });
+    }
     try {
       if (!data.name || !data.email || !data.message) {
         alert('Please fill in all required fields');
@@ -75,12 +78,35 @@ export default function ContactForm(){
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-xl">
-      <input {...register('name')} required placeholder="Name" className="w-full border rounded-lg p-3" />
-      <input {...register('email')} required placeholder="Email" type="email" className="w-full border rounded-lg p-3" />
-      <input {...register('company')} placeholder="Company (optional)" className="w-full border rounded-lg p-3" />
-      <textarea {...register('message')} required placeholder="Message" className="w-full border rounded-lg p-3 h-36" />
-      <button type="submit" className="w-full bg-primary text-white rounded-lg py-3">Send Message</button>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <input 
+        {...register('name')} 
+        required 
+        placeholder="Your Name" 
+        className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        onChange={(e) => setFormData && setFormData(prev => ({ ...prev, name: e.target.value }))}
+      />
+      <input 
+        {...register('email')} 
+        required 
+        placeholder="Your Email" 
+        type="email" 
+        className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        onChange={(e) => setFormData && setFormData(prev => ({ ...prev, email: e.target.value }))}
+      />
+      <input 
+        {...register('company')} 
+        placeholder="Company (optional)" 
+        className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+      />
+      <textarea 
+        {...register('message')} 
+        required 
+        placeholder="Your Message" 
+        className="w-full border border-gray-300 rounded-lg p-3 h-36 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        onChange={(e) => setFormData && setFormData(prev => ({ ...prev, message: e.target.value }))}
+      />
+      <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg py-3 transition-colors">Send Message</button>
     </form>
   )
 }
