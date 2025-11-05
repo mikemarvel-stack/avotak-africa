@@ -21,12 +21,17 @@ export default function Login() {
     const toastId = toast.loading('Logging in...');
 
     try {
+      if (!formData.email || !formData.password) {
+        throw new Error('Email and password are required');
+      }
+      
       const apiBase = import.meta.env.VITE_API_BASE || '/api';
       const response = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'same-origin',
         body: JSON.stringify(formData),
       });
 

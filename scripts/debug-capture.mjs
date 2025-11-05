@@ -1,4 +1,5 @@
 import fs from 'fs'
+import path from 'path'
 import { chromium } from 'playwright'
 
 const url = process.argv[2] || 'http://localhost:3005'
@@ -53,8 +54,9 @@ async function capture() {
       contentSnippet: content.slice(0, 2000)
     }
 
-    fs.writeFileSync('debug-capture.json', JSON.stringify(data, null, 2))
-    console.log('Saved capture to debug-capture.json')
+    const outputPath = path.resolve(process.cwd(), 'debug-capture.json')
+    fs.writeFileSync(outputPath, JSON.stringify(data, null, 2))
+    console.log('Saved capture to', outputPath)
   } catch (err) {
     console.error('Capture failed:', err)
   }

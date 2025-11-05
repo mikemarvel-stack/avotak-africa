@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import ErrorBoundary from './ErrorBoundary'
 
-// List of modules to test (relative to this file when using dynamic import)
-const TESTS = [
-  { name: 'Navbar', path: '../components/Navbar.jsx' },
-  { name: 'StickySocials', path: '../components/StickySocials.jsx' },
-  { name: 'BackToTop', path: '../components/BackToTop.jsx' },
-  { name: 'TawkChat', path: '../components/TawkChat.jsx' },
-  { name: 'Footer', path: '../components/Footer.jsx' },
-  { name: 'Home (page)', path: '../pages/Home.jsx' },
-  { name: 'Produce (page)', path: '../pages/Produce.jsx' },
-  { name: 'Projects (page)', path: '../pages/Projects.jsx' },
-]
+// Validated module paths for testing
+const ALLOWED_MODULES = {
+  'Navbar': () => import('../components/Navbar.jsx'),
+  'StickySocials': () => import('../components/StickySocials.jsx'),
+  'BackToTop': () => import('../components/BackToTop.jsx'),
+  'TawkChat': () => import('../components/TawkChat.jsx'),
+  'Footer': () => import('../components/Footer.jsx'),
+  'Home (page)': () => import('../pages/Home.jsx'),
+  'Produce (page)': () => import('../pages/Produce.jsx'),
+  'Projects (page)': () => import('../pages/Projects.jsx'),
+}
+
+const TESTS = Object.keys(ALLOWED_MODULES).map(name => ({ name }))
 
 export default function Bisect() {
   const [results, setResults] = useState([])
@@ -25,7 +27,9 @@ export default function Bisect() {
       for (const t of TESTS) {
         setResults((r) => [...r, { name: t.name, status: 'importing' }])
         try {
-          const mod = await import(/* @vite-ignore */ t.path)
+          const importFn = ALLOWED_MODULES[t.name]
+          if (!importFn) throw new Error('Module not allowed')
+          const mod = await importFn()
           if (cancelled) return
           setResults((r) => r.map(x => x.name === t.name ? { ...x, status: 'imported' } : x))
           setImported((r) => [...r, { name: t.name, Comp: mod.default }])

@@ -17,11 +17,17 @@ router.post('/login', async (req, res) => {
   if (!email || !password)
     return res.status(400).json({ message: 'Email and password required' });
 
+  if (typeof email !== 'string' || typeof password !== 'string')
+    return res.status(400).json({ message: 'Invalid input format' });
+
+  if (email.length > 255 || password.length > 255)
+    return res.status(400).json({ message: 'Input too long' });
+
   if (email !== ADMIN_EMAIL)
-    return res.status(401).json({ message: 'Invalid email' });
+    return res.status(401).json({ message: 'Invalid credentials' });
 
   if (password !== ADMIN_PASSWORD)
-    return res.status(401).json({ message: 'Invalid password' });
+    return res.status(401).json({ message: 'Invalid credentials' });
 
   const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '2h' });
 

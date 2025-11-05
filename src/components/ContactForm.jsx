@@ -6,8 +6,15 @@ export default function ContactForm(){
   const { register, handleSubmit, reset } = useForm()
   const onSubmit = async (data) => {
     try {
+      if (!data.name || !data.email || !data.message) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
       // Send to Formspree
-      await axios.post('https://formspree.io/f/xqkrznyg', data)
+      await axios.post('https://formspree.io/f/xqkrznyg', data, {
+        headers: { 'Content-Type': 'application/json' }
+      })
 
       // Format the message for Tawk
       const formattedMessage = `New Contact Form Submission:\n\nName: ${data.name}\nEmail: ${data.email}\n${data.company ? `Company: ${data.company}\n` : ''}Message: ${data.message}`;

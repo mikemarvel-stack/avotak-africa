@@ -37,6 +37,7 @@ export default function AdminHome() {
               onChange={(e) => handleFieldChange('title', e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md"
               placeholder="e.g., Avotak Africa Ltd"
+              aria-label="Hero section title"
             />
           </div>
           <div className="mt-4">
@@ -48,6 +49,7 @@ export default function AdminHome() {
               onChange={(e) => handleFieldChange('subtitle', e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md"
               placeholder="e.g., Your trusted partner in agriculture..."
+              aria-label="Hero section subtitle"
             />
           </div>
         </div>

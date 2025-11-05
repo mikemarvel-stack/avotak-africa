@@ -19,6 +19,9 @@ router.get('/', async (req, res) => {
 // Create new gallery item
 router.post('/', verifyToken, async (req, res) => {
   try {
+    if (!req.body || typeof req.body !== 'object') {
+      return res.status(400).json({ message: 'Invalid request body' });
+    }
     const newItem = new Gallery(req.body);
     await newItem.save();
     res.status(201).json(newItem);
@@ -31,10 +34,16 @@ router.post('/', verifyToken, async (req, res) => {
 // Update gallery item
 router.put('/:id', verifyToken, async (req, res) => {
   try {
+    if (!req.params.id || !/^[a-f\d]{24}$/i.test(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
+    if (!req.body || typeof req.body !== 'object') {
+      return res.status(400).json({ message: 'Invalid request body' });
+    }
     const item = await Gallery.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true, runValidators: true }
     );
     if (!item) {
       return res.status(404).json({ message: 'Gallery item not found' });
@@ -49,6 +58,9 @@ router.put('/:id', verifyToken, async (req, res) => {
 // Delete gallery item
 router.delete('/:id', verifyToken, async (req, res) => {
   try {
+    if (!req.params.id || !/^[a-f\d]{24}$/i.test(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
     const item = await Gallery.findById(req.params.id);
     if (!item) {
       return res.status(404).json({ message: 'Gallery item not found' });

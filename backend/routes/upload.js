@@ -9,6 +9,12 @@ router.post('/upload', verifyToken, upload.single('image'), async (req, res) => 
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
+    
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(req.file.mimetype)) {
+      return res.status(400).json({ message: 'Invalid file type' });
+    }
+    
     res.json({ 
       url: req.file.path,
       public_id: req.file.filename 

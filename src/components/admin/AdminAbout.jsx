@@ -36,6 +36,7 @@ export default function AdminAbout() {
             value={content.title || ''}
             onChange={(e) => handleFieldChange('title', e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md"
+            aria-label="About page title"
           />
         </div>
 
@@ -47,6 +48,7 @@ export default function AdminAbout() {
             value={content.description || ''}
             onChange={(e) => handleFieldChange('description', e.target.value)}
             className="w-full p-2 border border-gray-300 rounded-md"
+            aria-label="About page description"
           />
         </div>
 

@@ -21,14 +21,16 @@ const StatCard = ({ icon, title, value, link, loading }) => (
   </Link>
 );
 
+const FALLBACK_STATS = {
+  projects: 0,
+  services: 0,
+  produce: 0,
+  gallery: 0,
+  home: 0,
+};
+
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({
-    projects: 0,
-    services: 0,
-    produce: 0,
-    gallery: 0,
-    home: 0,
-  });
+  const [stats, setStats] = useState(FALLBACK_STATS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user, apiCall } = useAdminStore(state => ({ user: state.user, apiCall: state.apiCall }));
@@ -60,6 +62,7 @@ export default function AdminDashboard() {
       } catch (err) {
         console.error('Failed to fetch dashboard stats:', err);
         setError('Could not load dashboard data.');
+        setStats(FALLBACK_STATS);
       } finally {
         setLoading(false);
       }

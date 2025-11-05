@@ -90,6 +90,7 @@ export default function AdminGallery() {
                 value={item.title}
                 onChange={(e) => handleUpdateItem(index, 'title', e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                aria-label={`Gallery item ${index + 1} title`}
               />
             </div>
             <div className="flex-grow">
@@ -99,6 +100,7 @@ export default function AdminGallery() {
                 value={item.description}
                 onChange={(e) => handleUpdateItem(index, 'description', e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+                aria-label={`Gallery item ${index + 1} description`}
               />
             </div>
             <div>

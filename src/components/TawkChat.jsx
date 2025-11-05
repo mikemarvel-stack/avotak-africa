@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import {
   ChatBubbleLeftIcon,
   XMarkIcon,
@@ -73,13 +73,13 @@ export default function TawkChat({ openFromContact }) {
     }, 1200);
   };
 
-  const handleEmoji = emoji => handleSend(emoji);
+  const handleEmoji = useCallback(emoji => handleSend(emoji), []);
 
-  const openTawk = () => {
+  const openTawk = useCallback(() => {
     if (window.Tawk_API && typeof window.Tawk_API.maximize === 'function') {
       window.Tawk_API.maximize();
     }
-  };
+  }, []);
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">

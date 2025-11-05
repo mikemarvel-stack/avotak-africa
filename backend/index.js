@@ -76,9 +76,11 @@ mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve frontend build from the 'dist' directory at the project root
-app.use(express.static(path.join(__dirname, '../dist')));
+const distPath = path.resolve(__dirname, '../dist');
+const indexPath = path.resolve(distPath, 'index.html');
+
+app.use(express.static(distPath));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  res.sendFile(indexPath);
 });

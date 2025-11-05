@@ -84,6 +84,7 @@ export default function AdminServices() {
                   value={service.title}
                   onChange={(e) => handleUpdateService(index, 'title', e.target.value)}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                  aria-label={`Service ${index + 1} title`}
                 />
               </div>
               <div>
@@ -92,6 +93,7 @@ export default function AdminServices() {
                   value={service.icon}
                   onChange={(e) => handleUpdateService(index, 'icon', e.target.value)}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                  aria-label={`Service ${index + 1} icon`}
                 >
                   {availableIcons.map(iconName => (
                     <option key={iconName} value={iconName}>{iconName}</option>
@@ -106,6 +108,7 @@ export default function AdminServices() {
                 onChange={(e) => handleUpdateService(index, 'desc', e.target.value)}
                 rows="3"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                aria-label={`Service ${index + 1} description`}
               />
             </div>
             <div className="flex justify-end mt-4">

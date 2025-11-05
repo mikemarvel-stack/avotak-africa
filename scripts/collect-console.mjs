@@ -1,9 +1,10 @@
 import fs from 'fs'
+import path from 'path'
+import net from 'net'
 import { chromium } from 'playwright'
 
 // Helper to find Vite's port from dev server output
 const findVitePort = () => new Promise((resolve) => {
-  const net = require('net')
   const tryPort = (port) => {
     const server = net.createServer()
     server.once('error', () => {
@@ -90,8 +91,9 @@ console.log('Testing URL:', url)
 
   const content = await page.content()
   const out = { url, timestamp: new Date().toISOString(), logs, contentSnippet: content.slice(0, 2000) }
-  fs.writeFileSync('playwright-capture.json', JSON.stringify(out, null, 2))
-  console.log('Saved capture to playwright-capture.json')
+  const outputPath = path.resolve(process.cwd(), 'playwright-capture.json')
+  fs.writeFileSync(outputPath, JSON.stringify(out, null, 2))
+  console.log('Saved capture to', outputPath)
 
   await browser.close()
 })()

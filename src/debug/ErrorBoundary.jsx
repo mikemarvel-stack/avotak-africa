@@ -17,6 +17,10 @@ export default class ErrorBoundary extends React.Component {
     console.error('ErrorBoundary caught error:', error, info);
   }
 
+  handleRefresh = () => {
+    window.location.reload();
+  };
+
   render() {
     if (this.state.error) {
       return (
@@ -27,7 +31,7 @@ export default class ErrorBoundary extends React.Component {
             <p className="mb-4">We've encountered an unexpected error. Please try refreshing the page.</p>
             
             <button
-              onClick={() => window.location.reload()}
+              onClick={this.handleRefresh}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
             >
               Refresh Page
