@@ -37,10 +37,17 @@ export default function Home() {
 
   return (
     <div className="overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-green-600 via-green-700 to-green-800 text-white">
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="relative max-w-7xl mx-auto px-4 py-24 md:py-32">
+      {/* Hero Section with Slider Background */}
+      <section className="relative text-white">
+        {/* Slider Background */}
+        <div className="absolute inset-0 z-0">
+          <HomeSlider images={sliderImages} />
+        </div>
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/50 z-10" />
+        
+        {/* Hero Content */}
+        <div className="relative z-20 max-w-7xl mx-auto px-4 py-24 md:py-32">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -71,7 +78,7 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent z-20" />
       </section>
 
       {/* Featured Produce Section */}
