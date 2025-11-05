@@ -18,15 +18,20 @@ export default function useAdminContent(endpoint, initialContent = {}) {
       setContent({ ...initialContent, ...response });
     } catch (err) {
       console.error(`Failed to load content from ${endpoint}:`, err);
-      setError('Failed to load content.');
+      setError('Failed to load content. Using default values.');
+      setContent(initialContent);
     } finally {
       setLoading(false);
     }
-  }, [apiCall, endpoint, initialContent]);
+  }, [apiCall, endpoint]);
 
   useEffect(() => {
-    loadContent();
-  }, [loadContent]);
+    let mounted = true;
+    if (mounted) {
+      loadContent();
+    }
+    return () => { mounted = false; };
+  }, []);
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();

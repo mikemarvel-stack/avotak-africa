@@ -36,7 +36,11 @@ export default function AdminDashboard() {
   const { user, apiCall } = useAdminStore(state => ({ user: state.user, apiCall: state.apiCall }));
 
   useEffect(() => {
+    let mounted = true;
+    
     const fetchStats = async () => {
+      if (!mounted) return;
+      
       try {
         setError(null);
         setLoading(true);
@@ -49,27 +53,28 @@ export default function AdminDashboard() {
           '/content/home',
         ];
 
-        const responses = await Promise.all(endpoints.map(url => apiCall(url)));
+        const responses = await Promise.allSettled(endpoints.map(url => apiCall(url)));
         
         setStats({
-          projects: responses[0]?.length || 0,
-          services: responses[1]?.services?.length || 0,
-          produce: responses[2]?.length || 0,
-          gallery: responses[3]?.length || 0,
-          home: responses[4]?.sliderImages?.length || 0,
+          projects: responses[0]?.status === 'fulfilled' ? responses[0].value?.length || 0 : 0,
+          services: responses[1]?.status === 'fulfilled' ? responses[1].value?.services?.length || 0 : 0,
+          produce: responses[2]?.status === 'fulfilled' ? responses[2].value?.length || 0 : 0,
+          gallery: responses[3]?.status === 'fulfilled' ? responses[3].value?.length || 0 : 0,
+          home: responses[4]?.status === 'fulfilled' ? responses[4].value?.sliderImages?.length || 0 : 0,
         });
 
       } catch (err) {
         console.error('Failed to fetch dashboard stats:', err);
-        setError('Could not load dashboard data.');
+        setError('Could not load dashboard data. Using defaults.');
         setStats(FALLBACK_STATS);
       } finally {
-        setLoading(false);
+        if (mounted) setLoading(false);
       }
     };
 
     fetchStats();
-  }, [apiCall]);
+    return () => { mounted = false; };
+  }, []);
 
   const sections = [
     { key: 'home', title: 'Home Slider Images', link: '/admin/home', icon: <Home className="w-6 h-6 text-green-600" /> },
