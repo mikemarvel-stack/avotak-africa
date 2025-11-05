@@ -8,6 +8,10 @@ import exportProcessImg from '../assets/Export Process Facilitation.jpg';
 import basilCultivationImg from '../assets/Basil Cultivation Program.jpg';
 import marketLinkagesImg from '../assets/Fresh Produce Market Linkages.jpg';
 import herbFieldImg from '../assets/herb-field.jpg';
+import avocadoImg from '../assets/avocado.jpg';
+import basilImg from '../assets/basil.jpg';
+import tomatoImg from '../assets/tomato.jpg';
+import mangoImg from '../assets/mango.jpg';
 
 // Helper to normalize strings (lowercase, remove spaces & special chars)
 const normalize = (str) =>
@@ -73,6 +77,66 @@ const staticProjects = [
     date: 'Ongoing',
     image: herbFieldImg,
     tags: ['Sustainability', 'Herbs', 'Environment', 'Climate-Smart']
+  },
+  {
+    id: 7,
+    title: 'Avocado Orchard Establishment',
+    category: 'Agriculture',
+    description: 'Supported 80 farmers in establishing commercial Hass avocado orchards across Kenya and Uganda. Provided grafted seedlings, training on orchard management, spacing, fertilization, and pest control. Implemented drip irrigation systems and mulching for water efficiency. Farmers received ongoing technical support through field visits and farmer field schools.',
+    impact: '80 farmers, 200 hectares planted, first harvest expected in 2026',
+    date: 'Feb 2024 - Ongoing',
+    image: avocadoImg,
+    tags: ['Avocado', 'Orchard', 'Investment', 'Long-term']
+  },
+  {
+    id: 8,
+    title: 'Organic Certification Support',
+    category: 'Certification',
+    description: 'Guided 25 farmer groups through organic certification process for herbs and vegetables. Provided training on organic standards, record keeping, and internal control systems. Supported farmers in transitioning from conventional to organic farming practices. Facilitated audits and certification with international certification bodies.',
+    impact: '25 groups certified organic, 30% price premium achieved',
+    date: 'Mar 2024 - Dec 2024',
+    image: basilImg,
+    tags: ['Organic', 'Certification', 'Premium', 'Standards']
+  },
+  {
+    id: 9,
+    title: 'Cold Chain Infrastructure Development',
+    category: 'Infrastructure',
+    description: 'Established 3 cold storage facilities and 5 collection centers in key production areas. Facilities equipped with modern cooling systems, quality grading equipment, and packaging materials. Trained staff on cold chain management, temperature monitoring, and quality control. Reduced post-harvest losses and extended shelf life of fresh produce.',
+    impact: '60% reduction in post-harvest losses, 500+ farmers benefiting',
+    date: 'May 2024 - Present',
+    image: herbFieldImg,
+    tags: ['Infrastructure', 'Cold Chain', 'Quality', 'Technology']
+  },
+  {
+    id: 10,
+    title: 'Women Farmers Empowerment Program',
+    category: 'Social Impact',
+    description: 'Targeted program supporting women farmers in vegetable and herb production. Provided training, inputs, and market access specifically designed for women-led enterprises. Established women farmer groups, savings and credit schemes, and leadership training. Connected women farmers to premium markets and negotiated favorable terms.',
+    impact: '120 women farmers, 45% income increase, 15 women-led cooperatives formed',
+    date: 'Jun 2024 - Ongoing',
+    image: tomatoImg,
+    tags: ['Women', 'Empowerment', 'Social', 'Inclusion']
+  },
+  {
+    id: 11,
+    title: 'Smart Irrigation Technology Pilot',
+    category: 'Technology',
+    description: 'Piloted smart drip irrigation systems with soil moisture sensors and automated controls on 50 farms. Farmers received training on system operation, maintenance, and water management. Monitored water usage, crop performance, and cost savings. Technology significantly reduced water consumption while improving yields.',
+    impact: '50% water savings, 20% yield increase, 50 farms equipped',
+    date: 'Aug 2024 - Present',
+    image: herbNurseryImg,
+    tags: ['Technology', 'Irrigation', 'Innovation', 'Water']
+  },
+  {
+    id: 12,
+    title: 'Youth in Agriculture Initiative',
+    category: 'Youth Development',
+    description: 'Engaged 100 young people in commercial agriculture through training, mentorship, and startup support. Provided business development training, access to land, inputs, and markets. Established youth farmer groups and linked them to financial services. Created employment opportunities and changed perceptions about farming as a career.',
+    impact: '100 youth engaged, 40 agribusinesses started, 200+ jobs created',
+    date: 'Sep 2024 - Ongoing',
+    image: mangoImg,
+    tags: ['Youth', 'Employment', 'Entrepreneurship', 'Future']
   },
 ];
 
