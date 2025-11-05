@@ -3,7 +3,7 @@ import express from 'express';
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import { protect } from '../utils/auth.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 

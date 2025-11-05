@@ -22,7 +22,7 @@ import {
   deleteGalleryItem
 } from '../controllers/contentController.js';
 
-import { protect } from '../utils/auth.js';
+import { protect } from '../middleware/authMiddleware.js';
 import { cloudinary } from '../utils/cloudinary.js';
 
 import HomeContent from '../models/HomeContent.js';

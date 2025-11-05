@@ -1,5 +1,5 @@
 import express from 'express';
-import { protect } from '../utils/auth.js'; // Use 'protect' instead of 'verifyToken'
+import { protect } from '../middleware/authMiddleware.js';
 import asyncHandler from 'express-async-handler';
 
 const router = express.Router();

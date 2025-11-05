@@ -1,6 +1,6 @@
 import express from 'express';
 import Gallery from '../models/gallery.js';
-import { verifyToken } from '../utils/auth.js';
+import { protect as verifyToken } from '../middleware/authMiddleware.js';
 import { v2 as cloudinary } from 'cloudinary';
 
 const router = express.Router();
