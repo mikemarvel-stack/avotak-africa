@@ -1,9 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Leaf, Users, Target, Award, TrendingUp, Globe, MapPin, CheckCircle, Heart, Shield, Lightbulb, Handshake } from 'lucide-react';
+import usePublicContent from '../hooks/usePublicContent';
 
 export default function AboutUs() {
   const navigate = useNavigate();
+  const { content, loading } = usePublicContent('/content/about', {});
 
   const handleContactClick = () => {
     // Navigate to contact page
@@ -21,10 +23,10 @@ export default function AboutUs() {
             Est. 2024 • East Africa
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-green-800 mb-4">
-            About Avotak Africa Limited
+            {content.title || 'About Avotak Africa Limited'}
           </h1>
           <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-            Transforming African agriculture through innovation, sustainability, and farmer empowerment
+            {content.description || 'Transforming African agriculture through innovation, sustainability, and farmer empowerment'}
           </p>
         </div>
 
@@ -55,7 +57,7 @@ export default function AboutUs() {
               <h2 className="text-2xl font-bold text-green-800">Our Mission</h2>
             </div>
             <p className="text-gray-700 text-lg leading-relaxed">
-              To transform East African agriculture by providing premium quality produce, innovative farming solutions, and comprehensive support services that meet international standards—while empowering smallholder farmers, promoting sustainable practices, and contributing to regional food security and economic prosperity.
+              {content.mission || 'To transform East African agriculture by providing premium quality produce, innovative farming solutions, and comprehensive support services that meet international standards—while empowering smallholder farmers, promoting sustainable practices, and contributing to regional food security and economic prosperity.'}
             </p>
           </div>
           <div className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-green-600 hover:shadow-xl transition-shadow">
@@ -66,7 +68,7 @@ export default function AboutUs() {
               <h2 className="text-2xl font-bold text-green-800">Our Vision</h2>
             </div>
             <p className="text-gray-700 text-lg leading-relaxed">
-              To be East Africa's most trusted and innovative agricultural solutions provider by 2030—recognized for excellence in quality, sustainability, and farmer empowerment. We envision thriving farming communities, flourishing ecosystems, and a resilient agricultural sector that feeds Africa and the world.
+              {content.vision || "To be East Africa's most trusted and innovative agricultural solutions provider by 2030—recognized for excellence in quality, sustainability, and farmer empowerment. We envision thriving farming communities, flourishing ecosystems, and a resilient agricultural sector that feeds Africa and the world."}
             </p>
           </div>
         </div>
