@@ -17,12 +17,20 @@ const protect = asyncHandler(async (req, res, next) => {
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Get user from the token (select all fields except the password)
-      req.user = await User.findById(decoded.id).select('-password');
-
-      if (!req.user) {
+      // Check if token has email (simple auth) or id (user-based auth)
+      if (decoded.email) {
+        // Simple email-based auth
+        req.user = { email: decoded.email, isAdmin: true };
+      } else if (decoded.id) {
+        // User-based auth - lookup in database
+        req.user = await User.findById(decoded.id).select('-password');
+        if (!req.user) {
+          res.status(401);
+          throw new Error('Not authorized, user not found');
+        }
+      } else {
         res.status(401);
-        throw new Error('Not authorized, user not found');
+        throw new Error('Not authorized, invalid token');
       }
 
       next();
@@ -31,9 +39,7 @@ const protect = asyncHandler(async (req, res, next) => {
       res.status(401);
       throw new Error('Not authorized, token failed');
     }
-  }
-
-  if (!token) {
+  } else {
     res.status(401);
     throw new Error('Not authorized, no token');
   }
