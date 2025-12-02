@@ -79,6 +79,38 @@ const projects = [
     impact: '30 groups certified, 50% price premium, 150 farmers benefiting',
     duration: 'Jan 2023 - Dec 2024',
     order: 3
+  },
+  {
+    title: 'Sustainable Herb Farming Initiative',
+    description: 'Promoted climate-smart practices for rosemary, coriander, and basil cultivation. Introduced drip irrigation, mulching, and integrated pest management.',
+    category: 'Training',
+    impact: '200 farmers trained, 40% water savings, 50% less chemicals',
+    duration: 'Jun 2024 - Ongoing',
+    order: 4
+  },
+  {
+    title: 'Cherry Tomato Market Linkages',
+    description: 'Connected smallholder farmers to premium cherry tomato markets in regional supermarkets and hotels. Provided greenhouse technology and quality seeds.',
+    category: 'Export',
+    impact: '60 farmers linked, 15 premium buyers, 45% revenue increase',
+    duration: 'Apr 2024 - Present',
+    order: 5
+  },
+  {
+    title: 'Fresh Rosemary Export Development',
+    description: 'Developed fresh rosemary supply chain for European markets. Trained farmers on proper harvesting, bunching, and post-harvest handling.',
+    category: 'Export',
+    impact: '40 farmers exporting, 2 tons weekly, new income stream created',
+    duration: 'May 2024 - Ongoing',
+    order: 6
+  },
+  {
+    title: 'Coriander Production Training',
+    description: 'Intensive training program on commercial coriander production for local and export markets. Provided quality seeds and drip irrigation kits.',
+    category: 'Training',
+    impact: '100 farmers trained, 30% yield increase, reliable market access',
+    duration: 'Jul 2024 - Present',
+    order: 7
   }
 ];
 
@@ -112,6 +144,7 @@ const seedDatabase = async () => {
 
     await Project.insertMany(projects);
     console.log(`✅ Inserted ${projects.length} projects`);
+    console.log('   Projects: Avocado, Mango, Basil, Ginger, Herbs, Tomato, Rosemary, Coriander');
 
     await Produce.insertMany(produce);
     console.log(`✅ Inserted ${produce.length} produce items`);
