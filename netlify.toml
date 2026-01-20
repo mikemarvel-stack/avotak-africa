@@ -7,7 +7,7 @@
 [context.production.environment]
   # Set environment variables for the production build.
   # Vite requires env vars to be prefixed with VITE_.
-  VITE_API_BASE = "/api" # Corrected variable name
+  VITE_API_URL = "/api"
   NODE_VERSION = "18"
 
 # This is the proxy redirect for your API calls.
@@ -26,3 +26,8 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
