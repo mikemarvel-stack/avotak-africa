@@ -51,15 +51,15 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-start gap-3 text-gray-300 text-sm group">
                 <MapPin className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                <span className="group-hover:text-white transition-colors">123 Greenway Rd, Nairobi, Kenya</span>
+                <span className="group-hover:text-white transition-colors">Songea Road, Mgendela Street. P.O. Box 319, <Njombe-Tanzania></Njombe-Tanzania></span>
               </div>
               <div className="flex items-center gap-3 text-gray-300 text-sm group cursor-pointer" onClick={() => handleNavigate('/contact')}>
                 <Phone className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="group-hover:text-white transition-colors">+254 711 281 829</span>
+                <span className="group-hover:text-white transition-colors">+255 747 799 873</span>
               </div>
               <div className="flex items-center gap-3 text-gray-300 text-sm group cursor-pointer" onClick={() => handleNavigate('/contact')}>
                 <Mail className="w-5 h-5 text-green-400 flex-shrink-0" />
-                <span className="group-hover:text-white transition-colors">info@avotakafrica.com</span>
+                <span className="group-hover:text-white transition-colors">info@avotakafrica.co.tz</span>
               </div>
             </div>
           </div>

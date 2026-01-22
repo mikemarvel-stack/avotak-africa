@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://avotakafrica.netlify.app/sitemap.xml
+Sitemap: https://avotakafrica.com/sitemap.xml
